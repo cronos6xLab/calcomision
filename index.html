@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Comisiones · Aion Perfumes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #f8f8f8; --dark: #111111;
+    --muted: #666666; --border: #e6e6e6;
+    --gold: #b8975a; --gold-light: #fffdf5;
+    --green: #1a6638; --green-bg: #f0faf4; --green-border: #a8dfc0;
+    --radius: 6px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Jost',sans-serif; background:var(--bg2); color:var(--dark); min-height:100vh; }
+
+  /* HEADER */
+  .header { background:var(--dark); color:#fff; padding:18px 24px; text-align:center; }
+  .header h1 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; letter-spacing:4px; text-transform:uppercase; }
+  .header p { font-size:0.72rem; color:rgba(255,255,255,0.5); letter-spacing:2px; margin-top:4px; text-transform:uppercase; }
+
+  .container { max-width:860px; margin:0 auto; padding:28px 16px 60px; }
+
+  /* VENDEDOR SELECTOR */
+  .card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:20px; }
+  .card-title { font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; font-weight:600; color:var(--gold); margin-bottom:14px; }
+
+  .vendedor-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+  .vendedor-row input {
+    flex:1; min-width:180px; padding:11px 14px; border:1px solid var(--border);
+    border-radius:var(--radius); font-family:'Jost',sans-serif; font-size:0.9rem;
+    background:var(--bg2); outline:none; transition:border-color 0.2s;
+  }
+  .vendedor-row input:focus { border-color:var(--dark); background:var(--bg); }
+  .btn { padding:11px 20px; border:none; border-radius:var(--radius); font-family:'Jost',sans-serif;
+    font-size:0.78rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
+    cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .btn-dark { background:var(--dark); color:#fff; }
+  .btn-dark:hover { background:#333; }
+  .btn-outline { background:transparent; color:var(--dark); border:1px solid var(--border); }
+  .btn-outline:hover { background:var(--bg2); }
+  .btn-gold { background:var(--gold); color:#fff; }
+  .btn-gold:hover { opacity:0.88; }
+
+  /* TABS VENDEDORES */
+  .vendedores-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+  .tab-btn {
+    padding:7px 16px; border:1px solid var(--border); border-radius:20px;
+    background:var(--bg2); font-family:'Jost',sans-serif; font-size:0.78rem;
+    cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px;
+  }
+  .tab-btn.active { background:var(--dark); color:#fff; border-color:var(--dark); }
+  .tab-btn .remove-tab { font-size:0.9rem; line-height:1; opacity:0.6; }
+  .tab-btn.active .remove-tab { opacity:0.8; }
+  .tab-btn .remove-tab:hover { opacity:1; }
+
+  /* FORM AÑADIR PEDIDO */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:520px){ .form-grid { grid-template-columns:1fr; } }
+
+  .form-group { display:flex; flex-direction:column; gap:5px; }
+  .form-group label { font-size:0.68rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:500; }
+  .form-group select, .form-group input[type="number"] {
+    padding:11px 14px; border:1px solid var(--border); border-radius:var(--radius);
+    font-family:'Jost',sans-serif; font-size:0.88rem; background:var(--bg2);
+    outline:none; transition:border-color 0.2s; color:var(--dark); appearance:none;
+    -webkit-appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center;
+    padding-right:34px;
+  }
+  .form-group select:focus, .form-group input[type="number"]:focus { border-color:var(--dark); background:var(--bg); }
+  .form-group input[type="number"] { background-image:none; padding-right:14px; }
+
+  .checkbox-row { display:flex; align-items:center; gap:10px; margin-top:4px; cursor:pointer; }
+  .checkbox-row input[type="checkbox"] { width:17px; height:17px; accent-color:var(--dark); cursor:pointer; }
+  .checkbox-row span { font-size:0.85rem; }
+
+  .price-preview {
+    background:var(--gold-light); border:1px solid rgba(184,151,90,0.3);
+    border-radius:var(--radius); padding:12px 16px; font-size:0.82rem;
+    display:flex; justify-content:space-between; align-items:center; margin-top:4px;
+  }
+  .price-preview strong { font-size:1rem; color:var(--dark); }
+
+  /* TABLA PEDIDOS */
+  .pedidos-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+  .pedidos-table th {
+    text-align:left; font-size:0.65rem; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--muted); font-weight:600; padding:10px 12px; border-bottom:2px solid var(--border);
+  }
+  .pedidos-table td { padding:12px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .pedidos-table tr:last-child td { border-bottom:none; }
+  .pedidos-table tr:hover td { background:var(--bg2); }
+  .td-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; transition:color 0.15s; }
+  .td-remove:hover { color:#c00; }
+
+  .fero-badge {
+    display:inline-block; font-size:0.6rem; background:var(--dark); color:#fff;
+    border-radius:3px; padding:2px 6px; letter-spacing:1px; margin-left:5px; vertical-align:middle;
+  }
+
+  /* RESUMEN COMISIÓN */
+  .resumen-box {
+    background:var(--green-bg); border:1px solid var(--green-border);
+    border-radius:var(--radius); padding:20px; margin-top:6px;
+  }
+  .resumen-row { display:flex; justify-content:space-between; font-size:0.85rem; padding:6px 0; border-bottom:1px solid rgba(168,223,192,0.4); }
+  .resumen-row:last-child { border-bottom:none; }
+  .resumen-total { display:flex; justify-content:space-between; font-size:1.15rem; font-weight:600; color:var(--green); margin-top:12px; padding-top:12px; border-top:2px solid var(--green-border); }
+
+  .empty-state { text-align:center; padding:32px 16px; color:var(--muted); font-size:0.82rem; }
+  .empty-state .icon { font-size:2rem; margin-bottom:8px; }
+
+  /* SEPARADOR */
+  .section-divider { display:flex; align-items:center; gap:12px; margin:24px 0 16px; }
+  .section-divider span { font-size:0.68rem; text-transform:uppercase; letter-spacing:2px; color:var(--muted); white-space:nowrap; font-weight:600; }
+  .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .no-vendedor { text-align:center; padding:24px; color:var(--muted); font-size:0.82rem; }
+
+  /* TABLA REFERENCIA */
+  .ref-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
+  .ref-table th { font-size:0.62rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:600; padding:8px 10px; border-bottom:2px solid var(--border); text-align:left; }
+  .ref-table td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  .ref-table tr:last-child td { border-bottom:none; }
+  .ref-table tr:hover td { background:var(--bg2); }
+  .ref-table .gold { color:var(--gold); font-weight:600; }
+  .ref-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .ref-tab { padding:5px 14px; border:1px solid var(--border); border-radius:20px; background:var(--bg2); font-size:0.72rem; cursor:pointer; transition:all 0.15s; font-family:'Jost',sans-serif; }
+  .ref-tab.active { background:var(--dark); color:#fff; border-color:var(--dark); }
+
+  details summary { cursor:pointer; font-size:0.72rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:600; list-style:none; display:flex; align-items:center; gap:6px; }
+  details summary::before { content:'▶'; font-size:0.55rem; transition:transform 0.2s; }
+  details[open] summary::before { transform:rotate(90deg); }
+  details summary::-webkit-details-marker { display:none; }
+
+  /* ── PRINT / PDF ── */
+  @media print {
+    body { background: #fff !important; font-size: 11pt; }
+    .header { background: #111 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color: #fff !important; padding: 14px 20px; }
+    .container { padding: 10px 16px !important; max-width: 100% !important; }
+    .card { border: 1px solid #ccc !important; page-break-inside: avoid; }
+    .btn, .tab-btn, .vendedor-row, .form-grid, .form-group,
+    .checkbox-row, .price-preview, .no-vendedor, .ref-tabs,
+    details summary, .empty-state, .no-print { display: none !important; }
+    details { display: block !important; }
+    details > div { display: block !important; }
+    .vendedores-tabs { display: none !important; }
+    .section-divider span { font-size: 9pt; color: #666; }
+    .pedidos-table th, .pedidos-table td { font-size: 10pt; padding: 7px 8px; }
+    .resumen-box { background: #f0faf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #a8dfc0 !important; }
+    .resumen-total { font-size: 13pt; }
+    .fero-badge { background: #111 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-header { display: block !important; }
+    .btn-print-area { display: none !important; }
+    .ref-table th, .ref-table td { font-size: 9pt; padding: 5px 8px; }
+  }
+
+  /* Print header (hidden on screen) */
+  .print-header {
+    display: none;
+    font-size: 0.78rem;
+    color: #666;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.2rem; letter-spacing: 2px; }
+    .card { padding: 14px; }
+    .form-grid { grid-template-columns: 1fr !important; }
+    .pedidos-table { font-size: 0.74rem; }
+    .pedidos-table th, .pedidos-table td { padding: 8px 6px; }
+    .resumen-total { font-size: 1rem; }
+    .ref-table { font-size: 0.7rem; }
+    .ref-table th, .ref-table td { padding: 6px 6px; }
+    .section-divider span { font-size: 0.62rem; }
+    .vendedor-row { flex-direction: column; }
+    .vendedor-row input { width: 100%; }
+    .vendedor-row .btn { width: 100%; }
+    .btn { font-size: 0.72rem; padding: 10px 14px; }
+    .tab-btn { font-size: 0.72rem; padding: 6px 12px; }
+    .price-preview { flex-direction: column; gap: 4px; text-align: center; }
+    .container { padding: 16px 10px 60px; }
+  }
+
+  @media (max-width: 380px) {
+    .pedidos-table th:nth-child(2), .pedidos-table td:nth-child(2) { max-width: 90px; word-break: break-word; }
+    .ref-table th:nth-child(2), .ref-table td:nth-child(2) { display: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Aion Perfumes</h1>
+  <p>Calculadora de Comisiones</p>
+</div>
+
+<div class="print-header" id="print-fecha"></div>
+<div class="container">
+
+  <!-- VENDEDORES -->
+  <div class="card">
+    <div class="card-title">Vendedores</div>
+    <div class="vendedor-row" style="margin-bottom:14px;">
+      <input type="text" id="nuevo-vendedor" placeholder="Nombre del vendedor..." maxlength="30">
+      <button class="btn btn-dark" onclick="agregarVendedor()">+ Agregar</button>
+    </div>
+    <div class="vendedores-tabs" id="vendedores-tabs">
+      <span style="font-size:0.78rem;color:var(--muted);">Aún no hay vendedores agregados.</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN ACTIVA -->
+  <div id="seccion-vendedor">
+    <div class="no-vendedor">Agrega o selecciona un vendedor para comenzar.</div>
+  </div>
+
+</div>
+
+<!-- TABLA DE REFERENCIA -->
+<div class="container" style="padding-top:0;">
+  <details>
+    <summary>Tabla de referencia de comisiones</summary>
+    <div class="card" style="margin-top:12px;">
+      <div class="ref-tabs" id="ref-tabs">
+        <button class="ref-tab active" onclick="filtrarRef('todos',this)">Todos</button>
+        <button class="ref-tab" onclick="filtrarRef('unidad',this)">Unidad</button>
+        <button class="ref-tab" onclick="filtrarRef('promo',this)">Promos</button>
+        <button class="ref-tab" onclick="filtrarRef('fero',this)">Con Feromonas</button>
+      </div>
+      <table class="ref-table" id="ref-table">
+        <thead>
+          <tr>
+            <th>Producto</th><th>Concentración</th><th>Modalidad</th>
+            <th>Sin feromonas</th><th>Con feromonas</th>
+          </tr>
+        </thead>
+        <tbody id="ref-tbody"></tbody>
+      </table>
+    </div>
+  </details>
+</div>
+
+<script>
+// ── DATOS ──
+const COMISION_FERO_UNIT = 60 * 0.90 * 0.20; // 10.80
+
+const REF_DATA = [
+  // Unidades
+  {prod:"Perfume 30ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:188},
+  {prod:"Perfume 30ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:232},
+  {prod:"Perfume 30ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:277},
+  {prod:"Perfume 50ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:277},
+  {prod:"Perfume 50ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:349},
+  {prod:"Perfume 50ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:417},
+  {prod:"Perfume 60ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:321},
+  {prod:"Perfume 60ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:410},
+  {prod:"Perfume 60ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:488},
+  {prod:"Perfume 100ml", conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:432},
+  {prod:"Perfume 100ml", conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:554},
+  {prod:"Perfume 100ml", conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:654},
+  // Promos
+  {prod:"Perfume 30ml",  conc:"Extrait 33%",  mod:"Promo 6×5", piezas:5, base:188},
+  {prod:"Perfume 30ml",  conc:"Elixir 42%",   mod:"Promo 6×5", piezas:5, base:232},
+  {prod:"Perfume 30ml",  conc:"Elixir 50%",   mod:"Promo 6×5", piezas:5, base:277},
+  {prod:"Perfume 50ml",  conc:"Extrait 33%",  mod:"Promo 5×4", piezas:4, base:277},
+  {prod:"Perfume 50ml",  conc:"Elixir 42%",   mod:"Promo 5×4", piezas:4, base:349},
+  {prod:"Perfume 50ml",  conc:"Elixir 50%",   mod:"Promo 5×4", piezas:4, base:417},
+  {prod:"Perfume 60ml",  conc:"Extrait 33%",  mod:"Promo 5×4", piezas:4, base:321},
+  {prod:"Perfume 60ml",  conc:"Elixir 42%",   mod:"Promo 5×4", piezas:4, base:410},
+  {prod:"Perfume 60ml",  conc:"Elixir 50%",   mod:"Promo 5×4", piezas:4, base:488},
+  {prod:"Perfume 100ml", conc:"Extrait 33%",  mod:"Promo 4×3", piezas:3, base:432},
+  {prod:"Perfume 100ml", conc:"Elixir 42%",   mod:"Promo 4×3", piezas:3, base:554},
+  {prod:"Perfume 100ml", conc:"Elixir 50%",   mod:"Promo 4×3", piezas:3, base:654},
+  // Extras
+  {prod:"Crema 50ml",    conc:"—",            mod:"Unidad",    piezas:1, base:129},
+  {prod:"Desodorante",   conc:"—",            mod:"Unidad",    piezas:1, base:129},
+  {prod:"Crema 50ml",    conc:"—",            mod:"Promo 6×5", piezas:5, base:129},
+  {prod:"Desodorante",   conc:"—",            mod:"Promo 6×5", piezas:5, base:129},
+];
+
+function calcComision(base, piezas, fero) {
+  const sf = base * 0.90 * 0.20 * piezas;
+  return fero ? sf + (COMISION_FERO_UNIT * piezas) : sf;
+}
+
+// ── ESTADO ──
+let vendedores = {};   // { nombre: [ {prod, conc, mod, fero, comision} ] }
+let vendedorActivo = null;
+
+// ── VENDEDORES ──
+function agregarVendedor() {
+  const input = document.getElementById('nuevo-vendedor');
+  const nombre = input.value.trim();
+  if (!nombre) return;
+  if (vendedores[nombre]) { input.value=''; seleccionarVendedor(nombre); return; }
+  vendedores[nombre] = [];
+  input.value = '';
+  renderTabs();
+  seleccionarVendedor(nombre);
+}
+
+document.getElementById('nuevo-vendedor').addEventListener('keydown', e => {
+  if (e.key === 'Enter') agregarVendedor();
+});
+
+function renderTabs() {
+  const container = document.getElementById('vendedores-tabs');
+  const nombres = Object.keys(vendedores);
+  if (nombres.length === 0) {
+    container.innerHTML = '<span style="font-size:0.78rem;color:var(--muted);">Aún no hay vendedores agregados.</span>';
+    return;
+  }
+  container.innerHTML = nombres.map(n => `
+    <button class="tab-btn ${n === vendedorActivo ? 'active' : ''}" onclick="seleccionarVendedor('${n}')">
+      ${n}
+      <span class="remove-tab" onclick="event.stopPropagation(); eliminarVendedor('${n}')">✕</span>
+    </button>
+  `).join('');
+}
+
+function eliminarVendedor(nombre) {
+  delete vendedores[nombre];
+  if (vendedorActivo === nombre) {
+    const nombres = Object.keys(vendedores);
+    vendedorActivo = nombres.length > 0 ? nombres[0] : null;
+  }
+  renderTabs();
+  renderSeccion();
+}
+
+function seleccionarVendedor(nombre) {
+  vendedorActivo = nombre;
+  renderTabs();
+  renderSeccion();
+}
+
+// ── SECCIÓN VENDEDOR ──
+function renderSeccion() {
+  const div = document.getElementById('seccion-vendedor');
+  if (!vendedorActivo) {
+    div.innerHTML = '<div class="no-vendedor">Agrega o selecciona un vendedor para comenzar.</div>';
+    return;
+  }
+  const pedidos = vendedores[vendedorActivo];
+
+  // Opciones de productos para el select
+  const productoOpts = [
+    ...["30ml","50ml","60ml","100ml"].flatMap(sz =>
+      ["Extrait 33%","Elixir 42%","Elixir 50%"].map(c =>
+        `<option value="${sz}|${c}">Perfume ${sz} · ${c}</option>`
+      )
+    ),
+    `<option value="crema|—">Crema Corporal 50ml</option>`,
+    `<option value="deo|—">Desodorante Roll-on 50ml</option>`,
+  ].join('');
+
+  const modalidadOpts = `
+    <option value="Unidad">Unidad</option>
+    <option value="Promo 6×5">Promo 6×5</option>
+    <option value="Promo 5×4">Promo 5×4</option>
+    <option value="Promo 4×3">Promo 4×3</option>
+  `;
+
+  div.innerHTML = `
+    <div class="card">
+      <div class="card-title">Añadir pedido — ${vendedorActivo}</div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label>Producto</label>
+          <select id="f-prod" onchange="refreshModalidadOptions(); actualizarPreview()">${productoOpts}</select>
+        </div>
+        <div class="form-group">
+          <label>Modalidad</label>
+          <select id="f-mod" onchange="actualizarPreview()">${modalidadOpts}</select>
+        </div>
+      </div>
+      <label class="checkbox-row" style="margin-bottom:14px;">
+        <input type="checkbox" id="f-fero" onchange="actualizarPreview()">
+        <span>Con feromonas (+$60 · comisión +$10.80 c/u)</span>
+      </label>
+      <div class="price-preview" id="price-preview">
+        <span>Comisión estimada</span>
+        <strong id="preview-val">$0.00</strong>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="refreshModalidadOptions(); actualizarPreview()">Actualizar</button>
+        <button class="btn btn-dark" onclick="agregarPedido()">+ Añadir al registro</button>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>Registro de pedidos</span></div>
+
+    <div class="card">
+      ${pedidos.length === 0 ? `
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <div>Aún no hay pedidos registrados para <strong>${vendedorActivo}</strong>.</div>
+        </div>
+      ` : `
+        <table class="pedidos-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Producto</th><th>Modalidad</th><th>Feromonas</th><th>Comisión</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pedidos.map((p,i) => `
+              <tr>
+                <td style="color:var(--muted);font-size:0.75rem;">${i+1}</td>
+                <td><strong>${p.prod}</strong><br><span style="font-size:0.72rem;color:var(--muted);">${p.conc}</span></td>
+                <td>${p.mod}</td>
+                <td>${p.fero ? '<span class="fero-badge">SÍ</span>' : '<span style="color:var(--muted);font-size:0.78rem;">No</span>'}</td>
+                <td style="font-weight:600;color:var(--green);">$${p.comision.toFixed(2)}</td>
+                <td><button class="td-remove" onclick="eliminarPedido(${i})">✕</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${renderResumen(pedidos)}
+        <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+          <button class="btn btn-outline no-print" onclick="resetPedidosVendedor()">Vaciar pedidos</button>
+          <button class="btn btn-outline no-print" onclick="exportarResumen()">Exportar .txt</button>
+          <button class="btn btn-dark no-print" onclick="imprimirComision()" style="display:flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir / PDF
+          </button>
+        </div>
+      `}
+    </div>
+  `;
+  refreshModalidadOptions();
+  actualizarPreview();
+}
+
+function renderResumen(pedidos) {
+  const total = pedidos.reduce((s,p) => s + p.comision, 0);
+  const porMod = {};
+  pedidos.forEach(p => { porMod[p.mod] = (porMod[p.mod]||0) + p.comision; });
+
+  return `
+    <div class="section-divider" style="margin-top:20px;"><span>Resumen de comisión</span></div>
+    <div class="resumen-box">
+      ${Object.entries(porMod).map(([mod,val]) =>
+        `<div class="resumen-row"><span>${mod}</span><span>$${val.toFixed(2)}</span></div>`
+      ).join('')}
+      <div class="resumen-total">
+        <span>Total a pagar a ${vendedorActivo}</span>
+        <span>$${total.toFixed(2)} MXN</span>
+      </div>
+    </div>
+  `;
+}
+
+function getPrecioBase(prodKey, mod) {
+  const PRECIOS = {
+    "30ml|Extrait 33%":188,"30ml|Elixir 42%":232,"30ml|Elixir 50%":277,
+    "50ml|Extrait 33%":277,"50ml|Elixir 42%":349,"50ml|Elixir 50%":417,
+    "60ml|Extrait 33%":321,"60ml|Elixir 42%":410,"60ml|Elixir 50%":488,
+    "100ml|Extrait 33%":432,"100ml|Elixir 42%":554,"100ml|Elixir 50%":654,
+    "crema|—":129,"deo|—":129,
+  };
+  const PIEZAS = {"Unidad":1,"Promo 6×5":5,"Promo 5×4":4,"Promo 4×3":3};
+  return { base: PRECIOS[prodKey] || 0, piezas: PIEZAS[mod] || 1 };
+}
+
+function actualizarPreview() {
+  const prodEl = document.getElementById('f-prod');
+  const modEl  = document.getElementById('f-mod');
+  const feroEl = document.getElementById('f-fero');
+  if (!prodEl) return;
+  const { base, piezas } = getPrecioBase(prodEl.value, modEl.value);
+  const com = calcComision(base, piezas, feroEl.checked);
+  const el  = document.getElementById('preview-val');
+  if (el) el.textContent = '$' + com.toFixed(2);
+}
+
+function agregarPedido() {
+  if (!vendedorActivo) return;
+  const prodEl = document.getElementById('f-prod');
+  const modEl  = document.getElementById('f-mod');
+  const feroEl = document.getElementById('f-fero');
+  const prodVal = prodEl.value;
+  const modVal  = modEl.value;
+  const fero    = feroEl.checked;
+  const { base, piezas } = getPrecioBase(prodVal, modVal);
+  const com = calcComision(base, piezas, fero);
+  const [sz, conc] = prodVal.split('|');
+  const prodNombre = sz === 'crema' ? 'Crema 50ml' : sz === 'deo' ? 'Desodorante' : `Perfume ${sz}`;
+
+  vendedores[vendedorActivo].push({
+    prod: prodNombre, conc, mod: modVal, fero, comision: com
+  });
+  renderSeccion();
+}
+
+function eliminarPedido(idx) {
+  vendedores[vendedorActivo].splice(idx, 1);
+  renderSeccion();
+}
+
+
+function getValidMods(prodVal) {
+  const [sz] = prodVal.split('|');
+  if (sz === '30ml' || sz === 'crema' || sz === 'deo') return ['Unidad','Promo 6×5'];
+  if (sz === '50ml' || sz === '60ml') return ['Unidad','Promo 5×4'];
+  if (sz === '100ml') return ['Unidad','Promo 4×3'];
+  return ['Unidad'];
+}
+
+function refreshModalidadOptions() {
+  const prodEl = document.getElementById('f-prod');
+  const modEl  = document.getElementById('f-mod');
+  if (!prodEl || !modEl) return;
+  const valid = getValidMods(prodEl.value);
+  const current = modEl.value;
+  modEl.innerHTML = valid.map(v => `<option value="${v}">${v}</option>`).join('');
+  if (valid.includes(current)) modEl.value = current;
+}
+
+function resetPedidosVendedor() {
+  if (!vendedorActivo) return;
+  if (!confirm(`¿Vaciar todos los pedidos de ${vendedorActivo}?`)) return;
+  vendedores[vendedorActivo] = [];
+  renderSeccion();
+}
+
+function exportarResumen() {
+  if (!vendedorActivo) return;
+  const pedidos = vendedores[vendedorActivo] || [];
+  if (pedidos.length === 0) {
+    alert('No hay pedidos para exportar.');
+    return;
+  }
+  const total = pedidos.reduce((s,p) => s + p.comision, 0);
+  let txt = `Resumen de comisión — ${vendedorActivo}
+`;
+  txt += `Fecha: ${new Date().toLocaleString('es-MX')}
+`;
+  txt += '━━━━━━━━━━━━━━━━━━━━
+';
+  pedidos.forEach((p, i) => {
+    txt += `${i+1}. ${p.prod} · ${p.conc} · ${p.mod}${p.fero ? ' · Feromonas' : ''} = $${p.comision.toFixed(2)}
+`;
+  });
+  txt += '━━━━━━━━━━━━━━━━━━━━
+';
+  txt += `TOTAL A PAGAR: $${total.toFixed(2)} MXN`;
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `comision-${vendedorActivo.replace(/\s+/g,'-').toLowerCase()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+function imprimirComision() {
+  if (!vendedorActivo) { alert('Selecciona un vendedor primero.'); return; }
+  const pedidos = vendedores[vendedorActivo] || [];
+  if (pedidos.length === 0) { alert('No hay pedidos para imprimir.'); return; }
+
+  // Mostrar fecha y nombre en el print-header
+  const fechaEl = document.getElementById('print-fecha');
+  if (fechaEl) fechaEl.textContent =
+    'Vendedor: ' + vendedorActivo + '  ·  Fecha: ' + new Date().toLocaleString('es-MX');
+
+  window.print();
+}
+
+// ── TABLA REFERENCIA ──
+let refFiltro = 'todos';
+
+function renderRefTable() {
+  const tbody = document.getElementById('ref-tbody');
+  const rows = REF_DATA.filter(r => {
+    if (refFiltro === 'unidad') return r.mod === 'Unidad';
+    if (refFiltro === 'promo')  return r.mod !== 'Unidad';
+    if (refFiltro === 'fero')   return true;
+    return true;
+  });
+  tbody.innerHTML = rows.map(r => {
+    const sf  = calcComision(r.base, r.piezas, false);
+    const cf  = calcComision(r.base, r.piezas, true);
+    const showFero = refFiltro !== 'unidad' && refFiltro !== 'promo' || refFiltro === 'fero';
+    return `<tr>
+      <td>${r.prod}</td><td>${r.conc}</td><td>${r.mod}</td>
+      <td class="gold">$${sf.toFixed(2)}</td>
+      <td class="gold">$${cf.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrarRef(filtro, el) {
+  refFiltro = filtro;
+  document.querySelectorAll('.ref-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderRefTable();
+}
+
+// ── INIT ──
+renderRefTable();
+</script>
+</body>
+</html>
