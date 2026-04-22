@@ -52,7 +52,7 @@
     cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px;
   }
   .tab-btn.active { background:var(--dark); color:#fff; border-color:var(--dark); }
-  .tab-btn .remove-tab { font-size:0.9rem; line-height:1; opacity:0.6; }
+  .tab-btn .remove-tab { font-size:0.9rem; line-height:1; opacity:0.6; cursor:pointer; }
   .tab-btn.active .remove-tab { opacity:0.8; }
   .tab-btn .remove-tab:hover { opacity:1; }
 
@@ -94,7 +94,7 @@
   .pedidos-table td { padding:12px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
   .pedidos-table tr:last-child td { border-bottom:none; }
   .pedidos-table tr:hover td { background:var(--bg2); }
-  .td-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; transition:color 0.15s; }
+  .td-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; transition:color 0.15s; padding:0 8px; }
   .td-remove:hover { color:#c00; }
 
   .fero-badge {
@@ -193,7 +193,6 @@
     .pedidos-table th:nth-child(2), .pedidos-table td:nth-child(2) { max-width: 90px; word-break: break-word; }
     .ref-table th:nth-child(2), .ref-table td:nth-child(2) { display: none; }
   }
-
 </style>
 </head>
 <body>
@@ -211,7 +210,7 @@
     <div class="card-title">Vendedores</div>
     <div class="vendedor-row" style="margin-bottom:14px;">
       <input type="text" id="nuevo-vendedor" placeholder="Nombre del vendedor..." maxlength="30">
-      <button class="btn btn-dark" onclick="agregarVendedor()">+ Agregar</button>
+      <button class="btn btn-dark" id="btn-agregar-vendedor">+ Agregar</button>
     </div>
     <div class="vendedores-tabs" id="vendedores-tabs">
       <span style="font-size:0.78rem;color:var(--muted);">Aún no hay vendedores agregados.</span>
@@ -227,14 +226,14 @@
 
 <!-- TABLA DE REFERENCIA -->
 <div class="container" style="padding-top:0;">
-  <details>
+  <details open>
     <summary>Tabla de referencia de comisiones</summary>
     <div class="card" style="margin-top:12px;">
       <div class="ref-tabs" id="ref-tabs">
-        <button class="ref-tab active" onclick="filtrarRef('todos',this)">Todos</button>
-        <button class="ref-tab" onclick="filtrarRef('unidad',this)">Unidad</button>
-        <button class="ref-tab" onclick="filtrarRef('promo',this)">Promos</button>
-        <button class="ref-tab" onclick="filtrarRef('fero',this)">Con Feromonas</button>
+        <button class="ref-tab active" data-filtro="todos">Todos</button>
+        <button class="ref-tab" data-filtro="unidad">Unidad</button>
+        <button class="ref-tab" data-filtro="promo">Promos</button>
+        <button class="ref-tab" data-filtro="fero">Con Feromonas</button>
       </div>
       <table class="ref-table" id="ref-table">
         <thead>
@@ -244,7 +243,7 @@
           </tr>
         </thead>
         <tbody id="ref-tbody"></tbody>
-      </table>
+       </table>
     </div>
   </details>
 </div>
@@ -301,16 +300,16 @@ function agregarVendedor() {
   const input = document.getElementById('nuevo-vendedor');
   const nombre = input.value.trim();
   if (!nombre) return;
-  if (vendedores[nombre]) { input.value=''; seleccionarVendedor(nombre); return; }
+  if (vendedores[nombre]) { 
+    input.value=''; 
+    seleccionarVendedor(nombre); 
+    return; 
+  }
   vendedores[nombre] = [];
   input.value = '';
   renderTabs();
   seleccionarVendedor(nombre);
 }
-
-document.getElementById('nuevo-vendedor').addEventListener('keydown', e => {
-  if (e.key === 'Enter') agregarVendedor();
-});
 
 function renderTabs() {
   const container = document.getElementById('vendedores-tabs');
@@ -320,11 +319,24 @@ function renderTabs() {
     return;
   }
   container.innerHTML = nombres.map(n => `
-    <button class="tab-btn ${n === vendedorActivo ? 'active' : ''}" onclick="seleccionarVendedor('${n}')">
+    <button class="tab-btn ${n === vendedorActivo ? 'active' : ''}" data-nombre="${n}">
       ${n}
-      <span class="remove-tab" onclick="event.stopPropagation(); eliminarVendedor('${n}')">✕</span>
+      <span class="remove-tab" data-nombre="${n}">✕</span>
     </button>
   `).join('');
+  
+  // Agregar event listeners
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const nombre = btn.getAttribute('data-nombre');
+    btn.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-tab')) {
+        e.stopPropagation();
+        eliminarVendedor(nombre);
+      } else {
+        seleccionarVendedor(nombre);
+      }
+    });
+  });
 }
 
 function eliminarVendedor(nombre) {
@@ -346,22 +358,29 @@ function seleccionarVendedor(nombre) {
 // ── SECCIÓN VENDEDOR ──
 function renderSeccion() {
   const div = document.getElementById('seccion-vendedor');
-  if (!vendedorActivo) {
+  if (!vendedorActivo || !vendedores[vendedorActivo]) {
     div.innerHTML = '<div class="no-vendedor">Agrega o selecciona un vendedor para comenzar.</div>';
     return;
   }
   const pedidos = vendedores[vendedorActivo];
 
   // Opciones de productos para el select
-  const productoOpts = [
-    ...["30ml","50ml","60ml","100ml"].flatMap(sz =>
-      ["Extrait 33%","Elixir 42%","Elixir 50%"].map(c =>
-        `<option value="${sz}|${c}">Perfume ${sz} · ${c}</option>`
-      )
-    ),
-    `<option value="crema|—">Crema Corporal 50ml</option>`,
-    `<option value="deo|—">Desodorante Roll-on 50ml</option>`,
-  ].join('');
+  const productoOpts = `
+    <option value="30ml|Extrait 33%">Perfume 30ml · Extrait 33%</option>
+    <option value="30ml|Elixir 42%">Perfume 30ml · Elixir 42%</option>
+    <option value="30ml|Elixir 50%">Perfume 30ml · Elixir 50%</option>
+    <option value="50ml|Extrait 33%">Perfume 50ml · Extrait 33%</option>
+    <option value="50ml|Elixir 42%">Perfume 50ml · Elixir 42%</option>
+    <option value="50ml|Elixir 50%">Perfume 50ml · Elixir 50%</option>
+    <option value="60ml|Extrait 33%">Perfume 60ml · Extrait 33%</option>
+    <option value="60ml|Elixir 42%">Perfume 60ml · Elixir 42%</option>
+    <option value="60ml|Elixir 50%">Perfume 60ml · Elixir 50%</option>
+    <option value="100ml|Extrait 33%">Perfume 100ml · Extrait 33%</option>
+    <option value="100ml|Elixir 42%">Perfume 100ml · Elixir 42%</option>
+    <option value="100ml|Elixir 50%">Perfume 100ml · Elixir 50%</option>
+    <option value="crema|—">Crema Corporal 50ml</option>
+    <option value="deo|—">Desodorante Roll-on 50ml</option>
+  `;
 
   const modalidadOpts = `
     <option value="Unidad">Unidad</option>
@@ -376,15 +395,15 @@ function renderSeccion() {
       <div class="form-grid" style="margin-bottom:14px;">
         <div class="form-group">
           <label>Producto</label>
-          <select id="f-prod" onchange="refreshModalidadOptions(); actualizarPreview()">${productoOpts}</select>
+          <select id="f-prod">${productoOpts}</select>
         </div>
         <div class="form-group">
           <label>Modalidad</label>
-          <select id="f-mod" onchange="actualizarPreview()">${modalidadOpts}</select>
+          <select id="f-mod">${modalidadOpts}</select>
         </div>
       </div>
       <label class="checkbox-row" style="margin-bottom:14px;">
-        <input type="checkbox" id="f-fero" onchange="actualizarPreview()">
+        <input type="checkbox" id="f-fero">
         <span>Con feromonas (+$60 · comisión +$10.80 c/u)</span>
       </label>
       <div class="price-preview" id="price-preview">
@@ -392,8 +411,8 @@ function renderSeccion() {
         <strong id="preview-val">$0.00</strong>
       </div>
       <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
-        <button class="btn btn-outline" onclick="refreshModalidadOptions(); actualizarPreview()">Actualizar</button>
-        <button class="btn btn-dark" onclick="agregarPedido()">+ Añadir al registro</button>
+        <button class="btn btn-outline" id="btn-actualizar">Actualizar</button>
+        <button class="btn btn-dark" id="btn-agregar-pedido">+ Añadir al registro</button>
       </div>
     </div>
 
@@ -420,16 +439,16 @@ function renderSeccion() {
                 <td>${p.mod}</td>
                 <td>${p.fero ? '<span class="fero-badge">SÍ</span>' : '<span style="color:var(--muted);font-size:0.78rem;">No</span>'}</td>
                 <td style="font-weight:600;color:var(--green);">$${p.comision.toFixed(2)}</td>
-                <td><button class="td-remove" onclick="eliminarPedido(${i})">✕</button></td>
+                <td><button class="td-remove" data-index="${i}">✕</button></td>
               </tr>
             `).join('')}
           </tbody>
-        </table>
+         </table>
         ${renderResumen(pedidos)}
         <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
-          <button class="btn btn-outline no-print" onclick="resetPedidosVendedor()">Vaciar pedidos</button>
-          <button class="btn btn-outline no-print" onclick="exportarResumen()">Exportar .txt</button>
-          <button class="btn btn-dark no-print" onclick="imprimirComision()" style="display:flex;align-items:center;gap:6px;">
+          <button class="btn btn-outline no-print" id="btn-vaciar">Vaciar pedidos</button>
+          <button class="btn btn-outline no-print" id="btn-exportar">Exportar .txt</button>
+          <button class="btn btn-dark no-print" id="btn-imprimir" style="display:flex;align-items:center;gap:6px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             Imprimir / PDF
           </button>
@@ -437,7 +456,45 @@ function renderSeccion() {
       `}
     </div>
   `;
-  refreshModalidadOptions();
+  
+  // Agregar event listeners después de renderizar
+  const prodSelect = document.getElementById('f-prod');
+  const modSelect = document.getElementById('f-mod');
+  const feroCheck = document.getElementById('f-fero');
+  
+  if (prodSelect && modSelect) {
+    refreshModalidadOptions();
+    prodSelect.addEventListener('change', () => {
+      refreshModalidadOptions();
+      actualizarPreview();
+    });
+    modSelect.addEventListener('change', () => actualizarPreview());
+    if (feroCheck) feroCheck.addEventListener('change', () => actualizarPreview());
+    
+    const btnActualizar = document.getElementById('btn-actualizar');
+    if (btnActualizar) btnActualizar.addEventListener('click', () => actualizarPreview());
+    
+    const btnAgregar = document.getElementById('btn-agregar-pedido');
+    if (btnAgregar) btnAgregar.addEventListener('click', () => agregarPedido());
+    
+    const btnVaciar = document.getElementById('btn-vaciar');
+    if (btnVaciar) btnVaciar.addEventListener('click', () => resetPedidosVendedor());
+    
+    const btnExportar = document.getElementById('btn-exportar');
+    if (btnExportar) btnExportar.addEventListener('click', () => exportarResumen());
+    
+    const btnImprimir = document.getElementById('btn-imprimir');
+    if (btnImprimir) btnImprimir.addEventListener('click', () => imprimirComision());
+    
+    // Eliminar pedidos
+    document.querySelectorAll('.td-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(btn.getAttribute('data-index'));
+        eliminarPedido(idx);
+      });
+    });
+  }
+  
   actualizarPreview();
 }
 
@@ -476,9 +533,9 @@ function actualizarPreview() {
   const prodEl = document.getElementById('f-prod');
   const modEl  = document.getElementById('f-mod');
   const feroEl = document.getElementById('f-fero');
-  if (!prodEl) return;
+  if (!prodEl || !modEl) return;
   const { base, piezas } = getPrecioBase(prodEl.value, modEl.value);
-  const com = calcComision(base, piezas, feroEl.checked);
+  const com = calcComision(base, piezas, feroEl ? feroEl.checked : false);
   const el  = document.getElementById('preview-val');
   if (el) el.textContent = '$' + com.toFixed(2);
 }
@@ -488,9 +545,11 @@ function agregarPedido() {
   const prodEl = document.getElementById('f-prod');
   const modEl  = document.getElementById('f-mod');
   const feroEl = document.getElementById('f-fero');
+  if (!prodEl || !modEl) return;
+  
   const prodVal = prodEl.value;
   const modVal  = modEl.value;
-  const fero    = feroEl.checked;
+  const fero    = feroEl ? feroEl.checked : false;
   const { base, piezas } = getPrecioBase(prodVal, modVal);
   const com = calcComision(base, piezas, fero);
   const [sz, conc] = prodVal.split('|');
@@ -503,10 +562,10 @@ function agregarPedido() {
 }
 
 function eliminarPedido(idx) {
+  if (!vendedorActivo) return;
   vendedores[vendedorActivo].splice(idx, 1);
   renderSeccion();
 }
-
 
 function getValidMods(prodVal) {
   const [sz] = prodVal.split('|');
@@ -524,6 +583,7 @@ function refreshModalidadOptions() {
   const current = modEl.value;
   modEl.innerHTML = valid.map(v => `<option value="${v}">${v}</option>`).join('');
   if (valid.includes(current)) modEl.value = current;
+  else modEl.value = valid[0];
 }
 
 function resetPedidosVendedor() {
@@ -541,18 +601,13 @@ function exportarResumen() {
     return;
   }
   const total = pedidos.reduce((s,p) => s + p.comision, 0);
-  let txt = `Resumen de comisión — ${vendedorActivo}
-`;
-  txt += `Fecha: ${new Date().toLocaleString('es-MX')}
-`;
-  txt += '━━━━━━━━━━━━━━━━━━━━
-';
+  let txt = `Resumen de comisión — ${vendedorActivo}\n`;
+  txt += `Fecha: ${new Date().toLocaleString('es-MX')}\n`;
+  txt += '━━━━━━━━━━━━━━━━━━━━\n';
   pedidos.forEach((p, i) => {
-    txt += `${i+1}. ${p.prod} · ${p.conc} · ${p.mod}${p.fero ? ' · Feromonas' : ''} = $${p.comision.toFixed(2)}
-`;
+    txt += `${i+1}. ${p.prod} · ${p.conc} · ${p.mod}${p.fero ? ' · Feromonas' : ''} = $${p.comision.toFixed(2)}\n`;
   });
-  txt += '━━━━━━━━━━━━━━━━━━━━
-';
+  txt += '━━━━━━━━━━━━━━━━━━━━\n';
   txt += `TOTAL A PAGAR: $${total.toFixed(2)} MXN`;
   const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -563,13 +618,11 @@ function exportarResumen() {
   URL.revokeObjectURL(url);
 }
 
-
 function imprimirComision() {
   if (!vendedorActivo) { alert('Selecciona un vendedor primero.'); return; }
   const pedidos = vendedores[vendedorActivo] || [];
   if (pedidos.length === 0) { alert('No hay pedidos para imprimir.'); return; }
 
-  // Mostrar fecha y nombre en el print-header
   const fechaEl = document.getElementById('print-fecha');
   if (fechaEl) fechaEl.textContent =
     'Vendedor: ' + vendedorActivo + '  ·  Fecha: ' + new Date().toLocaleString('es-MX');
@@ -582,16 +635,17 @@ let refFiltro = 'todos';
 
 function renderRefTable() {
   const tbody = document.getElementById('ref-tbody');
-  const rows = REF_DATA.filter(r => {
-    if (refFiltro === 'unidad') return r.mod === 'Unidad';
-    if (refFiltro === 'promo')  return r.mod !== 'Unidad';
-    if (refFiltro === 'fero')   return true;
-    return true;
-  });
+  let rows = [...REF_DATA];
+  
+  if (refFiltro === 'unidad') {
+    rows = rows.filter(r => r.mod === 'Unidad');
+  } else if (refFiltro === 'promo') {
+    rows = rows.filter(r => r.mod !== 'Unidad');
+  } // 'todos' y 'fero' muestran todos los datos
+  
   tbody.innerHTML = rows.map(r => {
     const sf  = calcComision(r.base, r.piezas, false);
     const cf  = calcComision(r.base, r.piezas, true);
-    const showFero = refFiltro !== 'unidad' && refFiltro !== 'promo' || refFiltro === 'fero';
     return `<tr>
       <td>${r.prod}</td><td>${r.conc}</td><td>${r.mod}</td>
       <td class="gold">$${sf.toFixed(2)}</td>
@@ -608,7 +662,32 @@ function filtrarRef(filtro, el) {
 }
 
 // ── INIT ──
-renderRefTable();
+function init() {
+  renderRefTable();
+  
+  // Event listeners para la tabla de referencia
+  document.querySelectorAll('.ref-tab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const filtro = btn.getAttribute('data-filtro');
+      filtrarRef(filtro, btn);
+    });
+  });
+  
+  // Event listener para agregar vendedor
+  const btnAgregarVendedor = document.getElementById('btn-agregar-vendedor');
+  if (btnAgregarVendedor) {
+    btnAgregarVendedor.addEventListener('click', agregarVendedor);
+  }
+  
+  const inputVendedor = document.getElementById('nuevo-vendedor');
+  if (inputVendedor) {
+    inputVendedor.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') agregarVendedor();
+    });
+  }
+}
+
+init();
 </script>
 </body>
 </html>
