@@ -1,693 +1,1281 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Comisiones · Aion Perfumes</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #ffffff; --bg2: #f8f8f8; --dark: #111111;
-    --muted: #666666; --border: #e6e6e6;
-    --gold: #b8975a; --gold-light: #fffdf5;
-    --green: #1a6638; --green-bg: #f0faf4; --green-border: #a8dfc0;
-    --radius: 6px;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Jost',sans-serif; background:var(--bg2); color:var(--dark); min-height:100vh; }
-
-  /* HEADER */
-  .header { background:var(--dark); color:#fff; padding:18px 24px; text-align:center; }
-  .header h1 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; letter-spacing:4px; text-transform:uppercase; }
-  .header p { font-size:0.72rem; color:rgba(255,255,255,0.5); letter-spacing:2px; margin-top:4px; text-transform:uppercase; }
-
-  .container { max-width:860px; margin:0 auto; padding:28px 16px 60px; }
-
-  /* VENDEDOR SELECTOR */
-  .card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:20px; }
-  .card-title { font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; font-weight:600; color:var(--gold); margin-bottom:14px; }
-
-  .vendedor-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
-  .vendedor-row input {
-    flex:1; min-width:180px; padding:11px 14px; border:1px solid var(--border);
-    border-radius:var(--radius); font-family:'Jost',sans-serif; font-size:0.9rem;
-    background:var(--bg2); outline:none; transition:border-color 0.2s;
-  }
-  .vendedor-row input:focus { border-color:var(--dark); background:var(--bg); }
-  .btn { padding:11px 20px; border:none; border-radius:var(--radius); font-family:'Jost',sans-serif;
-    font-size:0.78rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
-    cursor:pointer; transition:all 0.2s; white-space:nowrap; }
-  .btn-dark { background:var(--dark); color:#fff; }
-  .btn-dark:hover { background:#333; }
-  .btn-outline { background:transparent; color:var(--dark); border:1px solid var(--border); }
-  .btn-outline:hover { background:var(--bg2); }
-  .btn-gold { background:var(--gold); color:#fff; }
-  .btn-gold:hover { opacity:0.88; }
-
-  /* TABS VENDEDORES */
-  .vendedores-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
-  .tab-btn {
-    padding:7px 16px; border:1px solid var(--border); border-radius:20px;
-    background:var(--bg2); font-family:'Jost',sans-serif; font-size:0.78rem;
-    cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px;
-  }
-  .tab-btn.active { background:var(--dark); color:#fff; border-color:var(--dark); }
-  .tab-btn .remove-tab { font-size:0.9rem; line-height:1; opacity:0.6; cursor:pointer; }
-  .tab-btn.active .remove-tab { opacity:0.8; }
-  .tab-btn .remove-tab:hover { opacity:1; }
-
-  /* FORM AÑADIR PEDIDO */
-  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  @media(max-width:520px){ .form-grid { grid-template-columns:1fr; } }
-
-  .form-group { display:flex; flex-direction:column; gap:5px; }
-  .form-group label { font-size:0.68rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:500; }
-  .form-group select, .form-group input[type="number"] {
-    padding:11px 14px; border:1px solid var(--border); border-radius:var(--radius);
-    font-family:'Jost',sans-serif; font-size:0.88rem; background:var(--bg2);
-    outline:none; transition:border-color 0.2s; color:var(--dark); appearance:none;
-    -webkit-appearance:none; cursor:pointer;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat:no-repeat; background-position:right 12px center;
-    padding-right:34px;
-  }
-  .form-group select:focus, .form-group input[type="number"]:focus { border-color:var(--dark); background:var(--bg); }
-  .form-group input[type="number"] { background-image:none; padding-right:14px; }
-
-  .checkbox-row { display:flex; align-items:center; gap:10px; margin-top:4px; cursor:pointer; }
-  .checkbox-row input[type="checkbox"] { width:17px; height:17px; accent-color:var(--dark); cursor:pointer; }
-  .checkbox-row span { font-size:0.85rem; }
-
-  .price-preview {
-    background:var(--gold-light); border:1px solid rgba(184,151,90,0.3);
-    border-radius:var(--radius); padding:12px 16px; font-size:0.82rem;
-    display:flex; justify-content:space-between; align-items:center; margin-top:4px;
-  }
-  .price-preview strong { font-size:1rem; color:var(--dark); }
-
-  /* TABLA PEDIDOS */
-  .pedidos-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
-  .pedidos-table th {
-    text-align:left; font-size:0.65rem; text-transform:uppercase; letter-spacing:1.5px;
-    color:var(--muted); font-weight:600; padding:10px 12px; border-bottom:2px solid var(--border);
-  }
-  .pedidos-table td { padding:12px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
-  .pedidos-table tr:last-child td { border-bottom:none; }
-  .pedidos-table tr:hover td { background:var(--bg2); }
-  .td-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; transition:color 0.15s; padding:0 8px; }
-  .td-remove:hover { color:#c00; }
-
-  .fero-badge {
-    display:inline-block; font-size:0.6rem; background:var(--dark); color:#fff;
-    border-radius:3px; padding:2px 6px; letter-spacing:1px; margin-left:5px; vertical-align:middle;
-  }
-
-  /* RESUMEN COMISIÓN */
-  .resumen-box {
-    background:var(--green-bg); border:1px solid var(--green-border);
-    border-radius:var(--radius); padding:20px; margin-top:6px;
-  }
-  .resumen-row { display:flex; justify-content:space-between; font-size:0.85rem; padding:6px 0; border-bottom:1px solid rgba(168,223,192,0.4); }
-  .resumen-row:last-child { border-bottom:none; }
-  .resumen-total { display:flex; justify-content:space-between; font-size:1.15rem; font-weight:600; color:var(--green); margin-top:12px; padding-top:12px; border-top:2px solid var(--green-border); }
-
-  .empty-state { text-align:center; padding:32px 16px; color:var(--muted); font-size:0.82rem; }
-  .empty-state .icon { font-size:2rem; margin-bottom:8px; }
-
-  /* SEPARADOR */
-  .section-divider { display:flex; align-items:center; gap:12px; margin:24px 0 16px; }
-  .section-divider span { font-size:0.68rem; text-transform:uppercase; letter-spacing:2px; color:var(--muted); white-space:nowrap; font-weight:600; }
-  .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background:var(--border); }
-
-  .no-vendedor { text-align:center; padding:24px; color:var(--muted); font-size:0.82rem; }
-
-  /* TABLA REFERENCIA */
-  .ref-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
-  .ref-table th { font-size:0.62rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:600; padding:8px 10px; border-bottom:2px solid var(--border); text-align:left; }
-  .ref-table td { padding:8px 10px; border-bottom:1px solid var(--border); }
-  .ref-table tr:last-child td { border-bottom:none; }
-  .ref-table tr:hover td { background:var(--bg2); }
-  .ref-table .gold { color:var(--gold); font-weight:600; }
-  .ref-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
-  .ref-tab { padding:5px 14px; border:1px solid var(--border); border-radius:20px; background:var(--bg2); font-size:0.72rem; cursor:pointer; transition:all 0.15s; font-family:'Jost',sans-serif; }
-  .ref-tab.active { background:var(--dark); color:#fff; border-color:var(--dark); }
-
-  details summary { cursor:pointer; font-size:0.72rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:600; list-style:none; display:flex; align-items:center; gap:6px; }
-  details summary::before { content:'▶'; font-size:0.55rem; transition:transform 0.2s; }
-  details[open] summary::before { transform:rotate(90deg); }
-  details summary::-webkit-details-marker { display:none; }
-
-  /* ── PRINT / PDF ── */
-  @media print {
-    body { background: #fff !important; font-size: 11pt; }
-    .header { background: #111 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color: #fff !important; padding: 14px 20px; }
-    .container { padding: 10px 16px !important; max-width: 100% !important; }
-    .card { border: 1px solid #ccc !important; page-break-inside: avoid; }
-    .btn, .tab-btn, .vendedor-row, .form-grid, .form-group,
-    .checkbox-row, .price-preview, .no-vendedor, .ref-tabs,
-    details summary, .empty-state, .no-print { display: none !important; }
-    details { display: block !important; }
-    details > div { display: block !important; }
-    .vendedores-tabs { display: none !important; }
-    .section-divider span { font-size: 9pt; color: #666; }
-    .pedidos-table th, .pedidos-table td { font-size: 10pt; padding: 7px 8px; }
-    .resumen-box { background: #f0faf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #a8dfc0 !important; }
-    .resumen-total { font-size: 13pt; }
-    .fero-badge { background: #111 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .print-header { display: block !important; }
-    .btn-print-area { display: none !important; }
-    .ref-table th, .ref-table td { font-size: 9pt; padding: 5px 8px; }
-  }
-
-  /* Print header (hidden on screen) */
-  .print-header {
-    display: none;
-    font-size: 0.78rem;
-    color: #666;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e6e6e6;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .header h1 { font-size: 1.2rem; letter-spacing: 2px; }
-    .card { padding: 14px; }
-    .form-grid { grid-template-columns: 1fr !important; }
-    .pedidos-table { font-size: 0.74rem; }
-    .pedidos-table th, .pedidos-table td { padding: 8px 6px; }
-    .resumen-total { font-size: 1rem; }
-    .ref-table { font-size: 0.7rem; }
-    .ref-table th, .ref-table td { padding: 6px 6px; }
-    .section-divider span { font-size: 0.62rem; }
-    .vendedor-row { flex-direction: column; }
-    .vendedor-row input { width: 100%; }
-    .vendedor-row .btn { width: 100%; }
-    .btn { font-size: 0.72rem; padding: 10px 14px; }
-    .tab-btn { font-size: 0.72rem; padding: 6px 12px; }
-    .price-preview { flex-direction: column; gap: 4px; text-align: center; }
-    .container { padding: 16px 10px 60px; }
-  }
-
-  @media (max-width: 380px) {
-    .pedidos-table th:nth-child(2), .pedidos-table td:nth-child(2) { max-width: 90px; word-break: break-word; }
-    .ref-table th:nth-child(2), .ref-table td:nth-child(2) { display: none; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Clínica Integral - Seguimiento de Avances</title>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+        body { background: #f4f7fc; margin: 0; padding: 2rem 1rem; display: flex; justify-content: center; }
+        .contenedor { max-width: 1300px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 2rem; }
+        h1 { font-size: 1.7rem; margin-top: 0; color: #1e2b3c; }
+        h2 { font-size: 1.2rem; color: #2c3e50; margin: 0 0 0.8rem; border-left: 5px solid #2ecc71; padding-left: 0.8rem; }
+        h3 { font-size: 1rem; color: #34495e; margin: 1rem 0 0.5rem; }
+        h4 { font-size: 0.95rem; color: #2c3e50; margin: 0.8rem 0 0.4rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        @media (max-width: 900px) { .grid, .grid-3 { grid-template-columns: 1fr; } }
+        .campo { margin-bottom: 0.8rem; }
+        label { display: block; font-weight: 600; font-size: 0.83rem; color: #34495e; margin-bottom: 0.25rem; }
+        input, select { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 0.92rem; transition: 0.2s; }
+        input:focus, select:focus { outline: 2px solid #2ecc71; border-color: transparent; }
+        .fila { display: flex; gap: 0.7rem; }
+        .fila .campo { flex: 1; }
+        button { background: #2ecc71; color: white; border: none; padding: 0.75rem 1.2rem; border-radius: 40px; font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #27ae60; }
+        button.secundario { background: #3498db; }
+        button.secundario:hover { background: #2980b9; }
+        button.peligro { background: #e74c3c; }
+        button.peligro:hover { background: #c0392b; }
+        button.avance { background: #9b59b6; }
+        button.avance:hover { background: #8e44ad; }
+        .resultado { background: #f0f9f4; border-radius: 16px; padding: 1rem; margin-top: 1rem; border: 1px solid #b8e6c8; }
+        .resultado p { margin: 0.35rem 0; font-size: 0.95rem; }
+        .resultado .grande { font-size: 1.4rem; font-weight: 800; color: #1e7e34; }
+        .alerta { font-size: 0.78rem; color: #7f8c8d; margin-top: 1.5rem; border-top: 1px dashed #ccc; padding-top: 0.8rem; }
+        .lista { list-style: none; padding: 0; margin: 0.6rem 0 0; }
+        .lista li { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #eee; font-size: 0.88rem; }
+        .lista li:last-child { border-bottom: none; }
+        .total { font-size: 1.1rem; font-weight: 700; color: #2c3e50; margin-top: 0.7rem; }
+        .error { color: #e74c3c; font-size: 0.83rem; margin-top: 0.2rem; min-height: 1rem; }
+        .seccion { margin-bottom: 1.8rem; }
+        .card { background: #fafbfc; border-radius: 16px; padding: 1rem; border: 1px solid #e2e8f0; }
+        .balance-box { background: linear-gradient(135deg, #1e2b3c, #2c3e50); color: white; border-radius: 16px; padding: 1.3rem; margin: 1.5rem 0; }
+        .balance-box h3 { color: #2ecc71; margin-top: 0; }
+        .balance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center; }
+        @media (max-width: 700px) { .balance-grid { grid-template-columns: repeat(2, 1fr); } }
+        .balance-grid div span { display: block; font-size: 0.78rem; opacity: 0.8; }
+        .balance-grid div strong { font-size: 1.2rem; }
+        .plan-card { border-radius: 16px; padding: 1.3rem; margin-top: 1rem; }
+        .plan-deficit { background: #fff5f5; border: 2px solid #fc8181; }
+        .plan-superavit { background: #f0fff4; border: 2px solid #68d391; }
+        .plan-mantener { background: #ebf8ff; border: 2px solid #63b3ed; }
+        .macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; margin: 0.8rem 0; }
+        .macro { background: white; border-radius: 12px; padding: 0.7rem; text-align: center; border: 1px solid #e2e8f0; }
+        .macro strong { display: block; font-size: 1.1rem; color: #2c3e50; }
+        .macro span { font-size: 0.75rem; color: #718096; }
+        .nota { font-size: 0.83rem; color: #4a5568; background: #edf2f7; padding: 0.7rem; border-radius: 10px; margin-top: 0.6rem; }
+        .condicion-tag { display: inline-block; background: #e53e3e; color: white; border-radius: 20px; padding: 0.15rem 0.7rem; font-size: 0.75rem; font-weight: 600; margin: 0.15rem; }
+        .condicion-tag.ok { background: #38a169; }
+        .clinico-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media (max-width: 700px) { .clinico-grid { grid-template-columns: 1fr; } }
+        .alerta-clinica { background: #fff5f5; border: 1px solid #fc8181; border-radius: 12px; padding: 0.8rem; margin-top: 0.8rem; font-size: 0.85rem; color: #c53030; }
+        .alerta-clinica.ok { background: #f0fff4; border-color: #68d391; color: #276749; }
+        .alerta-clinica.warn { background: #fffff0; border-color: #ecc94b; color: #975a16; }
+        .timer-display { font-size: 2.5rem; font-weight: 800; text-align: center; color: #2c3e50; font-variant-numeric: tabular-nums; margin: 0.5rem 0; }
+        .timer-fase { text-align: center; font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+        .timer-fase.trabajo { color: #e53e3e; }
+        .timer-fase.descanso { color: #38a169; }
+        .timer-controles { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
+        .timer-controles button { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .badge-clinico { display: inline-block; border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.7rem; font-weight: 700; }
+        .badge-normal { background: #c6f6d5; color: #22543d; }
+        .badge-alto { background: #fed7d7; color: #822727; }
+        .badge-bajo { background: #fefcbf; color: #744210; }
+        .referencia { font-size: 0.72rem; color: #718096; }
+        .rutina-dia, .dieta-dia { background: white; border-radius: 12px; padding: 0.9rem; margin-bottom: 0.7rem; border-left: 4px solid #2ecc71; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .dieta-dia { border-left-color: #3498db; }
+        .rutina-dia table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .rutina-dia table th { text-align: left; color: #718096; font-weight: 600; padding: 0.2rem 0.3rem; border-bottom: 1px solid #e2e8f0; }
+        .rutina-dia table td { padding: 0.25rem 0.3rem; border-bottom: 1px solid #f0f0f0; }
+        .rutina-dia table td:last-child { color: #e53e3e; font-weight: 600; }
+        .dieta-dia ul { margin: 0.2rem 0; padding-left: 1.1rem; font-size: 0.82rem; line-height: 1.5; }
+        .dieta-dia .kcal-dia { font-size: 0.78rem; color: #718096; text-align: right; margin-top: 0.3rem; }
+        .subseccion { background: #f8fafc; border-radius: 14px; padding: 1rem; margin-top: 1rem; border: 1px solid #e2e8f0; }
+        /* ============ MÓDULO DE AVANCES ============ */
+        .avance-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+        .avance-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1rem 0; }
+        @media (max-width: 800px) { .avance-stats { grid-template-columns: repeat(2, 1fr); } }
+        .stat-card { background: white; border-radius: 14px; padding: 0.9rem; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .stat-card .valor { font-size: 1.4rem; font-weight: 800; color: #2c3e50; }
+        .stat-card .delta { font-size: 0.8rem; font-weight: 700; }
+        .stat-card .delta.baja { color: #38a169; }
+        .stat-card .delta.sube { color: #e53e3e; }
+        .stat-card .delta.estable { color: #718096; }
+        .stat-card .etiqueta { font-size: 0.75rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+        .grafico-container { background: white; border-radius: 14px; padding: 1rem; border: 1px solid #e2e8f0; margin-bottom: 1rem; }
+        .grafico-titulo { font-size: 0.9rem; font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        .grafico-titulo .objetivo-tag { font-size: 0.75rem; color: #718096; font-weight: 500; }
+        .barras { display: flex; align-items: flex-end; gap: 4px; height: 120px; padding: 0 0.3rem; border-bottom: 2px solid #cbd5e1; position: relative; }
+        .barra-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; min-width: 18px; }
+        .barra { width: 100%; background: linear-gradient(180deg, #2ecc71, #27ae60); border-radius: 4px 4px 0 0; transition: 0.3s; min-height: 2px; }
+        .barra.glucosa { background: linear-gradient(180deg, #e74c3c, #c0392b); }
+        .barra.presion { background: linear-gradient(180deg, #e67e22, #d35400); }
+        .barra.calorias { background: linear-gradient(180deg, #3498db, #2980b9); }
+        .barra.ejercicio { background: linear-gradient(180deg, #9b59b6, #8e44ad); }
+        .barra.peso { background: linear-gradient(180deg, #1abc9c, #16a085); }
+        .barra-label { font-size: 0.6rem; color: #718096; margin-top: 3px; text-align: center; }
+        .linea-objetivo { position: absolute; left: 0; right: 0; border-top: 2px dashed #e53e3e; pointer-events: none; }
+        .linea-objetivo span { position: absolute; right: 2px; top: -14px; background: #e53e3e; color: white; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; }
+        .tabla-avance { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: white; border-radius: 12px; overflow: hidden; }
+        .tabla-avance th { background: #1e2b3c; color: white; padding: 0.5rem; text-align: left; font-weight: 600; font-size: 0.78rem; }
+        .tabla-avance td { padding: 0.45rem 0.5rem; border-bottom: 1px solid #edf2f7; }
+        .tabla-avance tr:hover { background: #f8fafc; }
+        .tabla-avance .acciones-td button { padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 12px; }
+        .sin-datos { text-align: center; color: #a0aec0; padding: 2rem 1rem; font-size: 0.9rem; font-style: italic; }
+        .form-avance { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+        @media (max-width: 800px) { .form-avance { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 500px) { .form-avance { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
+<div class="contenedor">
+    <h1>🏥 Calculadora Clínica Integral - Seguimiento de Avances</h1>
+    <p style="color:#5d6d7e; margin-top:-0.5rem;">Fórmulas Harris-Benedict / Mifflin-St Jeor · MET · Guías ADA 2024, ESC 2024, DASH, KDIGO 2024, ACSM.</p>
 
-<div class="header">
-  <h1>Aion Perfumes</h1>
-  <p>Calculadora de Comisiones</p>
-</div>
-
-<div class="print-header" id="print-fecha"></div>
-<div class="container">
-
-  <!-- VENDEDORES -->
-  <div class="card">
-    <div class="card-title">Vendedores</div>
-    <div class="vendedor-row" style="margin-bottom:14px;">
-      <input type="text" id="nuevo-vendedor" placeholder="Nombre del vendedor..." maxlength="30">
-      <button class="btn btn-dark" id="btn-agregar-vendedor">+ Agregar</button>
+    <!-- ============ SECCIÓN 1: DATOS Y CONDICIONES ============ -->
+    <div class="seccion">
+        <h2>1. Datos personales y condiciones de salud</h2>
+        <div class="grid-3">
+            <div class="fila">
+                <div class="campo"><label>Edad (años)</label><input type="number" id="edad" value="30" min="10" max="100"></div>
+                <div class="campo"><label>Sexo</label>
+                    <select id="sexo"><option value="hombre">Hombre</option><option value="mujer">Mujer</option></select>
+                </div>
+            </div>
+            <div class="fila">
+                <div class="campo"><label>Peso (kg)</label><input type="number" id="peso" value="70" step="0.1"></div>
+                <div class="campo"><label>Altura (cm)</label><input type="number" id="altura" value="170"></div>
+            </div>
+            <div class="fila">
+                <div class="campo"><label>Nivel de actividad</label>
+                    <select id="actividad">
+                        <option value="1.2">Sedentario</option><option value="1.375">Ligero</option>
+                        <option value="1.55" selected>Moderado</option><option value="1.725">Intenso</option>
+                        <option value="1.9">Muy intenso</option>
+                    </select>
+                </div>
+                <div class="campo"><label>Objetivo</label>
+                    <select id="objetivo">
+                        <option value="mantener">Mantener peso</option>
+                        <option value="deficit" selected>Perder grasa</option>
+                        <option value="superavit">Ganar masa muscular</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <h3>Condiciones metabólicas</h3>
+        <div class="grid-3" style="margin-top:0.3rem;">
+            <div><label><input type="checkbox" id="condDiabetes" onchange="calcularTodo()"> Diabetes tipo 2</label></div>
+            <div><label><input type="checkbox" id="condHipertension" onchange="calcularTodo()"> Hipertensión arterial</label></div>
+            <div><label><input type="checkbox" id="condDislipidemia" onchange="calcularTodo()"> Dislipidemia</label></div>
+            <div><label><input type="checkbox" id="condObesidad" onchange="calcularTodo()"> Obesidad (IMC ≥ 30)</label></div>
+            <div><label><input type="checkbox" id="condRenal" onchange="calcularTodo()"> ERC</label></div>
+            <div><label><input type="checkbox" id="condMetabolico" onchange="calcularTodo()"> Síndrome metabólico</label></div>
+        </div>
+        <button onclick="calcularTodo()" style="margin-top:0.7rem;">Calcular calorías y plan</button>
+        <div id="resultadoPersonal" class="resultado" style="display:none;">
+            <p><strong>Ecuación:</strong> <span id="ecuacionUsada">—</span></p>
+            <p>TMB: <strong id="tmbVal">—</strong> kcal | TDEE: <strong id="tdeeVal">—</strong> kcal</p>
+            <p>Objetivo: <span class="grande" id="objetivoVal">—</span> kcal</p>
+            <p id="detalleObjetivo" style="font-size:0.85rem; color:#555;"></p>
+            <div id="condicionesActivas" style="margin-top:0.4rem;"></div>
+            <div class="nota" id="notaClinica"></div>
+        </div>
     </div>
-    <div class="vendedores-tabs" id="vendedores-tabs">
-      <span style="font-size:0.78rem;color:var(--muted);">Aún no hay vendedores agregados.</span>
+
+    <!-- ============ SECCIÓN 2: AUTOMONITOREO ============ -->
+    <div class="seccion" id="seccionClinica" style="display:none;">
+        <h2>2. 📊 Automonitoreo clínico en casa</h2>
+        <div class="clinico-grid">
+            <div class="card">
+                <h3>🩸 Glucosa capilar (mg/dL)</h3>
+                <div class="referencia">ADA 2024: Preprandial 80-130 | Postprandial &lt;180</div>
+                <div class="fila" style="align-items:flex-end; margin-top:0.5rem;">
+                    <div class="campo" style="flex:1;"><label>Valor (mg/dL)</label><input type="number" id="glucosaValor" value="100" min="20" max="600"></div>
+                    <div class="campo" style="flex:1;"><label>Momento</label>
+                        <select id="glucosaMomento">
+                            <option value="ayunas">Ayunas</option><option value="preprandial">Antes de comer</option>
+                            <option value="postprandial" selected>Después de comer (1-2h)</option>
+                            <option value="nocturna">Nocturna</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="secundario" onclick="registrarGlucosa()" style="width:100%; font-size:0.85rem;">📝 Registrar glucosa</button>
+                <div id="errorGlucosa" class="error"></div>
+                <ul id="listaGlucosa" class="lista"></ul>
+                <div id="alertaGlucosa"></div>
+            </div>
+            <div class="card">
+                <h3>❤️ Presión arterial (mmHg)</h3>
+                <div class="referencia">Objetivo ESC 2024: 120-129 mmHg sistólica en tratamiento. HTA: ≥140/90.</div>
+                <div class="fila" style="align-items:flex-end; margin-top:0.5rem;">
+                    <div class="campo" style="flex:1;"><label>Sistólica</label><input type="number" id="paSistolica" value="120" min="60" max="250"></div>
+                    <div class="campo" style="flex:1;"><label>Diastólica</label><input type="number" id="paDiastolica" value="80" min="40" max="150"></div>
+                </div>
+                <div class="campo"><label>Pulso (lpm, opcional)</label><input type="number" id="paPulso" value="72" min="30" max="220"></div>
+                <button class="secundario" onclick="registrarPA()" style="width:100%; font-size:0.85rem;">📝 Registrar presión</button>
+                <div id="errorPA" class="error"></div>
+                <ul id="listaPA" class="lista"></ul>
+                <div id="alertaPA"></div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- SECCIÓN ACTIVA -->
-  <div id="seccion-vendedor">
-    <div class="no-vendedor">Agrega o selecciona un vendedor para comenzar.</div>
-  </div>
-
-</div>
-
-<!-- TABLA DE REFERENCIA -->
-<div class="container" style="padding-top:0;">
-  <details open>
-    <summary>Tabla de referencia de comisiones</summary>
-    <div class="card" style="margin-top:12px;">
-      <div class="ref-tabs" id="ref-tabs">
-        <button class="ref-tab active" data-filtro="todos">Todos</button>
-        <button class="ref-tab" data-filtro="unidad">Unidad</button>
-        <button class="ref-tab" data-filtro="promo">Promos</button>
-        <button class="ref-tab" data-filtro="fero">Con Feromonas</button>
-      </div>
-      <table class="ref-table" id="ref-table">
-        <thead>
-          <tr>
-            <th>Producto</th><th>Concentración</th><th>Modalidad</th>
-            <th>Sin feromonas</th><th>Con feromonas</th>
-          </tr>
-        </thead>
-        <tbody id="ref-tbody"></tbody>
-       </table>
+    <!-- ============ SECCIÓN 3 y 4: ALIMENTOS Y EJERCICIO ============ -->
+    <div class="grid">
+        <div class="seccion">
+            <h2>3. Alimentos consumidos</h2>
+            <div class="card">
+                <div class="campo"><label>Alimento (por 100 g)</label><select id="selectorAlimento"><option value="">— Elige —</option></select></div>
+                <div class="fila" style="align-items:flex-end;">
+                    <div class="campo" style="flex:1;"><label>Cantidad (g)</label><input type="number" id="cantidadAlimento" value="100" min="1"></div>
+                    <div class="campo" style="flex:1;"><button class="secundario" onclick="agregarAlimento()" style="width:100%;">➕ Agregar</button></div>
+                </div>
+                <div id="errorAlimento" class="error"></div>
+                <ul id="listaConsumo" class="lista"></ul>
+                <p class="total">Total consumido: <span id="totalConsumido">0</span> kcal</p>
+                <button class="peligro" onclick="reiniciarConsumo()" style="margin-top:0.4rem; font-size:0.8rem; padding:0.4rem 0.9rem;">Reiniciar</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>4. Ejercicio del día</h2>
+            <div class="card">
+                <div class="campo"><label>Ejercicio</label><select id="selectorEjercicio"><option value="">— Elige —</option></select></div>
+                <div class="fila" style="align-items:flex-end;">
+                    <div class="campo" style="flex:1;"><label>Duración (min)</label><input type="number" id="duracionEjercicio" value="30" min="1"></div>
+                    <div class="campo" style="flex:1;"><label>Frecuencia (d/sem)</label>
+                        <select id="frecuenciaEjercicio"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select>
+                    </div>
+                </div>
+                <button class="secundario" onclick="agregarEjercicio()" style="width:100%;">➕ Agregar ejercicio</button>
+                <div id="errorEjercicio" class="error"></div>
+                <ul id="listaEjercicio" class="lista"></ul>
+                <p class="total">Total quemado hoy: <span id="totalQuemado">0</span> kcal</p>
+                <button class="peligro" onclick="reiniciarEjercicio()" style="margin-top:0.4rem; font-size:0.8rem; padding:0.4rem 0.9rem;">Reiniciar</button>
+            </div>
+        </div>
     </div>
-  </details>
+
+    <!-- ============ CRONÓMETRO HIIT ============ -->
+    <div class="seccion" id="seccionTimer" style="display:none;">
+        <h2>5. ⏱️ Cronómetro de entrenamiento por intervalos</h2>
+        <div class="card" style="max-width:500px; margin:0 auto;">
+            <p class="referencia" style="text-align:center;">Protocolo 10-20-30 para diabetes e hipertensión.</p>
+            <div id="timerFase" class="timer-fase descanso">Listo para comenzar</div>
+            <div id="timerDisplay" class="timer-display">00:00</div>
+            <div class="timer-controles">
+                <button id="btnIniciar" onclick="toggleTimer()" style="background:#2ecc71;">▶️ Iniciar</button>
+                <button class="peligro" onclick="resetTimer()" style="background:#e74c3c;">⏹️ Reiniciar</button>
+            </div>
+            <div class="fila" style="margin-top:0.8rem;">
+                <div class="campo"><label>Trabajo (s)</label><input type="number" id="timerTrabajo" value="20" min="5" max="120"></div>
+                <div class="campo"><label>Descanso (s)</label><input type="number" id="timerDescanso" value="30" min="5" max="120"></div>
+                <div class="campo"><label>Rondas</label><input type="number" id="timerRondas" value="5" min="1" max="30"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ BALANCE ============ -->
+    <div id="balanceDiario" class="balance-box" style="display:none;">
+        <h3>⚖️ Balance energético del día</h3>
+        <div class="balance-grid">
+            <div><span>Consumido</span><strong id="balConsumido">0</strong><span>kcal</span></div>
+            <div><span>Quemado</span><strong id="balQuemado">0</strong><span>kcal</span></div>
+            <div><span>Neto</span><strong id="balNeto">0</strong><span>kcal</span></div>
+            <div><span>Objetivo</span><strong id="balObjetivo">—</strong><span>kcal</span></div>
+        </div>
+        <p id="balMensaje" style="margin-top:0.8rem; font-size:0.95rem;"></p>
+    </div>
+
+    <!-- ============ PLAN PERSONALIZADO ============ -->
+    <div id="planSection" class="seccion" style="display:none;">
+        <h2>6. Tu plan personalizado</h2>
+        <div id="planContenido"></div>
+    </div>
+
+    <!-- ============ SECCIÓN 7: SEGUIMIENTO DE AVANCES ============ -->
+    <div id="avanceSection" class="seccion" style="display:none;">
+        <div class="avance-header">
+            <h2>7. 📈 Revisión de avances</h2>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                <button class="avance" onclick="exportarDatos()" style="font-size:0.8rem; padding:0.5rem 1rem;">⬇️ Exportar CSV</button>
+                <button class="peligro" onclick="borrarHistorial()" style="font-size:0.8rem; padding:0.5rem 1rem;">🗑️ Borrar historial</button>
+            </div>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <div class="card" style="margin-top:0.8rem;">
+            <h3>Registrar avance de hoy</h3>
+            <div class="form-avance">
+                <div class="campo"><label>Fecha</label><input type="date" id="avanceFecha"></div>
+                <div class="campo"><label>Peso (kg)</label><input type="number" id="avancePeso" step="0.1" placeholder="Opcional"></div>
+                <div class="campo"><label>Cintura (cm)</label><input type="number" id="avanceCintura" step="0.1" placeholder="Opcional"></div>
+                <div class="campo"><label>Glucosa promedio (mg/dL)</label><input type="number" id="avanceGlucosa" placeholder="Opcional"></div>
+                <div class="campo"><label>PA sistólica promedio</label><input type="number" id="avancePA" placeholder="Opcional"></div>
+                <div class="campo"><label>Calorías consumidas</label><input type="number" id="avanceCalorias" placeholder="Opcional"></div>
+                <div class="campo"><label>Minutos de ejercicio</label><input type="number" id="avanceEjercicio" placeholder="Opcional"></div>
+                <div class="campo"><label>Adherencia dieta (%)</label><input type="number" id="avanceAdherencia" min="0" max="100" placeholder="0-100"></div>
+                <div class="campo"><label>Notas / Síntomas</label><input type="text" id="avanceNotas" placeholder="Opcional"></div>
+            </div>
+            <button class="avance" onclick="guardarAvance()" style="margin-top:0.5rem;">💾 Guardar avance</button>
+            <div id="errorAvance" class="error"></div>
+        </div>
+
+        <!-- TARJETAS DE ESTADÍSTICAS -->
+        <div id="statsAvance"></div>
+
+        <!-- GRÁFICOS -->
+        <div id="graficosAvance"></div>
+
+        <!-- TABLA HISTÓRICA -->
+        <div style="margin-top:1.5rem;">
+            <h3>📋 Historial completo</h3>
+            <div style="overflow-x:auto;">
+                <table class="tabla-avance" id="tablaAvance">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th><th>Peso</th><th>Cintura</th><th>Glucosa</th>
+                            <th>PA</th><th>Kcal</th><th>Ejercicio</th><th>Adherencia</th><th>Notas</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAvance"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="nota" style="margin-top:1rem;">
+            💡 <strong>Consejo:</strong> Mide en las mismas condiciones (mañana en ayunas, misma báscula, misma ropa) para minimizar variabilidad. <strong>Los datos se guardan solo en tu navegador</strong> (localStorage), son 100% privados.
+        </div>
+    </div>
+
+    <div class="alerta">
+        ⚕️ <strong>Aviso de salud:</strong> Esta herramienta es una guía orientativa basada en fórmulas estándar y guías clínicas (ADA 2024, ESC 2024, DASH, KDIGO 2024, ACSM). No sustituye el consejo de un profesional de la nutrición o médico. Consulte siempre con un especialista antes de iniciar cualquier rutina o dieta.
+    </div>
 </div>
 
 <script>
-// ── DATOS ──
-const COMISION_FERO_UNIT = 60 * 0.90 * 0.20; // 10.80
+    // ============================================================
+    // BASES DE DATOS
+    // ============================================================
+    const alimentosDB = [
+        { nombre: "Manzana", kcal: 37 }, { nombre: "Plátano", kcal: 51 }, { nombre: "Aguacate", kcal: 134 },
+        { nombre: "Naranja", kcal: 47 }, { nombre: "Pera", kcal: 57 }, { nombre: "Fresas", kcal: 32 },
+        { nombre: "Brócoli", kcal: 35 }, { nombre: "Zanahoria", kcal: 10 }, { nombre: "Espinacas", kcal: 24 },
+        { nombre: "Patata cocida", kcal: 97 }, { nombre: "Boniato", kcal: 153 }, { nombre: "Arroz blanco cocido", kcal: 130 },
+        { nombre: "Arroz integral cocido", kcal: 132 }, { nombre: "Lentejas cocidas", kcal: 105 }, { nombre: "Garbanzos cocidos", kcal: 120 },
+        { nombre: "Pechuga de pollo", kcal: 75 }, { nombre: "Huevo entero", kcal: 155 }, { nombre: "Filete de vacuno", kcal: 155 },
+        { nombre: "Salmón", kcal: 208 }, { nombre: "Atún al natural", kcal: 116 }, { nombre: "Leche entera", kcal: 47 },
+        { nombre: "Yogur natural", kcal: 61 }, { nombre: "Queso fresco", kcal: 98 }, { nombre: "Aceite de oliva", kcal: 884 },
+        { nombre: "Almendras", kcal: 579 }, { nombre: "Pan integral", kcal: 265 }, { nombre: "Avena", kcal: 389 },
+        { nombre: "Pasta cocida", kcal: 158 }, { nombre: "Galletas María", kcal: 300 }, { nombre: "Chocolate negro 70%", kcal: 598 }
+    ];
 
-const REF_DATA = [
-  // Unidades
-  {prod:"Perfume 30ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:188},
-  {prod:"Perfume 30ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:232},
-  {prod:"Perfume 30ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:277},
-  {prod:"Perfume 50ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:277},
-  {prod:"Perfume 50ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:349},
-  {prod:"Perfume 50ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:417},
-  {prod:"Perfume 60ml",  conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:321},
-  {prod:"Perfume 60ml",  conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:410},
-  {prod:"Perfume 60ml",  conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:488},
-  {prod:"Perfume 100ml", conc:"Extrait 33%",  mod:"Unidad",    piezas:1, base:432},
-  {prod:"Perfume 100ml", conc:"Elixir 42%",   mod:"Unidad",    piezas:1, base:554},
-  {prod:"Perfume 100ml", conc:"Elixir 50%",   mod:"Unidad",    piezas:1, base:654},
-  // Promos
-  {prod:"Perfume 30ml",  conc:"Extrait 33%",  mod:"Promo 6×5", piezas:5, base:188},
-  {prod:"Perfume 30ml",  conc:"Elixir 42%",   mod:"Promo 6×5", piezas:5, base:232},
-  {prod:"Perfume 30ml",  conc:"Elixir 50%",   mod:"Promo 6×5", piezas:5, base:277},
-  {prod:"Perfume 50ml",  conc:"Extrait 33%",  mod:"Promo 5×4", piezas:4, base:277},
-  {prod:"Perfume 50ml",  conc:"Elixir 42%",   mod:"Promo 5×4", piezas:4, base:349},
-  {prod:"Perfume 50ml",  conc:"Elixir 50%",   mod:"Promo 5×4", piezas:4, base:417},
-  {prod:"Perfume 60ml",  conc:"Extrait 33%",  mod:"Promo 5×4", piezas:4, base:321},
-  {prod:"Perfume 60ml",  conc:"Elixir 42%",   mod:"Promo 5×4", piezas:4, base:410},
-  {prod:"Perfume 60ml",  conc:"Elixir 50%",   mod:"Promo 5×4", piezas:4, base:488},
-  {prod:"Perfume 100ml", conc:"Extrait 33%",  mod:"Promo 4×3", piezas:3, base:432},
-  {prod:"Perfume 100ml", conc:"Elixir 42%",   mod:"Promo 4×3", piezas:3, base:554},
-  {prod:"Perfume 100ml", conc:"Elixir 50%",   mod:"Promo 4×3", piezas:3, base:654},
-  // Extras
-  {prod:"Crema 50ml",    conc:"—",            mod:"Unidad",    piezas:1, base:129},
-  {prod:"Desodorante",   conc:"—",            mod:"Unidad",    piezas:1, base:129},
-  {prod:"Crema 50ml",    conc:"—",            mod:"Promo 6×5", piezas:5, base:129},
-  {prod:"Desodorante",   conc:"—",            mod:"Promo 6×5", piezas:5, base:129},
-];
+    const ejerciciosDB = [
+        { nombre: "Caminar lento (3 km/h)", met: 2.5 }, { nombre: "Caminar moderado (5 km/h)", met: 3.5 },
+        { nombre: "Caminar rápido (6.5 km/h)", met: 5.0 }, { nombre: "Correr (8 km/h)", met: 8.3 },
+        { nombre: "Correr (10 km/h)", met: 9.8 }, { nombre: "Ciclismo moderado", met: 6.8 },
+        { nombre: "Ciclismo intenso", met: 10.0 }, { nombre: "Natación moderada", met: 5.8 },
+        { nombre: "Natación intensa", met: 9.8 }, { nombre: "Pesas (moderado)", met: 3.5 },
+        { nombre: "Pesas (intenso)", met: 6.0 }, { nombre: "Yoga", met: 2.5 },
+        { nombre: "Pilates", met: 3.0 }, { nombre: "HIIT", met: 8.0 },
+        { nombre: "Saltar cuerda", met: 10.0 }, { nombre: "Fútbol", met: 7.0 },
+        { nombre: "Baloncesto", met: 6.5 }, { nombre: "Baile", met: 5.0 },
+        { nombre: "Elíptica", met: 5.0 }, { nombre: "Remo", met: 7.0 }, { nombre: "Escalada", met: 8.0 }
+    ];
 
-function calcComision(base, piezas, fero) {
-  const sf = base * 0.90 * 0.20 * piezas;
-  return fero ? sf + (COMISION_FERO_UNIT * piezas) : sf;
-}
+    const selectorAlimento = document.getElementById('selectorAlimento');
+    alimentosDB.forEach((al, i) => { const opt = document.createElement('option'); opt.value = i; opt.textContent = `${al.nombre} — ${al.kcal} kcal/100g`; selectorAlimento.appendChild(opt); });
+    const selectorEjercicio = document.getElementById('selectorEjercicio');
+    ejerciciosDB.forEach((ej, i) => { const opt = document.createElement('option'); opt.value = i; opt.textContent = `${ej.nombre} — ${ej.met} MET`; selectorEjercicio.appendChild(opt); });
 
-// ── ESTADO ──
-let vendedores = {};   // { nombre: [ {prod, conc, mod, fero, comision} ] }
-let vendedorActivo = null;
+    let consumo = [], ejercicios = [], glucosas = [], presiones = [];
+    let objetivoCalorico = null, tdeeGlobal = null, objetivoTipo = 'deficit', pesoGlobal = 70;
+    let condicionesActivas = [];
+    let historialAvance = [];
 
-// ── VENDEDORES ──
-function agregarVendedor() {
-  const input = document.getElementById('nuevo-vendedor');
-  const nombre = input.value.trim();
-  if (!nombre) return;
-  if (vendedores[nombre]) { 
-    input.value=''; 
-    seleccionarVendedor(nombre); 
-    return; 
-  }
-  vendedores[nombre] = [];
-  input.value = '';
-  renderTabs();
-  seleccionarVendedor(nombre);
-}
+    // ============================================================
+    // LOCALSTORAGE - CARGAR AL INICIO
+    // ============================================================
+    function cargarHistorial() {
+        try {
+            const guardado = localStorage.getItem('calculadoraClinicaAvances');
+            if (guardado) historialAvance = JSON.parse(guardado);
+        } catch(e) { historialAvance = []; }
+    }
 
-function renderTabs() {
-  const container = document.getElementById('vendedores-tabs');
-  const nombres = Object.keys(vendedores);
-  if (nombres.length === 0) {
-    container.innerHTML = '<span style="font-size:0.78rem;color:var(--muted);">Aún no hay vendedores agregados.</span>';
-    return;
-  }
-  container.innerHTML = nombres.map(n => `
-    <button class="tab-btn ${n === vendedorActivo ? 'active' : ''}" data-nombre="${n}">
-      ${n}
-      <span class="remove-tab" data-nombre="${n}">✕</span>
-    </button>
-  `).join('');
-  
-  // Agregar event listeners
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    const nombre = btn.getAttribute('data-nombre');
-    btn.addEventListener('click', (e) => {
-      if (e.target.classList.contains('remove-tab')) {
-        e.stopPropagation();
-        eliminarVendedor(nombre);
-      } else {
-        seleccionarVendedor(nombre);
-      }
-    });
-  });
-}
+    function guardarEnLocalStorage() {
+        try {
+            localStorage.setItem('calculadoraClinicaAvances', JSON.stringify(historialAvance));
+        } catch(e) { console.warn('No se pudo guardar en localStorage:', e); }
+    }
 
-function eliminarVendedor(nombre) {
-  delete vendedores[nombre];
-  if (vendedorActivo === nombre) {
-    const nombres = Object.keys(vendedores);
-    vendedorActivo = nombres.length > 0 ? nombres[0] : null;
-  }
-  renderTabs();
-  renderSeccion();
-}
+    // ============================================================
+    // CÁLCULO TMB
+    // ============================================================
+    function calcularTodo() {
+        const edad = parseFloat(document.getElementById('edad').value);
+        const sexo = document.getElementById('sexo').value;
+        const peso = parseFloat(document.getElementById('peso').value);
+        const altura = parseFloat(document.getElementById('altura').value);
+        const actividad = parseFloat(document.getElementById('actividad').value);
+        objetivoTipo = document.getElementById('objetivo').value;
+        pesoGlobal = peso;
 
-function seleccionarVendedor(nombre) {
-  vendedorActivo = nombre;
-  renderTabs();
-  renderSeccion();
-}
+        condicionesActivas = [];
+        if (document.getElementById('condDiabetes').checked) condicionesActivas.push('diabetes');
+        if (document.getElementById('condHipertension').checked) condicionesActivas.push('hipertension');
+        if (document.getElementById('condDislipidemia').checked) condicionesActivas.push('dislipidemia');
+        if (document.getElementById('condObesidad').checked) condicionesActivas.push('obesidad');
+        if (document.getElementById('condRenal').checked) condicionesActivas.push('renal');
+        if (document.getElementById('condMetabolico').checked) condicionesActivas.push('metabolico');
 
-// ── SECCIÓN VENDEDOR ──
-function renderSeccion() {
-  const div = document.getElementById('seccion-vendedor');
-  if (!vendedorActivo || !vendedores[vendedorActivo]) {
-    div.innerHTML = '<div class="no-vendedor">Agrega o selecciona un vendedor para comenzar.</div>';
-    return;
-  }
-  const pedidos = vendedores[vendedorActivo];
+        if (!edad || !peso || !altura || edad < 10 || peso <= 0 || altura <= 0) { alert('Introduce valores válidos.'); return; }
 
-  // Opciones de productos para el select
-  const productoOpts = `
-    <option value="30ml|Extrait 33%">Perfume 30ml · Extrait 33%</option>
-    <option value="30ml|Elixir 42%">Perfume 30ml · Elixir 42%</option>
-    <option value="30ml|Elixir 50%">Perfume 30ml · Elixir 50%</option>
-    <option value="50ml|Extrait 33%">Perfume 50ml · Extrait 33%</option>
-    <option value="50ml|Elixir 42%">Perfume 50ml · Elixir 42%</option>
-    <option value="50ml|Elixir 50%">Perfume 50ml · Elixir 50%</option>
-    <option value="60ml|Extrait 33%">Perfume 60ml · Extrait 33%</option>
-    <option value="60ml|Elixir 42%">Perfume 60ml · Elixir 42%</option>
-    <option value="60ml|Elixir 50%">Perfume 60ml · Elixir 50%</option>
-    <option value="100ml|Extrait 33%">Perfume 100ml · Extrait 33%</option>
-    <option value="100ml|Elixir 42%">Perfume 100ml · Elixir 42%</option>
-    <option value="100ml|Elixir 50%">Perfume 100ml · Elixir 50%</option>
-    <option value="crema|—">Crema Corporal 50ml</option>
-    <option value="deo|—">Desodorante Roll-on 50ml</option>
-  `;
+        let tmb, ecuacionNombre;
+        const tieneObesidadODiabetes = condicionesActivas.includes('obesidad') || condicionesActivas.includes('diabetes');
+        const tieneRenal = condicionesActivas.includes('renal');
 
-  const modalidadOpts = `
-    <option value="Unidad">Unidad</option>
-    <option value="Promo 6×5">Promo 6×5</option>
-    <option value="Promo 5×4">Promo 5×4</option>
-    <option value="Promo 4×3">Promo 4×3</option>
-  `;
+        if (tieneRenal) {
+            tmb = sexo === 'hombre' ? (10*peso)+(6.25*altura)-(5*edad)+5 : (10*peso)+(6.25*altura)-(5*edad)-161;
+            tmb *= 0.91;
+            ecuacionNombre = 'Mifflin-St Jeor ajustada ERC (-9%)';
+        } else if (tieneObesidadODiabetes) {
+            tmb = sexo === 'hombre' ? (10*peso)+(6.25*altura)-(5*edad)+5 : (10*peso)+(6.25*altura)-(5*edad)-161;
+            ecuacionNombre = 'Mifflin-St Jeor (obesidad/DM2)';
+        } else {
+            tmb = sexo === 'hombre' ? 88.362+(13.397*peso)+(4.799*altura)-(5.677*edad) : 447.593+(9.247*peso)+(3.098*altura)-(4.330*edad);
+            ecuacionNombre = 'Harris-Benedict revisada';
+        }
 
-  div.innerHTML = `
-    <div class="card">
-      <div class="card-title">Añadir pedido — ${vendedorActivo}</div>
-      <div class="form-grid" style="margin-bottom:14px;">
-        <div class="form-group">
-          <label>Producto</label>
-          <select id="f-prod">${productoOpts}</select>
-        </div>
-        <div class="form-group">
-          <label>Modalidad</label>
-          <select id="f-mod">${modalidadOpts}</select>
-        </div>
-      </div>
-      <label class="checkbox-row" style="margin-bottom:14px;">
-        <input type="checkbox" id="f-fero">
-        <span>Con feromonas (+$60 · comisión +$10.80 c/u)</span>
-      </label>
-      <div class="price-preview" id="price-preview">
-        <span>Comisión estimada</span>
-        <strong id="preview-val">$0.00</strong>
-      </div>
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
-        <button class="btn btn-outline" id="btn-actualizar">Actualizar</button>
-        <button class="btn btn-dark" id="btn-agregar-pedido">+ Añadir al registro</button>
-      </div>
-    </div>
+        const tdee = tmb * actividad;
+        tdeeGlobal = tdee;
 
-    <div class="section-divider"><span>Registro de pedidos</span></div>
+        let ajuste = 0, detalle = '';
+        if (objetivoTipo === 'deficit') {
+            if (condicionesActivas.includes('obesidad')) { ajuste = -750; detalle = 'Déficit 750 kcal/día (ACSM obesidad).'; }
+            else if (tieneRenal) { ajuste = -300; detalle = 'Déficit 300 kcal/día (ERC).'; }
+            else { ajuste = -500; detalle = 'Déficit 500 kcal/día (~0.5 kg/sem).'; }
+        } else if (objetivoTipo === 'superavit') {
+            if (condicionesActivas.includes('diabetes')) { ajuste = +200; detalle = 'Superávit 200 kcal/día (DM2).'; }
+            else { ajuste = +300; detalle = 'Superávit 300 kcal/día.'; }
+        } else { detalle = 'Mantenimiento.'; }
 
-    <div class="card">
-      ${pedidos.length === 0 ? `
-        <div class="empty-state">
-          <div class="icon">📋</div>
-          <div>Aún no hay pedidos registrados para <strong>${vendedorActivo}</strong>.</div>
-        </div>
-      ` : `
-        <table class="pedidos-table">
-          <thead>
+        objetivoCalorico = Math.round(tdee + ajuste);
+        document.getElementById('tmbVal').textContent = Math.round(tmb);
+        document.getElementById('tdeeVal').textContent = Math.round(tdee);
+        document.getElementById('objetivoVal').textContent = objetivoCalorico;
+        document.getElementById('detalleObjetivo').textContent = detalle;
+        document.getElementById('ecuacionUsada').textContent = ecuacionNombre;
+        document.getElementById('resultadoPersonal').style.display = 'block';
+        document.getElementById('balanceDiario').style.display = 'block';
+        document.getElementById('balObjetivo').textContent = objetivoCalorico;
+
+        const tieneDiabetesOHipertension = condicionesActivas.includes('diabetes') || condicionesActivas.includes('hipertension');
+        document.getElementById('seccionClinica').style.display = tieneDiabetesOHipertension ? 'block' : 'none';
+        document.getElementById('seccionTimer').style.display = tieneDiabetesOHipertension ? 'block' : 'none';
+
+        document.getElementById('condicionesActivas').innerHTML = condicionesActivas.length > 0
+            ? 'Condiciones: ' + condicionesActivas.map(c => `<span class="condicion-tag">${c.charAt(0).toUpperCase()+c.slice(1)}</span>`).join(' ')
+            : '<span class="condicion-tag ok">Sin condiciones</span>';
+
+        const notaDiv = document.getElementById('notaClinica');
+        if (tieneRenal) notaDiv.innerHTML = '⚠️ <strong>ERC:</strong> Consulte con su nefrólogo. Proteínas 0.6-0.8 g/kg/día (KDIGO 2024).';
+        else if (tieneObesidadODiabetes) notaDiv.innerHTML = 'ℹ️ <strong>Obesidad/DM2:</strong> Mifflin-St Jeor. ADA 2024: ≥14 g fibra/1,000 kcal.';
+        else notaDiv.innerHTML = 'ℹ️ Seleccione condiciones para adaptar ecuaciones.';
+
+        actualizarTodo();
+        generarPlan();
+        document.getElementById('avanceSection').style.display = 'block';
+        renderizarAvances();
+    }
+
+    // ============================================================
+    // AUTOMONITOREO
+    // ============================================================
+    function registrarGlucosa() {
+        const valor = parseFloat(document.getElementById('glucosaValor').value);
+        const momento = document.getElementById('glucosaMomento').value;
+        const errorDiv = document.getElementById('errorGlucosa');
+        if (isNaN(valor) || valor < 20 || valor > 600) { errorDiv.textContent = 'Valor válido (20-600 mg/dL).'; return; }
+        errorDiv.textContent = '';
+        glucosas.push({ valor, momento, timestamp: new Date().toLocaleTimeString() });
+        renderizarGlucosa();
+        document.getElementById('glucosaValor').value = 100;
+    }
+
+    function renderizarGlucosa() {
+        const ul = document.getElementById('listaGlucosa'); ul.innerHTML = '';
+        glucosas.forEach((g) => {
+            let estado = 'normal', badgeClass = 'badge-normal';
+            if (g.momento === 'ayunas' || g.momento === 'preprandial') {
+                if (g.valor < 80) { estado = 'bajo'; badgeClass = 'badge-bajo'; } else if (g.valor > 130) { estado = 'alto'; badgeClass = 'badge-alto'; }
+            } else if (g.momento === 'postprandial') {
+                if (g.valor < 70) { estado = 'bajo'; badgeClass = 'badge-bajo'; } else if (g.valor > 180) { estado = 'alto'; badgeClass = 'badge-alto'; }
+            } else if (g.momento === 'nocturna') {
+                if (g.valor < 80) { estado = 'bajo'; badgeClass = 'badge-bajo'; } else if (g.valor > 140) { estado = 'alto'; badgeClass = 'badge-alto'; }
+            }
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${g.momento} — ${g.valor} mg/dL</span> <span class="badge-clinico ${badgeClass}">${estado.toUpperCase()}</span>`;
+            ul.appendChild(li);
+        });
+        const alertaDiv = document.getElementById('alertaGlucosa');
+        if (glucosas.length > 0) {
+            const ultima = glucosas[glucosas.length - 1];
+            if (ultima.valor > 250) { alertaDiv.className = 'alerta-clinica'; alertaDiv.innerHTML = '🚨 <strong>Hiperglucemia severa (>250 mg/dL).</strong> No realice ejercicio. Hidrátese y consulte a su médico.'; }
+            else if (ultima.valor < 70) { alertaDiv.className = 'alerta-clinica warn'; alertaDiv.innerHTML = '⚠️ <strong>Hipoglucemia (<70 mg/dL).</strong> Consuma 15 g de carbohidrato rápido y espere 15 min.'; }
+            else { alertaDiv.className = 'alerta-clinica ok'; alertaDiv.innerHTML = '✅ Valor dentro del rango objetivo.'; }
+        }
+        actualizarTodo();
+    }
+
+    function registrarPA() {
+        const sistolica = parseFloat(document.getElementById('paSistolica').value);
+        const diastolica = parseFloat(document.getElementById('paDiastolica').value);
+        const pulso = parseFloat(document.getElementById('paPulso').value);
+        const errorDiv = document.getElementById('errorPA');
+        if (isNaN(sistolica) || isNaN(diastolica) || sistolica < 60 || sistolica > 250 || diastolica < 40 || diastolica > 150) { errorDiv.textContent = 'Valores válidos (sistólica 60-250, diastólica 40-150).'; return; }
+        errorDiv.textContent = '';
+        presiones.push({ sistolica, diastolica, pulso, timestamp: new Date().toLocaleTimeString() });
+        renderizarPA();
+        document.getElementById('paSistolica').value = 120; document.getElementById('paDiastolica').value = 80; document.getElementById('paPulso').value = 72;
+    }
+
+    function renderizarPA() {
+        const ul = document.getElementById('listaPA'); ul.innerHTML = '';
+        presiones.forEach((p) => {
+            let estado = 'normal', badgeClass = 'badge-normal';
+            if (p.sistolica >= 140 || p.diastolica >= 90) { estado = 'ALTO'; badgeClass = 'badge-alto'; }
+            else if (p.sistolica < 90 || p.diastolica < 60) { estado = 'BAJO'; badgeClass = 'badge-bajo'; }
+            else if (p.sistolica >= 130 && p.sistolica < 140) { estado = 'ELEVADO'; badgeClass = 'badge-alto'; }
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${p.sistolica}/${p.diastolica} mmHg${p.pulso ? ' — '+p.pulso+' lpm' : ''}</span> <span class="badge-clinico ${badgeClass}">${estado}</span>`;
+            ul.appendChild(li);
+        });
+        const alertaDiv = document.getElementById('alertaPA');
+        if (presiones.length > 0) {
+            const ultima = presiones[presiones.length - 1];
+            if (ultima.sistolica >= 180 || ultima.diastolica >= 110) { alertaDiv.className = 'alerta-clinica'; alertaDiv.innerHTML = '🚨 <strong>Crisis hipertensiva (≥180/110).</strong> Busque atención médica inmediata. No realice ejercicio.'; }
+            else if (ultima.sistolica >= 160 || ultima.diastolica >= 100) { alertaDiv.className = 'alerta-clinica warn'; alertaDiv.innerHTML = '⚠️ <strong>Presión muy elevada.</strong> Evite ejercicio de alta intensidad.'; }
+            else if (ultima.sistolica >= 140 || ultima.diastolica >= 90) { alertaDiv.className = 'alerta-clinica warn'; alertaDiv.innerHTML = '⚠️ <strong>Hipertensión.</strong> Confirme con AMPA (2-3 tomas mañana y noche durante 3-7 días).'; }
+            else { alertaDiv.className = 'alerta-clinica ok'; alertaDiv.innerHTML = '✅ Presión dentro del rango objetivo.'; }
+        }
+        actualizarTodo();
+    }
+
+    // ============================================================
+    // ALIMENTOS Y EJERCICIO
+    // ============================================================
+    function agregarAlimento() {
+        const idx = selectorAlimento.value;
+        const gramos = parseFloat(document.getElementById('cantidadAlimento').value);
+        const errorDiv = document.getElementById('errorAlimento');
+        if (idx === '' || isNaN(gramos) || gramos <= 0) { errorDiv.textContent = 'Selecciona alimento y cantidad válida.'; return; }
+        errorDiv.textContent = '';
+        const al = alimentosDB[idx];
+        const kcal = (al.kcal * gramos) / 100;
+        consumo.push({ nombre: al.nombre, gramos, kcal });
+        renderizarConsumo();
+        selectorAlimento.value = ''; document.getElementById('cantidadAlimento').value = 100;
+    }
+
+    function renderizarConsumo() {
+        const ul = document.getElementById('listaConsumo'); ul.innerHTML = '';
+        let total = 0;
+        consumo.forEach((item) => {
+            total += item.kcal;
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${item.nombre} — ${item.gramos} g</span> <strong>${item.kcal.toFixed(1)} kcal</strong>`;
+            ul.appendChild(li);
+        });
+        document.getElementById('totalConsumido').textContent = total.toFixed(1);
+        actualizarTodo();
+    }
+
+    function reiniciarConsumo() { consumo = []; renderizarConsumo(); }
+
+    function agregarEjercicio() {
+        const idx = selectorEjercicio.value;
+        const minutos = parseFloat(document.getElementById('duracionEjercicio').value);
+        const frecuencia = parseInt(document.getElementById('frecuenciaEjercicio').value);
+        const errorDiv = document.getElementById('errorEjercicio');
+        if (idx === '' || isNaN(minutos) || minutos <= 0) { errorDiv.textContent = 'Selecciona ejercicio y duración válida.'; return; }
+        errorDiv.textContent = '';
+        const ej = ejerciciosDB[idx];
+        const horas = minutos / 60;
+        const kcal = ej.met * pesoGlobal * horas;
+        ejercicios.push({ nombre: ej.nombre, minutos, frecuencia, kcal });
+        renderizarEjercicio();
+        selectorEjercicio.value = ''; document.getElementById('duracionEjercicio').value = 30;
+    }
+
+    function renderizarEjercicio() {
+        const ul = document.getElementById('listaEjercicio'); ul.innerHTML = '';
+        let total = 0;
+        ejercicios.forEach((item) => {
+            total += item.kcal;
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${item.nombre} — ${item.minutos} min (${item.frecuencia}×/sem)</span> <strong>${item.kcal.toFixed(1)} kcal</strong>`;
+            ul.appendChild(li);
+        });
+        document.getElementById('totalQuemado').textContent = total.toFixed(1);
+        actualizarTodo();
+    }
+
+    function reiniciarEjercicio() { ejercicios = []; renderizarEjercicio(); }
+
+    // ============================================================
+    // CRONÓMETRO HIIT
+    // ============================================================
+    let timerInterval = null, timerRunning = false, timerFase = 'descanso', timerSegundos = 0, timerRonda = 1;
+
+    function toggleTimer() {
+        if (timerRunning) { clearInterval(timerInterval); timerRunning = false; document.getElementById('btnIniciar').textContent = '▶️ Reanudar'; return; }
+        timerRunning = true; document.getElementById('btnIniciar').textContent = '⏸️ Pausar';
+        if (timerSegundos === 0 && timerRonda === 1 && timerFase === 'descanso') iniciarFase('trabajo');
+        timerInterval = setInterval(tickTimer, 1000);
+    }
+
+    function iniciarFase(fase) {
+        timerFase = fase;
+        const trabajo = parseInt(document.getElementById('timerTrabajo').value);
+        const descanso = parseInt(document.getElementById('timerDescanso').value);
+        timerSegundos = fase === 'trabajo' ? trabajo : descanso;
+        actualizarTimerUI();
+    }
+
+    function tickTimer() {
+        timerSegundos--;
+        if (timerSegundos <= 0) {
+            const trabajo = parseInt(document.getElementById('timerTrabajo').value);
+            const descanso = parseInt(document.getElementById('timerDescanso').value);
+            const rondas = parseInt(document.getElementById('timerRondas').value);
+            if (timerFase === 'trabajo') { timerFase = 'descanso'; timerSegundos = descanso; }
+            else {
+                timerRonda++;
+                if (timerRonda > rondas) { clearInterval(timerInterval); timerRunning = false; document.getElementById('btnIniciar').textContent = '▶️ Iniciar'; document.getElementById('timerFase').textContent = '✅ Completado'; document.getElementById('timerFase').className = 'timer-fase'; document.getElementById('timerDisplay').textContent = '00:00'; return; }
+                timerFase = 'trabajo'; timerSegundos = trabajo;
+            }
+        }
+        actualizarTimerUI();
+    }
+
+    function actualizarTimerUI() {
+        const mins = Math.floor(timerSegundos / 60), segs = timerSegundos % 60;
+        document.getElementById('timerDisplay').textContent = `${String(mins).padStart(2,'0')}:${String(segs).padStart(2,'0')}`;
+        const faseEl = document.getElementById('timerFase');
+        const rondas = parseInt(document.getElementById('timerRondas').value);
+        if (timerFase === 'trabajo') { faseEl.textContent = `🔴 TRABAJO — Ronda ${timerRonda}/${rondas}`; faseEl.className = 'timer-fase trabajo'; }
+        else { faseEl.textContent = `🟢 DESCANSO — Ronda ${timerRonda}/${rondas}`; faseEl.className = 'timer-fase descanso'; }
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval); timerRunning = false; timerFase = 'descanso'; timerSegundos = 0; timerRonda = 1;
+        document.getElementById('btnIniciar').textContent = '▶️ Iniciar';
+        document.getElementById('timerFase').textContent = 'Listo para comenzar';
+        document.getElementById('timerFase').className = 'timer-fase descanso';
+        document.getElementById('timerDisplay').textContent = '00:00';
+    }
+
+    // ============================================================
+    // BALANCE DIARIO
+    // ============================================================
+    function actualizarTodo() {
+        const totalConsumido = consumo.reduce((s, i) => s + i.kcal, 0);
+        const totalQuemado = ejercicios.reduce((s, i) => s + i.kcal, 0);
+        const neto = totalConsumido - totalQuemado;
+        document.getElementById('balConsumido').textContent = totalConsumido.toFixed(0);
+        document.getElementById('balQuemado').textContent = totalQuemado.toFixed(0);
+        document.getElementById('balNeto').textContent = neto.toFixed(0);
+        const msg = document.getElementById('balMensaje');
+        if (objetivoCalorico === null) { msg.textContent = 'Introduce tus datos y pulsa "Calcular".'; return; }
+        const ultimaGlucosa = glucosas.length > 0 ? glucosas[glucosas.length - 1] : null;
+        const ultimaPA = presiones.length > 0 ? presiones[presiones.length - 1] : null;
+        let alertaEjercicio = '';
+        if (ultimaGlucosa) {
+            if (ultimaGlucosa.valor > 250) alertaEjercicio += ' 🚨 Glucosa >250 mg/dL: NO entrene.';
+            else if (ultimaGlucosa.valor < 70) alertaEjercicio += ' ⚠️ Glucosa <70 mg/dL: NO entrene.';
+        }
+        if (ultimaPA) {
+            if (ultimaPA.sistolica >= 180 || ultimaPA.diastolica >= 110) alertaEjercicio += ' 🚨 PA ≥180/110: NO entrene.';
+            else if (ultimaPA.sistolica >= 160 || ultimaPA.diastolica >= 100) alertaEjercicio += ' ⚠️ PA ≥160/100: Evite ejercicio intenso.';
+        }
+        const diff = neto - objetivoCalorico;
+        let baseMsg = '';
+        if (Math.abs(diff) < 50) baseMsg = `✅ Dentro del objetivo. Diferencia: ${diff > 0 ? '+' : ''}${diff.toFixed(0)} kcal.`;
+        else if (diff > 0) baseMsg = `⚠️ Superado en ${diff.toFixed(0)} kcal.`;
+        else baseMsg = `ℹ️ Faltan ${Math.abs(diff).toFixed(0)} kcal para el objetivo.`;
+        msg.innerHTML = baseMsg + (alertaEjercicio ? `<br><strong style="color:#fc8181;">${alertaEjercicio}</strong>` : '');
+    }
+
+    // ============================================================
+    // PLAN PERSONALIZADO (RUTINA + DIETA)
+    // ============================================================
+    function generarPlan() {
+        if (objetivoCalorico === null || !pesoGlobal) return;
+        const planSection = document.getElementById('planSection');
+        const planContenido = document.getElementById('planContenido');
+        planSection.style.display = 'block';
+
+        const peso = pesoGlobal, kcal = objetivoCalorico;
+        const tieneDiabetes = condicionesActivas.includes('diabetes');
+        const tieneHipertension = condicionesActivas.includes('hipertension');
+        const tieneDislipidemia = condicionesActivas.includes('dislipidemia');
+        const tieneObesidad = condicionesActivas.includes('obesidad');
+        const tieneRenal = condicionesActivas.includes('renal');
+        const tieneMetabolico = condicionesActivas.includes('metabolico');
+
+        let proteinaG, grasaG, carbosG, proteinaKcal, grasaKcal, carbosKcal;
+        let notasMacros = [];
+        if (tieneRenal) { proteinaG = peso * 0.7; grasaG = peso * 0.9; notasMacros.push('Proteínas 0.6-0.8 g/kg/día (ERC, KDIGO 2024).'); }
+        else if (tieneObesidad && objetivoTipo === 'deficit') { proteinaG = peso * 2.0; grasaG = peso * 0.8; notasMacros.push('Proteína 2.0 g/kg para preservar masa magra.'); }
+        else if (tieneDiabetes) { proteinaG = peso * 1.8; grasaG = peso * 0.9; notasMacros.push('ADA 2024: ≥14 g fibra/1,000 kcal.'); }
+        else if (objetivoTipo === 'superavit') { proteinaG = peso * 2.0; grasaG = peso * 1.0; }
+        else { proteinaG = peso * 1.8; grasaG = peso * 0.9; }
+        if (tieneDislipidemia) notasMacros.push('Dislipidemia: grasas saturadas <7% kcal (AHA/ACC).');
+        if (tieneHipertension) notasMacros.push('Hipertensión (DASH): sodio ≤1,500-2,300 mg, potasio 4,700 mg.');
+
+        proteinaKcal = proteinaG * 4; grasaKcal = grasaG * 9;
+        carbosKcal = kcal - proteinaKcal - grasaKcal;
+        if (carbosKcal < 0) { carbosKcal = 0; carbosG = 0; } else { carbosG = carbosKcal / 4; }
+
+        const equipamientoMx = 'Máquinas de peso integrado, mancuernas, barras, caminadora, elíptica, bicicleta estática';
+
+        // RUTINA
+        let rutinaHTML = '';
+        if (objetivoTipo === 'deficit') {
+            rutinaHTML = `<div class="subseccion"><h3>🏋️ Rutina - Pérdida de Grasa</h3>
+                <div class="nota">Equipamiento: ${equipamientoMx}. Solicita a un instructor que te muestre la técnica.</div>
+                <div class="rutina-dia"><h4>Lunes — Fuerza Tren Inferior + Core</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Prensa de piernas</td><td>Máquina de prensa</td><td>3 × 12-15</td></tr>
+                    <tr><td>Extensión de piernas</td><td>Máquina</td><td>3 × 12-15</td></tr>
+                    <tr><td>Curl de piernas</td><td>Máquina</td><td>3 × 12-15</td></tr>
+                    <tr><td>Elevación de talones</td><td>Máquina pantorrilla</td><td>3 × 15-20</td></tr>
+                    <tr><td>Plancha</td><td>Colchoneta</td><td>3 × 30-45 seg</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Martes — Cardio + HIIT</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Duración</th></tr>
+                    <tr><td>Caminata inclinada</td><td>Caminadora (5-10%)</td><td>20 min</td></tr>
+                    <tr><td>HIIT (cronómetro 10-20-30)</td><td>Caminadora/bici</td><td>5-10 rondas</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Miércoles — Fuerza Tren Superior</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Press de pecho</td><td>Máquina press pecho</td><td>3 × 10-12</td></tr>
+                    <tr><td>Jalón al pecho</td><td>Polea alta</td><td>3 × 10-12</td></tr>
+                    <tr><td>Remo sentado</td><td>Máquina remo</td><td>3 × 10-12</td></tr>
+                    <tr><td>Press hombros</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Curl bíceps</td><td>Mancuernas</td><td>2 × 12-15</td></tr>
+                    <tr><td>Extensión tríceps</td><td>Polea</td><td>2 × 12-15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Jueves — Descanso activo</h4><table><tr><td>Caminata ligera 30-40 min o estiramientos.</td></tr></table></div>
+                <div class="rutina-dia"><h4>Viernes — Full Body</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Sentadilla Smith</td><td>Smith</td><td>3 × 10-12</td></tr>
+                    <tr><td>Press banca</td><td>Máquina/barra</td><td>3 × 10-12</td></tr>
+                    <tr><td>Remo con mancuerna</td><td>Mancuerna</td><td>3 × 10-12</td></tr>
+                    <tr><td>Elevaciones laterales</td><td>Mancuernas</td><td>3 × 12-15</td></tr>
+                    <tr><td>Abdominales máquina</td><td>Máquina</td><td>3 × 15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Sábado — Cardio continuo</h4><table><tr><td>Elíptica o bicicleta 40-50 min moderado (55-70% FCmax).</td></tr></table></div>
+                <div class="rutina-dia"><h4>Domingo — Descanso total</h4><table><tr><td>7-9 h de sueño.</td></tr></table></div>
+            </div>`;
+        } else if (objetivoTipo === 'superavit') {
+            rutinaHTML = `<div class="subseccion"><h3>🏋️ Rutina - Ganancia Muscular</h3>
+                <div class="nota">Equipamiento: ${equipamientoMx}. Sobrecarga progresiva.</div>
+                <div class="rutina-dia"><h4>Lunes — Empuje</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Press banca</td><td>Barra/máquina</td><td>4 × 8-10</td></tr>
+                    <tr><td>Press inclinado</td><td>Mancuernas</td><td>3 × 8-10</td></tr>
+                    <tr><td>Aperturas</td><td>Máquina aperturas</td><td>3 × 10-12</td></tr>
+                    <tr><td>Press militar</td><td>Máquina/barra</td><td>4 × 8-10</td></tr>
+                    <tr><td>Extensión tríceps polea</td><td>Polea</td><td>3 × 10-12</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Martes — Tirón</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Jalón al pecho</td><td>Polea alta</td><td>4 × 8-10</td></tr>
+                    <tr><td>Remo sentado</td><td>Máquina remo</td><td>4 × 8-10</td></tr>
+                    <tr><td>Remo con barra</td><td>Barra</td><td>3 × 8-10</td></tr>
+                    <tr><td>Curl bíceps barra</td><td>Barra Z</td><td>3 × 8-10</td></tr>
+                    <tr><td>Curl martillo</td><td>Mancuernas</td><td>3 × 10-12</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Miércoles — Descanso</h4><table><tr><td>Caminata ligera, estiramientos.</td></tr></table></div>
+                <div class="rutina-dia"><h4>Jueves — Pierna</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Sentadilla</td><td>Barra/Smith</td><td>4 × 8-10</td></tr>
+                    <tr><td>Prensa piernas</td><td>Máquina prensa</td><td>4 × 10-12</td></tr>
+                    <tr><td>Extensión piernas</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Curl piernas</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Peso muerto rumano</td><td>Barra/mancuernas</td><td>3 × 8-10</td></tr>
+                    <tr><td>Elevación talones</td><td>Máquina</td><td>4 × 12-15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Viernes — Empuje (volumen)</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Press inclinado</td><td>Mancuernas</td><td>4 × 8-10</td></tr>
+                    <tr><td>Press hombro</td><td>Máquina</td><td>4 × 10-12</td></tr>
+                    <tr><td>Elevaciones laterales</td><td>Mancuernas</td><td>4 × 12-15</td></tr>
+                    <tr><td>Fondos asistidos</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Sábado — Tirón + Core</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Peso muerto</td><td>Barra</td><td>3 × 6-8</td></tr>
+                    <tr><td>Jalón cerrado</td><td>Polea</td><td>3 × 10-12</td></tr>
+                    <tr><td>Face pull</td><td>Polea</td><td>3 × 15</td></tr>
+                    <tr><td>Abdominales</td><td>Máquina</td><td>3 × 15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Domingo — Descanso total</h4><table><tr><td>7-9 h de sueño.</td></tr></table></div>
+            </div>`;
+        } else {
+            rutinaHTML = `<div class="subseccion"><h3>🏋️ Rutina - Mantenimiento</h3>
+                <div class="nota">Equipamiento: ${equipamientoMx}.</div>
+                <div class="rutina-dia"><h4>Lunes — Tren Superior</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Press pecho</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Jalón al pecho</td><td>Polea</td><td>3 × 10-12</td></tr>
+                    <tr><td>Press hombros</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Curl bíceps</td><td>Mancuernas</td><td>2 × 12-15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Martes — Cardio 30-40 min</h4><table><tr><td>Caminadora, elíptica o bici (60-70% FCmax).</td></tr></table></div>
+                <div class="rutina-dia"><h4>Miércoles — Tren Inferior</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Prensa piernas</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Extensión piernas</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Curl piernas</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Elevación talones</td><td>Máquina</td><td>3 × 15</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Jueves — Yoga o movilidad</h4><table><tr><td>30 min estiramientos/movilidad.</td></tr></table></div>
+                <div class="rutina-dia"><h4>Viernes — Full Body</h4><table>
+                    <tr><th>Ejercicio</th><th>Máquina</th><th>Series × Reps</th></tr>
+                    <tr><td>Sentadilla Smith</td><td>Smith</td><td>3 × 10-12</td></tr>
+                    <tr><td>Press banca</td><td>Máquina/barra</td><td>3 × 10-12</td></tr>
+                    <tr><td>Remo sentado</td><td>Máquina</td><td>3 × 10-12</td></tr>
+                    <tr><td>Plancha</td><td>Colchoneta</td><td>3 × 30-45 seg</td></tr>
+                </table></div>
+                <div class="rutina-dia"><h4>Sábado — Cardio 30 min</h4><table><tr><td>Caminata rápida, natación o baile.</td></tr></table></div>
+                <div class="rutina-dia"><h4>Domingo — Descanso total</h4><table><tr><td>Recuperación.</td></tr></table></div>
+            </div>`;
+        }
+
+        let ajustesCondicion = '';
+        if (tieneHipertension) ajustesCondicion += `<div class="nota" style="border-left:4px solid #e53e3e;">⚠️ <strong>Hipertensión:</strong> Evita press banca inclinado y prensa muy pesada. Intensidad moderada (60-70% 1RM). No aguantes la respiración. <em>NSCA, ACSM.</em></div>`;
+        if (tieneDiabetes) ajustesCondicion += `<div class="nota" style="border-left:4px solid #e53e3e;">🩸 <strong>Diabetes:</strong> No más de 2 días consecutivos sin actividad. Entrenamiento concurrente reduce HbA1c -0.17%. <em>ACSM/ADA 2024.</em></div>`;
+        if (tieneRenal) ajustesCondicion += `<div class="nota" style="border-left:4px solid #e53e3e;">⚠️ <strong>ERC:</strong> Volumen bajo (2-4 veces/sem, días no consecutivos). RPE 3-5/10. <em>KDIGO 2024.</em></div>`;
+        if (tieneObesidad) ajustesCondicion += `<div class="nota" style="border-left:4px solid #e53e3e;">⚖️ <strong>Obesidad:</strong> Prioriza máquinas sobre peso libre. Progresa de 40-60% VO2max. <em>ACSM.</em></div>`;
+        if (tieneMetabolico) ajustesCondicion += `<div class="nota" style="border-left:4px solid #e53e3e;">🔄 <strong>Síndrome metabólico:</strong> Combinado aeróbico-resistencia es el más efectivo. <em>Frontiers.</em></div>`;
+
+        // DIETA (versión resumida)
+        let dietaHTML = '';
+        if (tieneDiabetes && !tieneRenal) {
+            dietaHTML = `<div class="subseccion"><h3>🥗 Plan de Alimentación - Diabetes Tipo 2</h3>
+                <div class="nota">Técnica del plato: ½ verduras, ¼ proteína, ¼ carbohidratos integrales. Índice glucémico bajo. <em>ADA 2024.</em></div>
+                <div class="dieta-dia"><h4>Lunes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena con leche descremada + fresas + almendras</li>
+                    <li><strong>Almuerzo:</strong> Lentejas + ensalada de espinacas + pechuga de pollo</li>
+                    <li><strong>Cena:</strong> Salmón al horno con brócoli + ½ taza arroz integral</li>
+                    <li><strong>Snack:</strong> Yogur natural + manzana</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Martes</h4><ul>
+                    <li><strong>Desayuno:</strong> Huevos revueltos (2) con espinacas + pan integral</li>
+                    <li><strong>Almuerzo:</strong> Garbanzos con verduras + filete de ternera magra</li>
+                    <li><strong>Cena:</strong> Atún al natural con ensalada + boniato</li>
+                    <li><strong>Snack:</strong> Nueces + pera</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Miércoles</h4><ul>
+                    <li><strong>Desayuno:</strong> Yogur griego + avena + arándanos</li>
+                    <li><strong>Almuerzo:</strong> Arroz integral + pollo a la plancha + brócoli</li>
+                    <li><strong>Cena:</strong> Tortilla de 2 huevos con champiñones + ensalada</li>
+                    <li><strong>Snack:</strong> Naranja + pistachos</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Jueves</h4><ul>
+                    <li><strong>Desayuno:</strong> Pan integral + aguacate + huevo poché</li>
+                    <li><strong>Almuerzo:</strong> Lentejas estofadas + pollo + ensalada</li>
+                    <li><strong>Cena:</strong> Merluza al horno + calabacín + patata cocida</li>
+                    <li><strong>Snack:</strong> Yogur + fresas</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Viernes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena + leche + plátano + canela</li>
+                    <li><strong>Almuerzo:</strong> Garbanzos con espinacas + salmón</li>
+                    <li><strong>Cena:</strong> Ensalada de atún con garbanzos y aguacate</li>
+                    <li><strong>Snack:</strong> Manzana + almendras</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Sábado</h4><ul>
+                    <li><strong>Desayuno:</strong> Tostadas integrales + aguacate + huevos</li>
+                    <li><strong>Almuerzo:</strong> Pasta integral con pollo y verduras</li>
+                    <li><strong>Cena:</strong> Sopa de verduras + pescado blanco</li>
+                    <li><strong>Snack:</strong> Yogur + nueces</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Domingo</h4><ul>
+                    <li><strong>Desayuno:</strong> Tortilla de espinacas + pan integral</li>
+                    <li><strong>Almuerzo:</strong> Pollo asado + boniato + ensalada</li>
+                    <li><strong>Cena:</strong> Crema de calabaza + tortilla de claras</li>
+                    <li><strong>Snack:</strong> Fruta de temporada</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="nota">💡 <strong>ADA 2024:</strong> ≥14 g fibra/1,000 kcal. Evita zumos y refrescos.</div>
+            </div>`;
+        } else if (tieneHipertension && !tieneRenal) {
+            dietaHTML = `<div class="subseccion"><h3>🥗 Plan DASH - Hipertensión</h3>
+                <div class="nota">Sodio &lt;2,300 mg/día. <em>Mayo Clinic / DASH.</em></div>
+                <div class="dieta-dia"><h4>Lunes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena sin sal + pasas + plátano + leche descremada</li>
+                    <li><strong>Almuerzo:</strong> Hummus con pimiento, pepino, zanahorias + falafel + pan pita</li>
+                    <li><strong>Cena:</strong> Salmón asado + arroz silvestre + judías verdes + pera</li>
+                    <li><strong>Snack:</strong> Yogur descremado + durazno</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal (Na: ~2,017 mg)</div></div>
+                <div class="dieta-dia"><h4>Martes</h4><ul>
+                    <li><strong>Desayuno:</strong> Fruta mixta + ½ bagel integral + mantequilla de maní</li>
+                    <li><strong>Almuerzo:</strong> Ensalada de espinacas con pera + pollo + panecillo</li>
+                    <li><strong>Cena:</strong> Calabacín relleno de arroz integral y frijoles</li>
+                    <li><strong>Snack:</strong> ¼ taza de almendras sin sal</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Miércoles</h4><ul>
+                    <li><strong>Desayuno:</strong> Yogur griego + fresas + granola sin azúcar</li>
+                    <li><strong>Almuerzo:</strong> Sopa de lentejas + ensalada de garbanzos + pollo</li>
+                    <li><strong>Cena:</strong> Pescado blanco al horno + brócoli + arroz integral</li>
+                    <li><strong>Snack:</strong> Naranja + nueces</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Jueves</h4><ul>
+                    <li><strong>Desayuno:</strong> Pan integral + aguacate + huevo + tomate</li>
+                    <li><strong>Almuerzo:</strong> Ensalada de quinoa con frijoles, maíz y aguacate</li>
+                    <li><strong>Cena:</strong> Pavo a la plancha + puré de boniato + espárragos</li>
+                    <li><strong>Snack:</strong> Yogur descremado + durazno</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Viernes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena + leche descremada + arándanos + almendras</li>
+                    <li><strong>Almuerzo:</strong> Frijoles con arroz + plátano macho + ensalada</li>
+                    <li><strong>Cena:</strong> Salmón + verduras al vapor + quinoa</li>
+                    <li><strong>Snack:</strong> Fruta de temporada</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Sábado</h4><ul>
+                    <li><strong>Desayuno:</strong> Omelette de espinacas + pan integral + fruta</li>
+                    <li><strong>Almuerzo:</strong> Ensalada César (bajo sodio) + pollo a la parrilla</li>
+                    <li><strong>Cena:</strong> Sopa de verduras casera + tortilla de papas</li>
+                    <li><strong>Snack:</strong> Yogur + nueces</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Domingo</h4><ul>
+                    <li><strong>Desayuno:</strong> Batido de frutas + tostada integral</li>
+                    <li><strong>Almuerzo:</strong> Pollo al horno + patatas asadas + ensalada</li>
+                    <li><strong>Cena:</strong> Pescado al vapor + arroz + verduras</li>
+                    <li><strong>Snack:</strong> Manzana + mantequilla de maní</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="nota">💡 <strong>DASH:</strong> Potasio 4,700 mg/día, calcio 1,000 mg/día. Limita carnes rojas y dulces.</div>
+            </div>`;
+        } else if (tieneRenal) {
+            dietaHTML = `<div class="subseccion"><h3>🥗 Plan - ERC</h3>
+                <div class="nota">Proteínas 0.6-0.8 g/kg/día, control de sodio, potasio y fósforo. <em>KDIGO 2024.</em></div>
+                <div class="dieta-dia"><h4>Lunes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena con arándanos y canela</li>
+                    <li><strong>Almuerzo:</strong> Arroz blanco + pollo (porción pequeña) + calabacín</li>
+                    <li><strong>Cena:</strong> Salmón (porción pequeña) + arroz + judías verdes</li>
+                    <li><strong>Snack:</strong> Manzana</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Martes</h4><ul>
+                    <li><strong>Desayuno:</strong> Pan blanco + mermelada sin azúcar + té</li>
+                    <li><strong>Almuerzo:</strong> Fideos de arroz con verduras + huevo</li>
+                    <li><strong>Cena:</strong> Pescado blanco al vapor + arroz + calabacín</li>
+                    <li><strong>Snack:</strong> Pera</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Miércoles</h4><ul>
+                    <li><strong>Desayuno:</strong> Leche descremada + pan blanco + miel</li>
+                    <li><strong>Almuerzo:</strong> Pollo hervido + arroz + zanahoria</li>
+                    <li><strong>Cena:</strong> Tortilla de claras + arroz + espinacas cocidas</li>
+                    <li><strong>Snack:</strong> Uvas (porción pequeña)</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Jueves</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena + leche descremada + manzana</li>
+                    <li><strong>Almuerzo:</strong> Arroz blanco + pescado al vapor + judías verdes</li>
+                    <li><strong>Cena:</strong> Sopa de fideos de arroz con verduras + huevo</li>
+                    <li><strong>Snack:</strong> Pan blanco con mermelada</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Viernes</h4><ul>
+                    <li><strong>Desayuno:</strong> Tostada blanca + aguacate + té</li>
+                    <li><strong>Almuerzo:</strong> Pollo a la plancha + arroz + calabacín</li>
+                    <li><strong>Cena:</strong> Pescado blanco + arroz + zanahoria</li>
+                    <li><strong>Snack:</strong> Manzana</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Sábado</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena + leche descremada + arándanos</li>
+                    <li><strong>Almuerzo:</strong> Arroz + huevo cocido + verduras al vapor</li>
+                    <li><strong>Cena:</strong> Fideos de arroz con calabacín y pollo</li>
+                    <li><strong>Snack:</strong> Pera</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Domingo</h4><ul>
+                    <li><strong>Desayuno:</strong> Pan blanco + mermelada + leche descremada</li>
+                    <li><strong>Almuerzo:</strong> Pescado al horno + arroz + judías verdes</li>
+                    <li><strong>Cena:</strong> Sopa de verduras sin sal + tortilla de claras</li>
+                    <li><strong>Snack:</strong> Uvas (porción pequeña)</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="nota">⚠️ <strong>ERC:</strong> Limita potasio, fósforo y sodio. <strong>Consulte con su nefrólogo.</strong></div>
+            </div>`;
+        } else {
+            dietaHTML = `<div class="subseccion"><h3>🥗 Plan Equilibrado - Dieta Mediterránea</h3>
+                <div class="dieta-dia"><h4>Lunes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena con plátano y leche desnatada</li>
+                    <li><strong>Almuerzo:</strong> Ensalada de garbanzos + merluza al horno + brócoli</li>
+                    <li><strong>Cena:</strong> Tortilla de espinacas + ensalada de tomate</li>
+                    <li><strong>Snack:</strong> Yogur natural + fruta</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Martes</h4><ul>
+                    <li><strong>Desayuno:</strong> Tostada integral + aguacate + huevo poché</li>
+                    <li><strong>Almuerzo:</strong> Arroz integral + pollo + ensalada</li>
+                    <li><strong>Cena:</strong> Salmón al horno + espárragos + quinoa</li>
+                    <li><strong>Snack:</strong> Almendras + manzana</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Miércoles</h4><ul>
+                    <li><strong>Desayuno:</strong> Yogur griego + fresas + granola</li>
+                    <li><strong>Almuerzo:</strong> Lentejas estofadas + pollo + ensalada</li>
+                    <li><strong>Cena:</strong> Pescado blanco + calabacín + patata</li>
+                    <li><strong>Snack:</strong> Naranja + nueces</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Jueves</h4><ul>
+                    <li><strong>Desayuno:</strong> Pan integral + aguacate + tomate + café</li>
+                    <li><strong>Almuerzo:</strong> Ensalada de quinoa + frijoles + pollo</li>
+                    <li><strong>Cena:</strong> Pavo a la plancha + boniato + brócoli</li>
+                    <li><strong>Snack:</strong> Yogur + durazno</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Viernes</h4><ul>
+                    <li><strong>Desayuno:</strong> Avena + leche + arándanos + almendras</li>
+                    <li><strong>Almuerzo:</strong> Pasta integral con pollo y verduras</li>
+                    <li><strong>Cena:</strong> Salmón + verduras al vapor + arroz</li>
+                    <li><strong>Snack:</strong> Fruta de temporada</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Sábado</h4><ul>
+                    <li><strong>Desayuno:</strong> Omelette de espinacas + pan integral</li>
+                    <li><strong>Almuerzo:</strong> Pollo asado + boniato + ensalada</li>
+                    <li><strong>Cena:</strong> Sopa de verduras + tortilla de claras</li>
+                    <li><strong>Snack:</strong> Yogur + nueces</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+                <div class="dieta-dia"><h4>Domingo</h4><ul>
+                    <li><strong>Desayuno:</strong> Batido de frutas + tostada integral</li>
+                    <li><strong>Almuerzo:</strong> Paella de verduras + ensalada</li>
+                    <li><strong>Cena:</strong> Pescado al vapor + arroz + verduras</li>
+                    <li><strong>Snack:</strong> Manzana + mantequilla de maní</li>
+                </ul><div class="kcal-dia">≈ ${kcal} kcal</div></div>
+            </div>`;
+        }
+
+        let resumenHTML = '';
+        if (ejercicios.length > 0) {
+            const totalSemanal = ejercicios.reduce((s, e) => s + e.kcal * e.frecuencia, 0);
+            resumenHTML += `<div class="nota"><strong>📝 Ejercicio registrado:</strong> Quema diaria ~${ejercicios.reduce((s, e) => s + e.kcal, 0).toFixed(0)} kcal | Semanal ~${totalSemanal.toFixed(0)} kcal.</div>`;
+        }
+
+        let planHTML = '';
+        const cardClass = objetivoTipo === 'deficit' ? 'plan-deficit' : objetivoTipo === 'superavit' ? 'plan-superavit' : 'plan-mantener';
+        const titulo = objetivoTipo === 'deficit' ? '🔥 Plan de Pérdida de Grasa' : objetivoTipo === 'superavit' ? '💪 Plan de Ganancia Muscular' : '⚖️ Plan de Mantenimiento';
+        planHTML = `<div class="plan-card ${cardClass}">
+            <h3>${titulo}</h3>
+            <p><strong>Objetivo:</strong> ${kcal} kcal/día</p>
+            <div class="macros">
+                <div class="macro"><strong>${proteinaG.toFixed(0)} g</strong><span>Proteínas</span></div>
+                <div class="macro"><strong>${grasaG.toFixed(0)} g</strong><span>Grasas</span></div>
+                <div class="macro"><strong>${carbosG.toFixed(0)} g</strong><span>Carbohidratos</span></div>
+            </div>
+            ${notasMacros.map(n => `<div class="nota">📋 ${n}</div>`).join('')}
+            ${ajustesCondicion}
+            ${rutinaHTML}
+            ${dietaHTML}
+            ${resumenHTML}
+        </div>`;
+
+        planContenido.innerHTML = planHTML;
+    }
+
+    // ============================================================
+    // MÓDULO DE AVANCES
+    // ============================================================
+    function guardarAvance() {
+        const fecha = document.getElementById('avanceFecha').value;
+        const errorDiv = document.getElementById('errorAvance');
+        if (!fecha) { errorDiv.textContent = 'La fecha es obligatoria.'; return; }
+        errorDiv.textContent = '';
+
+        const registro = {
+            id: Date.now(),
+            fecha: fecha,
+            peso: parseFloat(document.getElementById('avancePeso').value) || null,
+            cintura: parseFloat(document.getElementById('avanceCintura').value) || null,
+            glucosa: parseFloat(document.getElementById('avanceGlucosa').value) || null,
+            pa: parseFloat(document.getElementById('avancePA').value) || null,
+            calorias: parseFloat(document.getElementById('avanceCalorias').value) || null,
+            ejercicio: parseFloat(document.getElementById('avanceEjercicio').value) || null,
+            adherencia: parseFloat(document.getElementById('avanceAdherencia').value) || null,
+            notas: document.getElementById('avanceNotas').value || ''
+        };
+
+        historialAvance.push(registro);
+        historialAvance.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+        guardarEnLocalStorage();
+        renderizarAvances();
+
+        // Limpiar formulario
+        document.getElementById('avancePeso').value = '';
+        document.getElementById('avanceCintura').value = '';
+        document.getElementById('avanceGlucosa').value = '';
+        document.getElementById('avancePA').value = '';
+        document.getElementById('avanceCalorias').value = '';
+        document.getElementById('avanceEjercicio').value = '';
+        document.getElementById('avanceAdherencia').value = '';
+        document.getElementById('avanceNotas').value = '';
+    }
+
+    function borrarHistorial() {
+        if (!confirm('¿Estás seguro de que deseas borrar todo el historial de avances? Esta acción no se puede deshacer.')) return;
+        historialAvance = [];
+        guardarEnLocalStorage();
+        renderizarAvances();
+    }
+
+    function eliminarAvance(id) {
+        if (!confirm('¿Eliminar este registro?')) return;
+        historialAvance = historialAvance.filter(a => a.id !== id);
+        guardarEnLocalStorage();
+        renderizarAvances();
+    }
+
+    function exportarDatos() {
+        if (historialAvance.length === 0) { alert('No hay datos para exportar.'); return; }
+        let csv = 'Fecha,Peso (kg),Cintura (cm),Glucosa (mg/dL),PA Sistólica (mmHg),Calorías,Minutos Ejercicio,Adherencia (%),Notas\n';
+        historialAvance.forEach(a => {
+            csv += `${a.fecha},${a.peso || ''},${a.cintura || ''},${a.glucosa || ''},${a.pa || ''},${a.calorias || ''},${a.ejercicio || ''},${a.adherencia || ''},"${(a.notas || '').replace(/"/g, '""')}"\n`;
+        });
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `avances_clinicos_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ============================================================
+    // RENDERIZAR AVANCES (estadísticas + gráficos + tabla)
+    // ============================================================
+    function renderizarAvances() {
+        if (historialAvance.length === 0) {
+            document.getElementById('statsAvance').innerHTML = '<div class="sin-datos">📊 Aún no hay registros. Agrega tu primer avance arriba para comenzar el seguimiento.</div>';
+            document.getElementById('graficosAvance').innerHTML = '';
+            document.getElementById('tbodyAvance').innerHTML = '<tr><td colspan="10" class="sin-datos">Sin datos registrados</td></tr>';
+            return;
+        }
+
+        // ---- ESTADÍSTICAS ----
+        const primero = historialAvance[0];
+        const ultimo = historialAvance[historialAvance.length - 1];
+
+        const stats = [];
+        // Peso
+        if (primero.peso && ultimo.peso) {
+            const delta = ultimo.peso - primero.peso;
+            const clase = Math.abs(delta) < 0.3 ? 'estable' : (delta > 0 ? 'sube' : 'baja');
+            const icono = clase === 'baja' ? '↓' : clase === 'sube' ? '↑' : '→';
+            const colorObjetivo = objetivoTipo === 'deficit' ? 'baja' : objetivoTipo === 'superavit' ? 'sube' : 'estable';
+            const esFavorable = clase === colorObjetivo || clase === 'estable';
+            stats.push({ etiqueta: 'Peso actual', valor: `${ultimo.peso} kg`, delta: `${icono} ${Math.abs(delta).toFixed(1)} kg`, clase: esFavorable ? 'baja' : 'sube' });
+        } else if (ultimo.peso) {
+            stats.push({ etiqueta: 'Peso actual', valor: `${ultimo.peso} kg`, delta: '', clase: 'estable' });
+        }
+        // Cintura
+        if (primero.cintura && ultimo.cintura) {
+            const delta = ultimo.cintura - primero.cintura;
+            const clase = Math.abs(delta) < 0.5 ? 'estable' : (delta > 0 ? 'sube' : 'baja');
+            const icono = clase === 'baja' ? '↓' : clase === 'sube' ? '↑' : '→';
+            stats.push({ etiqueta: 'Cintura actual', valor: `${ultimo.cintura} cm`, delta: `${icono} ${Math.abs(delta).toFixed(1)} cm`, clase: delta <= 0 ? 'baja' : 'sube' });
+        }
+        // Glucosa
+        if (primero.glucosa && ultimo.glucosa) {
+            const delta = ultimo.glucosa - primero.glucosa;
+            const clase = Math.abs(delta) < 3 ? 'estable' : (delta > 0 ? 'sube' : 'baja');
+            const icono = clase === 'baja' ? '↓' : clase === 'sube' ? '↑' : '→';
+            stats.push({ etiqueta: 'Glucosa prom.', valor: `${ultimo.glucosa} mg/dL`, delta: `${icono} ${Math.abs(delta).toFixed(0)} mg/dL`, clase: delta <= 0 ? 'baja' : 'sube' });
+        }
+        // PA
+        if (primero.pa && ultimo.pa) {
+            const delta = ultimo.pa - primero.pa;
+            const clase = Math.abs(delta) < 2 ? 'estable' : (delta > 0 ? 'sube' : 'baja');
+            const icono = clase === 'baja' ? '↓' : clase === 'sube' ? '↑' : '→';
+            stats.push({ etiqueta: 'PA sistólica', valor: `${ultimo.pa} mmHg`, delta: `${icono} ${Math.abs(delta).toFixed(0)} mmHg`, clase: delta <= 0 ? 'baja' : 'sube' });
+        }
+        // Adherencia promedio
+        const conAdherencia = historialAvance.filter(a => a.adherencia);
+        if (conAdherencia.length > 0) {
+            const promedioAdh = conAdherencia.reduce((s, a) => s + a.adherencia, 0) / conAdherencia.length;
+            stats.push({ etiqueta: 'Adherencia media', valor: `${promedioAdh.toFixed(0)}%`, delta: `${conAdherencia.length} registros`, clase: promedioAdh >= 80 ? 'baja' : promedioAdh >= 60 ? 'estable' : 'sube' });
+        }
+
+        const statsHTML = `<div class="avance-stats">${stats.map(s => `
+            <div class="stat-card">
+                <div class="etiqueta">${s.etiqueta}</div>
+                <div class="valor">${s.valor}</div>
+                <div class="delta ${s.clase}">${s.delta}</div>
+            </div>
+        `).join('')}</div>`;
+        document.getElementById('statsAvance').innerHTML = statsHTML;
+
+        // ---- GRÁFICOS ----
+        let graficosHTML = '';
+
+        // Función auxiliar para renderizar barras
+        function renderizarGrafico(titulo, key, unidad, colorClase, objetivoLinea) {
+            const datos = historialAvance.filter(a => a[key] !== null && a[key] !== undefined);
+            if (datos.length === 0) return '';
+
+            const maxVal = Math.max(...datos.map(d => d[key]), objetivoLinea || 0);
+            const minVal = Math.min(...datos.map(d => d[key]));
+            const rango = maxVal - minVal || 1;
+
+            const barrasHTML = datos.map((d, i) => {
+                const altura = Math.max(2, ((d[key] - minVal) / rango) * 100);
+                const fechaCorta = d.fecha.slice(5); // MM-DD
+                return `<div class="barra-wrap" title="${d.fecha}: ${d[key]} ${unidad}">
+                    <div class="barra ${colorClase}" style="height:${altura}%"></div>
+                    <div class="barra-label">${fechaCorta}</div>
+                </div>`;
+            }).join('');
+
+            let lineaObjetivoHTML = '';
+            if (objetivoLinea !== null && objetivoLinea !== undefined && objetivoLinea >= minVal && objetivoLinea <= maxVal) {
+                const pos = ((objetivoLinea - minVal) / rango) * 100;
+                lineaObjetivoHTML = `<div class="linea-objetivo" style="bottom:${pos}%;"><span>Objetivo ${objetivoLinea}${unidad}</span></div>`;
+            }
+
+            return `<div class="grafico-container">
+                <div class="grafico-titulo">
+                    <span>${titulo}</span>
+                    <span class="objetivo-tag">${datos.length} registros · rango: ${minVal.toFixed(1)}-${maxVal.toFixed(1)} ${unidad}</span>
+                </div>
+                <div class="barras" style="position:relative;">${barrasHTML}${lineaObjetivoHTML}</div>
+            </div>`;
+        }
+
+        graficosHTML += renderizarGrafico('⚖️ Evolución del peso', 'peso', 'kg', 'peso', objetivoTipo === 'deficit' ? pesoGlobal - 5 : objetivoTipo === 'superavit' ? pesoGlobal + 5 : pesoGlobal);
+        graficosHTML += renderizarGrafico('🩸 Glucosa promedio', 'glucosa', 'mg/dL', 'glucosa', 130);
+        graficosHTML += renderizarGrafico('❤️ Presión sistólica', 'pa', 'mmHg', 'presion', 130);
+        graficosHTML += renderizarGrafico('🔥 Calorías consumidas', 'calorias', 'kcal', 'calorias', objetivoCalorico);
+        graficosHTML += renderizarGrafico('🏃 Minutos de ejercicio', 'ejercicio', 'min', 'ejercicio', 30);
+        graficosHTML += renderizarGrafico('📏 Cintura', 'cintura', 'cm', 'peso', null);
+        graficosHTML += renderizarGrafico('✅ Adherencia a la dieta', 'adherencia', '%', 'ejercicio', 80);
+
+        document.getElementById('graficosAvance').innerHTML = graficosHTML;
+
+        // ---- TABLA ----
+        const tbody = document.getElementById('tbodyAvance');
+        tbody.innerHTML = historialAvance.slice().reverse().map(a => `
             <tr>
-              <th>#</th><th>Producto</th><th>Modalidad</th><th>Feromonas</th><th>Comisión</th><th></th>
+                <td>${a.fecha}</td>
+                <td>${a.peso || '—'}</td>
+                <td>${a.cintura || '—'}</td>
+                <td>${a.glucosa || '—'}</td>
+                <td>${a.pa || '—'}</td>
+                <td>${a.calorias || '—'}</td>
+                <td>${a.ejercicio || '—'}</td>
+                <td>${a.adherencia ? a.adherencia + '%' : '—'}</td>
+                <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${(a.notas || '').replace(/"/g, '&quot;')}">${a.notas || '—'}</td>
+                <td class="acciones-td"><button class="peligro" onclick="eliminarAvance(${a.id})">✕</button></td>
             </tr>
-          </thead>
-          <tbody>
-            ${pedidos.map((p,i) => `
-              <tr>
-                <td style="color:var(--muted);font-size:0.75rem;">${i+1}</td>
-                <td><strong>${p.prod}</strong><br><span style="font-size:0.72rem;color:var(--muted);">${p.conc}</span></td>
-                <td>${p.mod}</td>
-                <td>${p.fero ? '<span class="fero-badge">SÍ</span>' : '<span style="color:var(--muted);font-size:0.78rem;">No</span>'}</td>
-                <td style="font-weight:600;color:var(--green);">$${p.comision.toFixed(2)}</td>
-                <td><button class="td-remove" data-index="${i}">✕</button></td>
-              </tr>
-            `).join('')}
-          </tbody>
-         </table>
-        ${renderResumen(pedidos)}
-        <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
-          <button class="btn btn-outline no-print" id="btn-vaciar">Vaciar pedidos</button>
-          <button class="btn btn-outline no-print" id="btn-exportar">Exportar .txt</button>
-          <button class="btn btn-dark no-print" id="btn-imprimir" style="display:flex;align-items:center;gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Imprimir / PDF
-          </button>
-        </div>
-      `}
-    </div>
-  `;
-  
-  // Agregar event listeners después de renderizar
-  const prodSelect = document.getElementById('f-prod');
-  const modSelect = document.getElementById('f-mod');
-  const feroCheck = document.getElementById('f-fero');
-  
-  if (prodSelect && modSelect) {
-    refreshModalidadOptions();
-    prodSelect.addEventListener('change', () => {
-      refreshModalidadOptions();
-      actualizarPreview();
-    });
-    modSelect.addEventListener('change', () => actualizarPreview());
-    if (feroCheck) feroCheck.addEventListener('change', () => actualizarPreview());
-    
-    const btnActualizar = document.getElementById('btn-actualizar');
-    if (btnActualizar) btnActualizar.addEventListener('click', () => actualizarPreview());
-    
-    const btnAgregar = document.getElementById('btn-agregar-pedido');
-    if (btnAgregar) btnAgregar.addEventListener('click', () => agregarPedido());
-    
-    const btnVaciar = document.getElementById('btn-vaciar');
-    if (btnVaciar) btnVaciar.addEventListener('click', () => resetPedidosVendedor());
-    
-    const btnExportar = document.getElementById('btn-exportar');
-    if (btnExportar) btnExportar.addEventListener('click', () => exportarResumen());
-    
-    const btnImprimir = document.getElementById('btn-imprimir');
-    if (btnImprimir) btnImprimir.addEventListener('click', () => imprimirComision());
-    
-    // Eliminar pedidos
-    document.querySelectorAll('.td-remove').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(btn.getAttribute('data-index'));
-        eliminarPedido(idx);
-      });
-    });
-  }
-  
-  actualizarPreview();
-}
+        `).join('');
+    }
 
-function renderResumen(pedidos) {
-  const total = pedidos.reduce((s,p) => s + p.comision, 0);
-  const porMod = {};
-  pedidos.forEach(p => { porMod[p.mod] = (porMod[p.mod]||0) + p.comision; });
-
-  return `
-    <div class="section-divider" style="margin-top:20px;"><span>Resumen de comisión</span></div>
-    <div class="resumen-box">
-      ${Object.entries(porMod).map(([mod,val]) =>
-        `<div class="resumen-row"><span>${mod}</span><span>$${val.toFixed(2)}</span></div>`
-      ).join('')}
-      <div class="resumen-total">
-        <span>Total a pagar a ${vendedorActivo}</span>
-        <span>$${total.toFixed(2)} MXN</span>
-      </div>
-    </div>
-  `;
-}
-
-function getPrecioBase(prodKey, mod) {
-  const PRECIOS = {
-    "30ml|Extrait 33%":188,"30ml|Elixir 42%":232,"30ml|Elixir 50%":277,
-    "50ml|Extrait 33%":277,"50ml|Elixir 42%":349,"50ml|Elixir 50%":417,
-    "60ml|Extrait 33%":321,"60ml|Elixir 42%":410,"60ml|Elixir 50%":488,
-    "100ml|Extrait 33%":432,"100ml|Elixir 42%":554,"100ml|Elixir 50%":654,
-    "crema|—":129,"deo|—":129,
-  };
-  const PIEZAS = {"Unidad":1,"Promo 6×5":5,"Promo 5×4":4,"Promo 4×3":3};
-  return { base: PRECIOS[prodKey] || 0, piezas: PIEZAS[mod] || 1 };
-}
-
-function actualizarPreview() {
-  const prodEl = document.getElementById('f-prod');
-  const modEl  = document.getElementById('f-mod');
-  const feroEl = document.getElementById('f-fero');
-  if (!prodEl || !modEl) return;
-  const { base, piezas } = getPrecioBase(prodEl.value, modEl.value);
-  const com = calcComision(base, piezas, feroEl ? feroEl.checked : false);
-  const el  = document.getElementById('preview-val');
-  if (el) el.textContent = '$' + com.toFixed(2);
-}
-
-function agregarPedido() {
-  if (!vendedorActivo) return;
-  const prodEl = document.getElementById('f-prod');
-  const modEl  = document.getElementById('f-mod');
-  const feroEl = document.getElementById('f-fero');
-  if (!prodEl || !modEl) return;
-  
-  const prodVal = prodEl.value;
-  const modVal  = modEl.value;
-  const fero    = feroEl ? feroEl.checked : false;
-  const { base, piezas } = getPrecioBase(prodVal, modVal);
-  const com = calcComision(base, piezas, fero);
-  const [sz, conc] = prodVal.split('|');
-  const prodNombre = sz === 'crema' ? 'Crema 50ml' : sz === 'deo' ? 'Desodorante' : `Perfume ${sz}`;
-
-  vendedores[vendedorActivo].push({
-    prod: prodNombre, conc, mod: modVal, fero, comision: com
-  });
-  renderSeccion();
-}
-
-function eliminarPedido(idx) {
-  if (!vendedorActivo) return;
-  vendedores[vendedorActivo].splice(idx, 1);
-  renderSeccion();
-}
-
-function getValidMods(prodVal) {
-  const [sz] = prodVal.split('|');
-  if (sz === '30ml' || sz === 'crema' || sz === 'deo') return ['Unidad','Promo 6×5'];
-  if (sz === '50ml' || sz === '60ml') return ['Unidad','Promo 5×4'];
-  if (sz === '100ml') return ['Unidad','Promo 4×3'];
-  return ['Unidad'];
-}
-
-function refreshModalidadOptions() {
-  const prodEl = document.getElementById('f-prod');
-  const modEl  = document.getElementById('f-mod');
-  if (!prodEl || !modEl) return;
-  const valid = getValidMods(prodEl.value);
-  const current = modEl.value;
-  modEl.innerHTML = valid.map(v => `<option value="${v}">${v}</option>`).join('');
-  if (valid.includes(current)) modEl.value = current;
-  else modEl.value = valid[0];
-}
-
-function resetPedidosVendedor() {
-  if (!vendedorActivo) return;
-  if (!confirm(`¿Vaciar todos los pedidos de ${vendedorActivo}?`)) return;
-  vendedores[vendedorActivo] = [];
-  renderSeccion();
-}
-
-function exportarResumen() {
-  if (!vendedorActivo) return;
-  const pedidos = vendedores[vendedorActivo] || [];
-  if (pedidos.length === 0) {
-    alert('No hay pedidos para exportar.');
-    return;
-  }
-  const total = pedidos.reduce((s,p) => s + p.comision, 0);
-  let txt = `Resumen de comisión — ${vendedorActivo}\n`;
-  txt += `Fecha: ${new Date().toLocaleString('es-MX')}\n`;
-  txt += '━━━━━━━━━━━━━━━━━━━━\n';
-  pedidos.forEach((p, i) => {
-    txt += `${i+1}. ${p.prod} · ${p.conc} · ${p.mod}${p.fero ? ' · Feromonas' : ''} = $${p.comision.toFixed(2)}\n`;
-  });
-  txt += '━━━━━━━━━━━━━━━━━━━━\n';
-  txt += `TOTAL A PAGAR: $${total.toFixed(2)} MXN`;
-  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `comision-${vendedorActivo.replace(/\s+/g,'-').toLowerCase()}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function imprimirComision() {
-  if (!vendedorActivo) { alert('Selecciona un vendedor primero.'); return; }
-  const pedidos = vendedores[vendedorActivo] || [];
-  if (pedidos.length === 0) { alert('No hay pedidos para imprimir.'); return; }
-
-  const fechaEl = document.getElementById('print-fecha');
-  if (fechaEl) fechaEl.textContent =
-    'Vendedor: ' + vendedorActivo + '  ·  Fecha: ' + new Date().toLocaleString('es-MX');
-
-  window.print();
-}
-
-// ── TABLA REFERENCIA ──
-let refFiltro = 'todos';
-
-function renderRefTable() {
-  const tbody = document.getElementById('ref-tbody');
-  let rows = [...REF_DATA];
-  
-  if (refFiltro === 'unidad') {
-    rows = rows.filter(r => r.mod === 'Unidad');
-  } else if (refFiltro === 'promo') {
-    rows = rows.filter(r => r.mod !== 'Unidad');
-  } // 'todos' y 'fero' muestran todos los datos
-  
-  tbody.innerHTML = rows.map(r => {
-    const sf  = calcComision(r.base, r.piezas, false);
-    const cf  = calcComision(r.base, r.piezas, true);
-    return `<tr>
-      <td>${r.prod}</td><td>${r.conc}</td><td>${r.mod}</td>
-      <td class="gold">$${sf.toFixed(2)}</td>
-      <td class="gold">$${cf.toFixed(2)}</td>
-    </tr>`;
-  }).join('');
-}
-
-function filtrarRef(filtro, el) {
-  refFiltro = filtro;
-  document.querySelectorAll('.ref-tab').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderRefTable();
-}
-
-// ── INIT ──
-function init() {
-  renderRefTable();
-  
-  // Event listeners para la tabla de referencia
-  document.querySelectorAll('.ref-tab').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const filtro = btn.getAttribute('data-filtro');
-      filtrarRef(filtro, btn);
-    });
-  });
-  
-  // Event listener para agregar vendedor
-  const btnAgregarVendedor = document.getElementById('btn-agregar-vendedor');
-  if (btnAgregarVendedor) {
-    btnAgregarVendedor.addEventListener('click', agregarVendedor);
-  }
-  
-  const inputVendedor = document.getElementById('nuevo-vendedor');
-  if (inputVendedor) {
-    inputVendedor.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') agregarVendedor();
-    });
-  }
-}
-
-init();
+    // ============================================================
+    // INICIALIZACIÓN
+    // ============================================================
+    window.onload = function() {
+        cargarHistorial();
+        // Fecha por defecto: hoy
+        document.getElementById('avanceFecha').value = new Date().toISOString().slice(0, 10);
+        calcularTodo();
+        document.getElementById('avanceSection').style.display = 'block';
+        renderizarAvances();
+    };
 </script>
 </body>
 </html>
