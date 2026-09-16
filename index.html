@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Aqua Planner</title>
 <style>
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -21,7 +22,11 @@
     --alerta:#b04a3f;
     --alerta-claro:#f5e6e4;
   }
-  html{scroll-behavior:smooth;}
+  html{
+    scroll-behavior:smooth;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
   body{
     font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     background:var(--blanco);
@@ -29,35 +34,51 @@
     line-height:1.6;
     font-size:15px;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
 
-  .app{max-width:720px; margin:0 auto; padding:2rem 1.5rem 6rem;}
+  /* ============ FIX CRÍTICO: ANTI-ZOOM iOS ============ */
+  /* iOS Safari hace zoom cuando font-size < 16px. Forzamos 16px SIEMPRE. */
+  input,
+  select,
+  textarea,
+  button{
+    font-size:16px !important;
+    font-family:inherit;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  input[type="date"]{
+    min-height:44px;
+  }
+
+  .app{max-width:720px; margin:0 auto; padding:1.5rem 1.25rem 5rem;}
 
   /* ============ HEADER ============ */
   .header{
-    padding:1.5rem 0 2rem;
+    padding:1rem 0 1.5rem;
     border-bottom:1px solid var(--gris-200);
-    margin-bottom:2rem;
+    margin-bottom:1.5rem;
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
     gap:1rem;
   }
   .header h1{
-    font-size:22px;
-    font-weight:400;
+    font-size:20px;
+    font-weight:500;
     letter-spacing:-0.02em;
     color:var(--negro);
-    margin-bottom:.2rem;
+    margin-bottom:.15rem;
   }
   .header .sub{
-    font-size:11px;
+    font-size:10px;
     text-transform:uppercase;
     letter-spacing:.15em;
     color:var(--gris-500);
   }
   .header .aviso{
-    font-size:10px;
+    font-size:9px;
     text-transform:uppercase;
     letter-spacing:.1em;
     color:var(--gris-500);
@@ -66,17 +87,14 @@
   }
 
   /* ============ PROGRESO ============ */
-  .progress{
-    margin-bottom:3rem;
-  }
+  .progress{margin-bottom:2.5rem;}
   .progress-line{
     height:1px;
     background:var(--gris-200);
     position:relative;
-    margin-bottom:1rem;
+    margin-bottom:.9rem;
   }
-  .progress-line::before{
-    content:"";
+  #progressBar{
     position:absolute;
     top:-1px;
     left:0;
@@ -88,111 +106,105 @@
   .progress-steps{
     display:flex;
     justify-content:space-between;
-    gap:.5rem;
-    font-size:10px;
+    gap:.4rem;
+    font-size:9px;
     text-transform:uppercase;
-    letter-spacing:.12em;
+    letter-spacing:.1em;
     color:var(--gris-500);
+    overflow:hidden;
   }
-  .progress-steps span{
-    transition:color .2s;
-  }
+  .progress-steps span{transition:color .2s; white-space:nowrap;}
   .progress-steps span.active{color:var(--negro); font-weight:600;}
   .progress-steps span.done{color:var(--gris-700);}
+  @media(max-width:400px){
+    .progress-steps span:not(.active):not(.done){display:none;}
+  }
 
   /* ============ SECCIONES ============ */
   .step{display:none;}
-  .step.active{display:block; animation:appear .5s ease;}
+  .step.active{display:block; animation:appear .4s ease;}
   @keyframes appear{
-    from{opacity:0; transform:translateY(8px);}
+    from{opacity:0; transform:translateY(6px);}
     to{opacity:1; transform:translateY(0);}
   }
 
   .bloque{
-    padding:1.75rem 0;
+    padding:1.5rem 0;
     border-bottom:1px solid var(--gris-200);
   }
   .bloque:last-child{border-bottom:none;}
 
   .bloque-titulo{
-    font-size:13px;
+    font-size:12px;
     text-transform:uppercase;
     letter-spacing:.15em;
     color:var(--gris-700);
     font-weight:500;
-    margin-bottom:.5rem;
+    margin-bottom:.4rem;
   }
   .bloque-desc{
     font-size:13px;
     color:var(--gris-500);
-    margin-bottom:1.5rem;
+    margin-bottom:1.25rem;
     max-width:520px;
+    line-height:1.6;
   }
 
   /* ============ FIELDS ============ */
-  .field{margin-bottom:1.5rem;}
+  .field{margin-bottom:1.25rem;}
   .field label{
     display:block;
-    font-size:11px;
+    font-size:10px;
     text-transform:uppercase;
     letter-spacing:.12em;
     color:var(--gris-500);
-    margin-bottom:.5rem;
+    margin-bottom:.4rem;
+    font-weight:500;
   }
   .field input,
   .field select{
     width:100%;
-    padding:.75rem 0;
+    padding:.7rem 0;
     border:none;
     border-bottom:1px solid var(--gris-300);
     border-radius:0;
     background:transparent;
-    font-size:15px;
-    font-family:inherit;
     color:var(--negro);
     transition:border-color .2s;
     appearance:none;
     -webkit-appearance:none;
+  }
+  .field select{
     background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3e%3cpath d='M1 1L5 5L9 1' stroke='%238a8a8a' stroke-width='1.2'/%3e%3c/svg%3e");
     background-repeat:no-repeat;
     background-position:right center;
     padding-right:1.5rem;
-  }
-  .field input{
-    background-image:none;
-    padding-right:0;
   }
   .field input:focus,
   .field select:focus{
     outline:none;
     border-bottom-color:var(--negro);
   }
-  .field small{
-    display:block;
-    font-size:11px;
-    color:var(--gris-500);
-    margin-top:.4rem;
-  }
 
-  .row{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1.5rem;}
-  @media(max-width:520px){ .row{grid-template-columns:1fr;} }
+  .row{display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1.25rem;}
+  @media(max-width:500px){ .row{grid-template-columns:1fr;} }
 
   /* ============ CHIPS ============ */
   .chips{display:flex; flex-wrap:wrap; gap:.5rem;}
   .chip{
     display:inline-flex;
     align-items:center;
-    gap:.4rem;
-    padding:.5rem 1rem;
+    gap:.35rem;
+    padding:.55rem .95rem;
     border:1px solid var(--gris-300);
     background:var(--blanco);
-    font-size:12px;
-    letter-spacing:.03em;
+    font-size:13px;
     color:var(--gris-700);
     cursor:pointer;
     transition:all .15s;
     user-select:none;
-    border-radius:0;
+    -webkit-user-select:none;
+    touch-action:manipulation;
   }
   .chip:hover{border-color:var(--gris-500);}
   .chip input{display:none;}
@@ -206,9 +218,9 @@
   .nav{
     display:flex;
     justify-content:space-between;
-    gap:1rem;
-    padding-top:2rem;
-    margin-top:2rem;
+    gap:.75rem;
+    padding-top:1.5rem;
+    margin-top:1.5rem;
     border-top:1px solid var(--gris-200);
     flex-wrap:wrap;
   }
@@ -217,9 +229,8 @@
     align-items:center;
     justify-content:center;
     gap:.5rem;
-    padding:1rem 2rem;
+    padding:.95rem 1.75rem;
     font-size:12px;
-    font-family:inherit;
     text-transform:uppercase;
     letter-spacing:.15em;
     font-weight:500;
@@ -229,11 +240,9 @@
     cursor:pointer;
     transition:all .2s;
     border-radius:0;
+    min-height:44px;
   }
-  .btn:hover{
-    background:var(--blanco);
-    color:var(--negro);
-  }
+  .btn:hover{background:var(--blanco); color:var(--negro);}
   .btn-ghost{
     background:transparent;
     color:var(--gris-700);
@@ -241,23 +250,19 @@
     text-decoration:underline;
     text-underline-offset:4px;
   }
-  .btn-ghost:hover{
-    background:transparent;
-    color:var(--negro);
-    border-color:transparent;
-  }
-  .btn-lg{padding:1.15rem 2.5rem;}
+  .btn-ghost:hover{background:transparent; color:var(--negro); border-color:transparent;}
+  .btn-lg{padding:1.1rem 2rem;}
   .btn-full{width:100%;}
 
   /* ============ TABS ============ */
   .tabs{
     display:flex;
-    gap:1.5rem;
+    gap:1.25rem;
     overflow-x:auto;
     border-bottom:1px solid var(--gris-200);
-    margin-bottom:2rem;
+    margin-bottom:1.75rem;
     scrollbar-width:none;
-    padding-bottom:0;
+    -webkit-overflow-scrolling:touch;
   }
   .tabs::-webkit-scrollbar{display:none;}
   .tab{
@@ -267,8 +272,7 @@
     color:var(--gris-500);
     font-size:11px;
     text-transform:uppercase;
-    letter-spacing:.15em;
-    font-family:inherit;
+    letter-spacing:.13em;
     font-weight:500;
     cursor:pointer;
     transition:color .2s;
@@ -289,107 +293,89 @@
   .tab.active{color:var(--negro);}
   .tab.active::after{transform:scaleX(1);}
   .tab-panel{display:none;}
-  .tab-panel.active{display:block; animation:appear .4s ease;}
+  .tab-panel.active{display:block; animation:appear .3s ease;}
 
   /* ============ NOTAS ============ */
   .nota{
     font-size:13px;
-    line-height:1.6;
+    line-height:1.65;
     color:var(--gris-700);
-    padding:1rem 0 1rem 1.25rem;
+    padding:.9rem 0 .9rem 1.1rem;
     border-left:2px solid var(--gris-300);
-    margin:1rem 0;
+    margin:.85rem 0;
   }
   .nota strong{color:var(--negro); font-weight:600;}
-  .nota-acento{
-    border-left-color:var(--acento);
-    background:var(--acento-claro);
-    padding:1rem 1.25rem;
-  }
-  .nota-aviso{
-    border-left-color:var(--alerta);
-    background:var(--alerta-claro);
-  }
+  .nota-acento{border-left-color:var(--acento); background:var(--acento-claro); padding:.9rem 1rem;}
+  .nota-aviso{border-left-color:var(--alerta); background:var(--alerta-claro); padding:.9rem 1rem;}
 
   /* ============ TABLAS ============ */
-  .tabla{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13px;
-    margin:.5rem 0;
-  }
+  .tabla{width:100%; border-collapse:collapse; font-size:13px; margin:.4rem 0;}
   .tabla th{
     text-align:left;
-    padding:.75rem 0;
+    padding:.7rem 0;
     border-bottom:1px solid var(--gris-300);
     font-size:10px;
     text-transform:uppercase;
-    letter-spacing:.12em;
+    letter-spacing:.1em;
     color:var(--gris-500);
     font-weight:500;
   }
   .tabla td{
-    padding:.75rem 0;
+    padding:.7rem 0;
     border-bottom:1px solid var(--gris-100);
     color:var(--gris-700);
     vertical-align:top;
   }
   .tabla td strong{color:var(--negro); font-weight:600;}
   .tabla tr:last-child td{border-bottom:none;}
-  .tabla-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .tabla-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -.25rem; padding:0 .25rem;}
 
   /* ============ STATS ============ */
   .stats{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
-    gap:1.5rem;
-    padding:1.5rem 0;
+    grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
+    gap:1.25rem;
+    padding:1.25rem 0;
   }
   .stat{
     text-align:left;
-    padding-left:1rem;
+    padding-left:.9rem;
     border-left:1px solid var(--gris-300);
   }
   .stat-lbl{
-    font-size:10px;
+    font-size:9px;
     text-transform:uppercase;
     letter-spacing:.12em;
     color:var(--gris-500);
-    margin-bottom:.3rem;
+    margin-bottom:.25rem;
   }
   .stat-val{
-    font-size:22px;
+    font-size:20px;
     color:var(--negro);
     font-weight:400;
     letter-spacing:-0.02em;
     line-height:1.2;
   }
-  .stat-sub{
-    font-size:11px;
-    color:var(--gris-500);
-    margin-top:.2rem;
-  }
+  .stat-sub{font-size:11px; color:var(--gris-500); margin-top:.15rem;}
 
   /* ============ ACORDEONES ============ */
   details.acordeon{
     border-bottom:1px solid var(--gris-200);
-    padding:0;
   }
-  details.acordeon:first-of-type{
-    border-top:1px solid var(--gris-200);
-  }
+  details.acordeon:first-of-type{border-top:1px solid var(--gris-200);}
   details.acordeon summary{
-    padding:1.25rem 0;
+    padding:1.1rem 0;
     cursor:pointer;
     font-size:13px;
     color:var(--gris-900);
     font-weight:500;
-    letter-spacing:.02em;
     list-style:none;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:1rem;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
   }
   details.acordeon summary::-webkit-details-marker{display:none;}
   details.acordeon summary::after{
@@ -397,24 +383,18 @@
     color:var(--gris-500);
     font-size:18px;
     font-weight:300;
-    transition:transform .2s;
     flex-shrink:0;
   }
-  details.acordeon[open] summary::after{
-    content:"−";
-  }
+  details.acordeon[open] summary::after{content:"−";}
   details.acordeon .content{
-    padding-bottom:1.5rem;
+    padding-bottom:1.25rem;
     font-size:13px;
     color:var(--gris-700);
     line-height:1.7;
   }
-  details.acordeon .content ul{
-    list-style:none;
-    padding:0;
-  }
+  details.acordeon .content ul{list-style:none; padding:0;}
   details.acordeon .content ul li{
-    padding:.4rem 0 .4rem 1rem;
+    padding:.35rem 0 .35rem .9rem;
     position:relative;
   }
   details.acordeon .content ul li::before{
@@ -425,17 +405,14 @@
   }
 
   /* ============ LISTAS ============ */
-  .lista-lim{
-    list-style:none;
-    padding:0;
-  }
+  .lista-lim{list-style:none; padding:0;}
   .lista-lim li{
     font-size:13px;
     color:var(--gris-700);
-    padding:.6rem 0;
+    padding:.55rem 0;
     border-bottom:1px solid var(--gris-100);
     display:flex;
-    gap:.75rem;
+    gap:.65rem;
     align-items:baseline;
   }
   .lista-lim li:last-child{border-bottom:none;}
@@ -445,11 +422,72 @@
     flex-shrink:0;
   }
 
-  /* ============ MARCAS ============ */
-  .marca-detalle{
-    padding:1.5rem;
+  /* ============ MARCAS / CATÁLOGO ============ */
+  .marca-card{
+    padding:1.1rem;
     background:var(--gris-50);
-    margin:1rem 0;
+    margin-bottom:.65rem;
+  }
+  .marca-card h4{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--gris-900);
+    font-weight:600;
+    margin-bottom:.4rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:.75rem;
+    flex-wrap:wrap;
+  }
+  .marca-card h4 .categoria{
+    font-size:9px;
+    color:var(--gris-500);
+    font-weight:400;
+    letter-spacing:.1em;
+  }
+  .marca-card .modelos{
+    font-size:12px;
+    color:var(--gris-700);
+    line-height:1.7;
+    margin-bottom:.4rem;
+  }
+  .marca-card .nota-marca{
+    font-size:11px;
+    color:var(--gris-500);
+    font-style:italic;
+  }
+
+  .filtros{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    margin-bottom:1.25rem;
+  }
+  .filtro{
+    padding:.5rem .9rem;
+    border:1px solid var(--gris-300);
+    background:var(--blanco);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--gris-700);
+    cursor:pointer;
+    transition:all .15s;
+    touch-action:manipulation;
+  }
+  .filtro.active{
+    background:var(--negro);
+    color:var(--blanco);
+    border-color:var(--negro);
+  }
+
+  /* ============ MARCAS DETALLE ============ */
+  .marca-detalle{
+    padding:1.25rem;
+    background:var(--gris-50);
+    margin:.75rem 0;
   }
   .marca-detalle h4{
     font-size:12px;
@@ -457,39 +495,31 @@
     letter-spacing:.15em;
     color:var(--gris-900);
     font-weight:500;
-    margin-bottom:.75rem;
+    margin-bottom:.6rem;
   }
-  .marca-detalle p{
-    font-size:13px;
-    color:var(--gris-700);
-    line-height:1.7;
-  }
+  .marca-detalle p{font-size:13px; color:var(--gris-700); line-height:1.7;}
 
   /* ============ AVANCES ============ */
   .avance-form{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
-    gap:1.5rem;
+    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    gap:1.25rem;
   }
   .chart{
     display:flex;
     align-items:flex-end;
-    gap:.35rem;
-    height:100px;
-    padding:0;
+    gap:.3rem;
+    height:90px;
     border-bottom:1px solid var(--gris-300);
-    margin:1.5rem 0 2rem;
+    margin:1.25rem 0 1.75rem;
   }
   .chart .bar{
     flex:1;
-    min-width:8px;
+    min-width:6px;
     background:var(--negro);
-    border-radius:0;
     min-height:2px;
     opacity:.85;
-    transition:opacity .2s;
   }
-  .chart .bar:hover{opacity:1;}
   .chart-info{
     font-size:11px;
     color:var(--gris-500);
@@ -499,15 +529,15 @@
   .historial{list-style:none; padding:0;}
   .historial li{
     display:grid;
-    grid-template-columns:90px 1fr auto;
-    gap:1rem;
+    grid-template-columns:80px 1fr auto;
+    gap:.85rem;
     align-items:baseline;
-    padding:.9rem 0;
+    padding:.8rem 0;
     border-bottom:1px solid var(--gris-100);
     font-size:13px;
   }
   .historial li .fecha{color:var(--gris-900); font-weight:500;}
-  .historial li .datos{color:var(--gris-500); font-size:12px;}
+  .historial li .datos{color:var(--gris-500); font-size:12px; line-height:1.5;}
   .historial li button{
     background:transparent;
     border:none;
@@ -515,12 +545,12 @@
     cursor:pointer;
     font-size:14px;
     padding:.2rem .4rem;
-    transition:color .15s;
+    touch-action:manipulation;
   }
   .historial li button:hover{color:var(--alerta);}
   .vacio{
     text-align:center;
-    padding:3rem 1rem;
+    padding:2.5rem 1rem;
     color:var(--gris-500);
     font-size:13px;
     font-style:italic;
@@ -529,56 +559,51 @@
   /* ============ HERO ============ */
   .hero{
     text-align:center;
-    padding:4rem 1rem 3rem;
+    padding:2.5rem .75rem 2rem;
     border-bottom:1px solid var(--gris-200);
-    margin-bottom:2rem;
+    margin-bottom:1.5rem;
   }
   .hero h2{
-    font-size:28px;
+    font-size:24px;
     font-weight:400;
     letter-spacing:-0.02em;
     color:var(--negro);
     line-height:1.3;
     margin-bottom:1rem;
-    max-width:520px;
+    max-width:480px;
     margin-left:auto;
     margin-right:auto;
   }
   .hero p{
     font-size:14px;
     color:var(--gris-500);
-    max-width:480px;
-    margin:0 auto 2rem;
+    max-width:440px;
+    margin:0 auto 1.75rem;
     line-height:1.7;
   }
   .hero .features{
     display:flex;
     flex-wrap:wrap;
-    gap:2rem;
+    gap:1.5rem;
     justify-content:center;
-    margin-bottom:2.5rem;
-    font-size:11px;
+    margin-bottom:2rem;
+    font-size:10px;
     text-transform:uppercase;
     letter-spacing:.12em;
     color:var(--gris-500);
   }
-  .hero .features span{position:relative;}
-
-  /* ============ RESPONSIVE ============ */
-  @media(max-width:520px){
-    .app{padding:1.25rem 1.25rem 4rem;}
-    .header{flex-direction:column; align-items:flex-start;}
-    .header .aviso{text-align:left;}
-    .hero{padding:2.5rem 0 2rem;}
-    .hero h2{font-size:22px;}
-    .btn{padding:.9rem 1.5rem; font-size:11px;}
-    .btn-lg{padding:1rem 1.75rem;}
-    .tabla{font-size:12px;}
-    .stats{grid-template-columns:1fr 1fr;}
-    .historial li{grid-template-columns:1fr; gap:.3rem;}
-  }
 
   .oculto{display:none !important;}
+
+  @media(max-width:500px){
+    .app{padding:1rem 1rem 4rem;}
+    .header{flex-direction:column; align-items:flex-start;}
+    .header .aviso{text-align:left;}
+    .hero{padding:1.75rem 0 1.5rem;}
+    .hero h2{font-size:20px;}
+    .btn{padding:.85rem 1.35rem; font-size:11px;}
+    .historial li{grid-template-columns:1fr; gap:.25rem;}
+  }
 </style>
 </head>
 <body>
@@ -589,13 +614,11 @@
       <h1>Aqua Planner</h1>
       <p class="sub">Asistente para acuarios plantados</p>
     </div>
-    <div class="aviso">
-      Guía<br>orientativa
-    </div>
+    <div class="aviso">Guía<br>orientativa</div>
   </header>
 
   <div class="progress">
-    <div class="progress-line"><div id="progressBar" style="position:absolute; top:-1px; left:0; height:3px; background:var(--negro); width:0%; transition:width .5s ease;"></div></div>
+    <div class="progress-line"><div id="progressBar"></div></div>
     <div class="progress-steps" id="progressSteps">
       <span data-step="0" class="active">Básicos</span>
       <span data-step="1">Equipo</span>
@@ -609,13 +632,13 @@
   <section class="step active" data-step="0">
     <div class="hero">
       <h2>Un acuario plantado, planificado con precisión.</h2>
-      <p>En cuatro pasos tendrás una guía completa de arranque, abonado, mantenimiento y prevención de algas, adaptada a tu equipo y tus plantas.</p>
+      <p>En cuatro pasos tendrás una guía completa de arranque, abonado, mantenimiento, prevención de algas y catálogo de marcas del hobby.</p>
       <div class="features">
         <span>Arranque</span>
         <span>Abonado</span>
         <span>CO₂</span>
         <span>Algas</span>
-        <span>Seguimiento</span>
+        <span>Catálogo</span>
       </div>
       <button class="btn btn-lg" onclick="goToStep(1)">Comenzar</button>
     </div>
@@ -627,9 +650,9 @@
       <div class="bloque-titulo">Medidas del acuario</div>
       <div class="bloque-desc">Largo, ancho y alto en centímetros. Calculamos el volumen neto aproximado descontando sustrato y decoración.</div>
       <div class="row">
-        <div class="field"><label>Largo (cm)</label><input type="number" id="largo" value="80" min="20"></div>
-        <div class="field"><label>Ancho (cm)</label><input type="number" id="ancho" value="35" min="20"></div>
-        <div class="field"><label>Alto (cm)</label><input type="number" id="alto" value="40" min="20"></div>
+        <div class="field"><label>Largo (cm)</label><input type="number" id="largo" value="80" min="20" inputmode="numeric"></div>
+        <div class="field"><label>Ancho (cm)</label><input type="number" id="ancho" value="35" min="20" inputmode="numeric"></div>
+        <div class="field"><label>Alto (cm)</label><input type="number" id="alto" value="40" min="20" inputmode="numeric"></div>
       </div>
       <div class="field">
         <label>Sustrato y decoración</label>
@@ -640,22 +663,20 @@
           <option value="25">Aquascape denso — 25%</option>
         </select>
       </div>
-      <div class="nota nota-acento">
-        <strong>Volumen neto estimado:</strong> <span id="volNetoTxt">—</span> L
-      </div>
+      <div class="nota nota-acento"><strong>Volumen neto estimado:</strong> <span id="volNetoTxt">—</span> L</div>
     </div>
 
     <div class="bloque">
       <div class="bloque-titulo">Parámetros del agua</div>
       <div class="bloque-desc">Si no los conoces, deja los valores por defecto. Podrás ajustarlos más tarde.</div>
       <div class="row">
-        <div class="field"><label>pH</label><input type="number" id="ph" value="7.0" step="0.1"></div>
-        <div class="field"><label>GH (°dGH)</label><input type="number" id="gh" value="8" step="0.5"></div>
-        <div class="field"><label>KH (°dKH)</label><input type="number" id="kh" value="4" step="0.5"></div>
+        <div class="field"><label>pH</label><input type="number" id="ph" value="7.0" step="0.1" inputmode="decimal"></div>
+        <div class="field"><label>GH (°dGH)</label><input type="number" id="gh" value="8" step="0.5" inputmode="decimal"></div>
+        <div class="field"><label>KH (°dKH)</label><input type="number" id="kh" value="4" step="0.5" inputmode="decimal"></div>
       </div>
       <div class="row">
-        <div class="field"><label>TDS (ppm)</label><input type="number" id="tds" value="200" step="10"></div>
-        <div class="field"><label>Temperatura (°C)</label><input type="number" id="temperatura" value="25" step="0.5"></div>
+        <div class="field"><label>TDS (ppm)</label><input type="number" id="tds" value="200" step="10" inputmode="numeric"></div>
+        <div class="field"><label>Temperatura (°C)</label><input type="number" id="temperatura" value="25" step="0.5" inputmode="decimal"></div>
       </div>
     </div>
 
@@ -680,16 +701,21 @@
         </div>
         <div class="field">
           <label>Fotoperíodo (h)</label>
-          <input type="number" id="fotoperiodo" value="8" min="4" max="14">
+          <input type="number" id="fotoperiodo" value="8" min="4" max="14" inputmode="numeric">
         </div>
       </div>
       <div class="field">
         <label>Marca / modelo</label>
         <select id="tipoLampara">
           <option value="generico">LED genérico</option>
-          <option value="chihiros">Chihiros WRGB II</option>
-          <option value="twinstar">Twinstar S-Line</option>
-          <option value="uns">Ultum Nature Systems Titan 1</option>
+          <option value="chihiros">Chihiros — WRGB II / Pro</option>
+          <option value="twinstar">Twinstar — S-Line / E-Line</option>
+          <option value="uns">Ultum Nature Systems — Titan 1</option>
+          <option value="ada">ADA — Aquasky / Solar RGB</option>
+          <option value="onf">ONF — Flat One / Nano</option>
+          <option value="fluval">Fluval — Plant 3.0</option>
+          <option value="finnex">Finnex — Planted+ 24/7</option>
+          <option value="nicrew">Nicrew — Planted</option>
           <option value="t5">Tubos T5 / T8</option>
         </select>
       </div>
@@ -701,34 +727,53 @@
         <label>Sistema</label>
         <select id="tipoCO2">
           <option value="no" selected>Sin CO₂</option>
-          <option value="casero">CO₂ casero</option>
-          <option value="kit">Kit comercial</option>
-          <option value="fzone">Fzone CO₂ System</option>
-          <option value="presurizado">CO₂ presurizado</option>
+          <option value="casero">CO₂ casero — levadura</option>
+          <option value="kit">Kit comercial desechable</option>
+          <option value="fzone">Fzone — Generator 2.5 L</option>
+          <option value="co2art">CO2Art — PRO-SE / Elite</option>
+          <option value="uns-co2">Ultum Nature Systems — CO₂ Kit</option>
+          <option value="ada-co2">ADA — CO₂ System 74</option>
+          <option value="presurizado">CO₂ presurizado genérico</option>
         </select>
       </div>
     </div>
 
     <div class="bloque">
-      <div class="bloque-titulo">Filtración y sustrato</div>
+      <div class="bloque-titulo">Filtración</div>
       <div class="row">
         <div class="field">
-          <label>Tipo de filtración</label>
+          <label>Tipo</label>
           <select id="tipoFiltracion">
             <option value="interno">Interno</option>
             <option value="mochila">Mochila (HOB)</option>
             <option value="canister" selected>Canister externo</option>
             <option value="esponja">Esponja</option>
+            <option value="sumidero">Sumidero</option>
           </select>
         </div>
         <div class="field">
           <label>Caudal (L/h)</label>
-          <input type="number" id="caudal" value="600" step="50">
+          <input type="number" id="caudal" value="600" step="50" inputmode="numeric">
         </div>
       </div>
+      <div class="field">
+        <label>Marca</label>
+        <select id="marcaFiltro">
+          <option value="generico">Genérica</option>
+          <option value="eheim">Eheim — Classic / Pro 4+</option>
+          <option value="fluval">Fluval — 207 / 307 / 407 / FX</option>
+          <option value="oase">OASE — BioMaster</option>
+          <option value="sunsun">Sunsun — HW Series</option>
+          <option value="aquaclear">AquaClear — HOB</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="bloque">
+      <div class="bloque-titulo">Sustrato</div>
       <div class="row">
         <div class="field">
-          <label>Sustrato</label>
+          <label>Tipo</label>
           <select id="tipoSustrato">
             <option value="inerte-grava">Grava inerte</option>
             <option value="inerte-arena">Arena inerte</option>
@@ -744,6 +789,18 @@
             <option value="viejo">Viejo — más de 1 año</option>
           </select>
         </div>
+      </div>
+      <div class="field">
+        <label>Marca</label>
+        <select id="marcaSustrato">
+          <option value="generico">Genérica</option>
+          <option value="ada">ADA — Amazonia / Aqua Soil</option>
+          <option value="uns">Ultum Nature Systems — Controsoil</option>
+          <option value="tropica">Tropica — Aquarium Soil</option>
+          <option value="seachem">Seachem — Flourite</option>
+          <option value="dennerle">Dennerle — Scapers Soil</option>
+          <option value="caribsea">CaribSea — Eco-Complete</option>
+        </select>
       </div>
     </div>
 
@@ -785,7 +842,7 @@
             <option value="inertes">Inertes</option>
             <option value="dragon">Dragon Stone</option>
             <option value="seiryu">Seiryu</option>
-            <option value="caliza">Caliza (sube dureza)</option>
+            <option value="caliza">Caliza — sube dureza</option>
           </select>
         </div>
       </div>
@@ -856,14 +913,14 @@
       <button class="tab" data-tab="agua">Agua</button>
       <button class="tab" data-tab="mantenimiento">Mantenimiento</button>
       <button class="tab" data-tab="algas">Algas</button>
-      <button class="tab" data-tab="insumos">Insumos</button>
+      <button class="tab" data-tab="catalogo">Catálogo</button>
     </div>
     <div id="tab-arranque" class="tab-panel active"></div>
     <div id="tab-abonado" class="tab-panel"></div>
     <div id="tab-agua" class="tab-panel"></div>
     <div id="tab-mantenimiento" class="tab-panel"></div>
     <div id="tab-algas" class="tab-panel"></div>
-    <div id="tab-insumos" class="tab-panel"></div>
+    <div id="tab-catalogo" class="tab-panel"></div>
 
     <div class="nav">
       <button class="btn btn-ghost" onclick="goToStep(3)">Editar datos</button>
@@ -878,12 +935,12 @@
       <div class="bloque-desc">Los datos se guardan en tu navegador. Completamente privado.</div>
       <div class="avance-form">
         <div class="field"><label>Fecha</label><input type="date" id="avFecha"></div>
-        <div class="field"><label>Peso (kg)</label><input type="number" id="avPeso" step="0.1" placeholder="Opcional"></div>
-        <div class="field"><label>Glucosa (mg/dL)</label><input type="number" id="avGlucosa" placeholder="Opcional"></div>
-        <div class="field"><label>PA sistólica</label><input type="number" id="avPA" placeholder="Opcional"></div>
-        <div class="field"><label>Calorías</label><input type="number" id="avKcal" placeholder="Opcional"></div>
-        <div class="field"><label>Ejercicio (min)</label><input type="number" id="avEjercicio" placeholder="Opcional"></div>
-        <div class="field"><label>Adherencia (%)</label><input type="number" id="avAdherencia" min="0" max="100" placeholder="0 – 100"></div>
+        <div class="field"><label>Peso (kg)</label><input type="number" id="avPeso" step="0.1" placeholder="Opcional" inputmode="decimal"></div>
+        <div class="field"><label>Glucosa (mg/dL)</label><input type="number" id="avGlucosa" placeholder="Opcional" inputmode="numeric"></div>
+        <div class="field"><label>PA sistólica</label><input type="number" id="avPA" placeholder="Opcional" inputmode="numeric"></div>
+        <div class="field"><label>Calorías</label><input type="number" id="avKcal" placeholder="Opcional" inputmode="numeric"></div>
+        <div class="field"><label>Ejercicio (min)</label><input type="number" id="avEjercicio" placeholder="Opcional" inputmode="numeric"></div>
+        <div class="field"><label>Adherencia (%)</label><input type="number" id="avAdherencia" min="0" max="100" placeholder="0 – 100" inputmode="numeric"></div>
         <div class="field"><label>Notas</label><input type="text" id="avNotas" placeholder="Opcional"></div>
       </div>
       <button class="btn btn-full" onclick="guardarAvance()" style="margin-top:1rem;">Guardar avance</button>
@@ -898,7 +955,7 @@
     <div class="bloque">
       <div class="bloque-titulo">Historial</div>
       <ul class="historial" id="historial"></ul>
-      <div style="display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap;">
+      <div style="display:flex; gap:1.25rem; margin-top:1.25rem; flex-wrap:wrap;">
         <button class="btn btn-ghost" onclick="exportarCSV()" style="padding:.5rem 0;">Exportar CSV</button>
         <button class="btn btn-ghost" onclick="borrarHistorial()" style="padding:.5rem 0; color:var(--alerta);">Borrar historial</button>
       </div>
@@ -912,6 +969,97 @@
 </div>
 
 <script>
+// ============================================================
+// CATÁLOGO DE MARCAS DEL HOBBY
+// ============================================================
+var CATALOGO = {
+  iluminacion: [
+    { marca:'Chihiros', modelos:'WRGB II, WRGB II Pro, Vivid II, A Series', nota:'Control Bluetooth, ajuste por canales RGB, simulación amanecer/atardecer. Excelente relación calidad-precio.' },
+    { marca:'Twinstar', modelos:'S-Line, E-Line, EA Series', nota:'Advanced Spectrum V3.0 con 6 LEDs de color individual. PPFD 300–370 µmol/m²/s a 20 cm.' },
+    { marca:'Ultum Nature Systems', modelos:'Titan 1, Solar RGB', nota:'200 bulbos Epistar RGB, 9,000–12,000 K. Aluminio aeronáutico, diseño ultra delgado.' },
+    { marca:'ADA', modelos:'Aquasky, Solar RGB, Solar I, Mist', nota:'Referente japonés del aquascaping. Espectro optimizado para plantas exigentes.' },
+    { marca:'ONF', modelos:'Flat One, Flat Nano', nota:'Diseño minimalista, muy popular en nano acuarios.' },
+    { marca:'Fluval', modelos:'Plant 3.0, Plant 2.0', nota:'Buena relación calidad-precio, app FluvalSmart.' },
+    { marca:'Finnex', modelos:'Planted+ 24/7, FugeRay', nota:'Programable 24/7, muy usado en USA.' },
+    { marca:'Nicrew', modelos:'ClassicLED, Planted', nota:'Económico, buena opción de entrada.' }
+  ],
+  filtracion: [
+    { marca:'Eheim', modelos:'Classic 2213, Pro 4+ 250, eXperience 250', nota:'Fiabilidad alemana, referencia del hobby desde décadas.' },
+    { marca:'Fluval', modelos:'207, 307, 407, FX4, FX6', nota:'Canister popular, fácil mantenimiento, buena circulación.' },
+    { marca:'OASE', modelos:'BioMaster 250, BioMaster 350, FiltoSmart', nota:'Pre-filtro integrado extraíble, muy práctico.' },
+    { marca:'Sunsun', modelos:'HW-302, HW-303B, HW-304B', nota:'Económico, buena capacidad para el precio.' },
+    { marca:'AquaClear', modelos:'30, 50, 70', nota:'HOB de referencia, filtro de esponja reutilizable.' }
+  ],
+  co2: [
+    { marca:'CO2Art', modelos:'PRO-SE, PRO-Elite', nota:'Reguladores premium, solenoide de alta calidad.' },
+    { marca:'Fzone', modelos:'Generator 2.5 L, Generator 5 L', nota:'Botella SUS304 con regulador integrado y contador de burbujas.' },
+    { marca:'Ultum Nature Systems', modelos:'UNS CO2 Kit', nota:'Estética limpia, integrado con la línea UNS.' },
+    { marca:'Aquario Neo', modelos:'Neo CO2 Kit', nota:'Compacto, ideal para nano acuarios.' },
+    { marca:'Green Leaf Aquariums', modelos:'GRO-1, PRO-1', nota:'Reguladores de alta gama, precisión quirúrgica.' },
+    { marca:'Milwaukee', modelos:'MA957', nota:'Regulador económico fiable, opción de entrada.' },
+    { marca:'ADA', modelos:'CO2 System 74-YA', nota:'Sistema japonés de referencia, acabado impecable.' }
+  ],
+  sustratos: [
+    { marca:'ADA', modelos:'Amazonia, Amazonia Light, Aqua Soil', nota:'El estándar dorado. Rico en nutrientes, ideal para tapizantes.' },
+    { marca:'Ultum Nature Systems', modelos:'Controsoil', nota:'No enturbia el agua, excelente para acuarios con gambas.' },
+    { marca:'Tropica', modelos:'Aquarium Soil, Plant Growth Substrate', nota:'Buena alternativa a ADA, menos amoniaco inicial.' },
+    { marca:'Seachem', modelos:'Flourite, Flourite Black Sand', nota:'Inerte, no se deshace. Requiere root tabs.' },
+    { marca:'Dennerle', modelos:'Scapers Soil, DeponitMix', nota:'Gama alemana completa, con sistema por capas.' },
+    { marca:'CaribSea', modelos:'Eco-Complete', nota:'Sustrato nutritivo económico, listo para usar.' }
+  ],
+  fertilizantes: [
+    { marca:'Seachem', modelos:'Flourish, Flourish Excel, Iron, Nitrogen, Phosphorus, Potassium', nota:'Gama completa y accesible. Excel es el carbono líquido más usado.' },
+    { marca:'Aquavitro', modelos:'Mineralize, Propel, Synthesis, Activate, Carbonate, Envy', nota:'Gama premium de Seachem, con fórmulas más concentradas.' },
+    { marca:'ADA', modelos:'Green Brighty Neutral K, Mineral, Iron, Nitrogen', nota:'Gama japonesa de referencia, muy equilibrada.' },
+    { marca:'Tropica', modelos:'Specialised Nutrition, Premium Nutrition, Plant Growth', nota:'Gama danesa, muy usada en acuarios de competición.' },
+    { marca:'NilocG', modelos:'Thrive, Thrive+, ThriveC', nota:'EI dosing (Estimative Index), popular en USA.' },
+    { marca:'Dennerle', modelos:'V30 Complete, S7 Vital, E15 FerActiv', nota:'Sistema alemán completo, con dosificación diaria.' },
+    { marca:'Aquarium Co-Op', modelos:'Easy Green, Easy Iron, Easy Carbon', nota:'Fórmula simplificada, ideal para principiantes.' }
+  ],
+  tests: [
+    { marca:'API', modelos:'Freshwater Master Test Kit, GH & KH Test', nota:'El más usado. Económico y suficiente para la mayoría.' },
+    { marca:'Salifert', modelos:'NO3, PO4, pH, KH', nota:'Alta precisión, escalas finas. Referencia para plantados.' },
+    { marca:'JBL', modelos:'ProAquaTest, ProScan', nota:'Gama alemana, muy completa.' },
+    { marca:'Sera', modelos:'Aqua-Test Box', nota:'Kits completos, buena calidad-precio.' },
+    { marca:'Hanna Instruments', modelos:'HI713 (fosfato), HI764', nota:'Fotómetro digital de laboratorio, máxima precisión.' }
+  ],
+  decloradores: [
+    { marca:'Seachem', modelos:'Prime', nota:'El estándar del hobby. Neutraliza cloro, cloramina y amoniaco.' },
+    { marca:'API', modelos:'Stress Coat+, Tap Water Conditioner', nota:'Económico, funciona bien con cloro pero no cloramina.' },
+    { marca:'Aquavitro', modelos:'Alpha', nota:'Versión premium de Prime.' },
+    { marca:'Brightwell Aquatics', modelos:'Bioscape, Erase-Cl', nota:'Gama marina adaptada a agua dulce.' }
+  ],
+  bacterias: [
+    { marca:'Seachem', modelos:'Stability', nota:'El más usado. Mantiene el ciclado bajo control.' },
+    { marca:'API', modelos:'Quick Start', nota:'Económico, buen arranque.' },
+    { marca:'Microbe-Lift', modelos:'Special Blend, Nite-Out II', nota:'Gama profesional, muy concentrada.' },
+    { marca:'Fritz', modelos:'FritzZyme 7, Turbo Start 700', nota:'Alta concentración, ciclado rápido.' },
+    { marca:'Brightwell Aquatics', modelos:'MicroBacter7, MicroBacter Start XLM', nota:'Gama marina/plantada de alta calidad.' }
+  ],
+  remineralizantes: [
+    { marca:'Salty Shrimp', modelos:'GH+, GH/KH+, Bee Shrimp Mineral', nota:'Especializado en gambas, muy preciso.' },
+    { marca:'Seachem', modelos:'Equilibrium, Alkaline Buffer, Acid Buffer', nota:'Ajuste de GH y KH con precisión.' },
+    { marca:'Aquavitro', modelos:'Mineralize', nota:'Sube GH con calcio y magnesio quelados.' },
+    { marca:'Brightwell Aquatics', modelos:'Remineraliz, Alkalin8.3-P', nota:'Precisión marina aplicada a agua dulce.' },
+    { marca:'Dennerle', modelos:'Nano Shrimp Mineral', nota:'Para gambas y acuarios pequeños.' }
+  ],
+  alimentos: [
+    { marca:'Hikari', modelos:'Micro Pellets, Tropical Micro Pellets, Cichlid Gold', nota:'Referente japonés, alta palatabilidad.' },
+    { marca:'New Life Spectrum', modelos:'Thera+A, Cichlid Formula', nota:'Alta palatabilidad, sin rellenos.' },
+    { marca:'Repashy', modelos:'Community Plus, Soilent Green, Super Green', nota:'Gel food, excelente para peces y gambas.' },
+    { marca:'Fluval', modelos:'Bug Bites, Colour Enhancing Pellets', nota:'Alto en proteína de insectos.' },
+    { marca:'NorthFin', modelos:'Community, Cichlid Formula', nota:'Gama premium, ingredientes naturales.' },
+    { marca:'Xtreme Aquatic Foods', modelos:'Nano, Krill Flake', nota:'Popular entre criadores profesionales.' }
+  ],
+  equipamiento: [
+    { marca:'Eheim', modelos:'Skim 350, Jager Heater, Stream Pump', nota:'Fiabilidad alemana, décadas de reputación.' },
+    { marca:'Fluval', modelos:'Heater, Circulation Pump', nota:'Calidad accesible.' },
+    { marca:'Ultum Nature Systems', modelos:'Titan Heater, Rimless Tank', nota:'Estética premium, muy usado en aquascaping.' },
+    { marca:'ADA', modelos:'Super Jet Filter, Beam Stand', nota:'Referente japonés, acabados impecables.' },
+    { marca:'Tropica', modelos:'Plant Tools, Scissors, Pinsettes', nota:'Herramientas de precisión para poda y plantado.' }
+  ]
+};
+
 // ============================================================
 // ESTADO
 // ============================================================
@@ -927,43 +1075,39 @@ function goToStep(n){
   var steps = document.querySelectorAll('.step');
   for (var i = 0; i < steps.length; i++){
     var s = steps[i];
-    if (parseInt(s.getAttribute('data-step')) === n){
-      s.classList.add('active');
-    } else {
-      s.classList.remove('active');
-    }
+    if (parseInt(s.getAttribute('data-step')) === n) s.classList.add('active');
+    else s.classList.remove('active');
   }
   var bar = document.getElementById('progressBar');
-  if (bar){
-    var pct = (n / (steps.length - 1)) * 100;
-    bar.style.width = pct + '%';
-  }
+  if (bar) bar.style.width = ((n / (steps.length - 1)) * 100) + '%';
+
   var spans = document.querySelectorAll('#progressSteps span');
   for (var j = 0; j < spans.length; j++){
     var sp = spans[j];
     var num = parseInt(sp.getAttribute('data-step'));
-    if (num === n){ sp.classList.add('active'); }
-    else { sp.classList.remove('active'); }
-    if (num < n){ sp.classList.add('done'); }
-    else { sp.classList.remove('done'); }
+    if (num === n) sp.classList.add('active');
+    else sp.classList.remove('active');
+    if (num < n) sp.classList.add('done');
+    else sp.classList.remove('done');
   }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ============================================================
-// CHIPS (checkbox styling)
+// CHIPS
 // ============================================================
 function setupChips(){
   var chips = document.querySelectorAll('.chip');
   for (var i = 0; i < chips.length; i++){
-    var chip = chips[i];
-    var input = chip.querySelector('input[type=checkbox]');
-    if (!input) continue;
-    if (input.checked) chip.classList.add('checked');
-    input.addEventListener('change', function(){
-      if (this.checked) this.parentElement.classList.add('checked');
-      else this.parentElement.classList.remove('checked');
-    });
+    (function(chip){
+      var input = chip.querySelector('input[type=checkbox]');
+      if (!input) return;
+      if (input.checked) chip.classList.add('checked');
+      input.addEventListener('change', function(){
+        if (this.checked) chip.classList.add('checked');
+        else chip.classList.remove('checked');
+      });
+    })(chips[i]);
   }
 }
 
@@ -982,9 +1126,6 @@ function calcularVolumen(){
   return neto;
 }
 
-// ============================================================
-// PORCENTAJE DE CAMBIO DE AGUA (helper compartido)
-// ============================================================
 function calcularCambioAgua(d){
   if (d.invertebrados === 'caridina') return '20–30%';
   if (d.carga === 'alta') return '50–60%';
@@ -1015,8 +1156,10 @@ function generarPlan(){
       tipoCO2: document.getElementById('tipoCO2').value,
       tipoFiltracion: document.getElementById('tipoFiltracion').value,
       caudal: parseFloat(document.getElementById('caudal').value) || 600,
+      marcaFiltro: document.getElementById('marcaFiltro').value,
       tipoSustrato: document.getElementById('tipoSustrato').value,
       antiguedad: document.getElementById('antiguedadSustrato').value,
+      marcaSustrato: document.getElementById('marcaSustrato').value,
       tipoAgua: document.getElementById('tipoAgua').value,
       invertebrados: document.getElementById('invertebrados').value,
       carga: document.getElementById('carga').value,
@@ -1030,7 +1173,6 @@ function generarPlan(){
       plantasRojas: document.getElementById('plantasRojas').value
     };
 
-    // Cambio de agua calculado una sola vez
     d.cambioAgua = calcularCambioAgua(d);
 
     renderArranque(d);
@@ -1038,7 +1180,7 @@ function generarPlan(){
     renderAgua(d);
     renderMantenimiento(d);
     renderAlgas(d);
-    renderInsumos(d);
+    renderCatalogo(d);
 
     var tabs = document.querySelectorAll('.tab');
     var panels = document.querySelectorAll('.tab-panel');
@@ -1106,7 +1248,7 @@ function renderArranque(d){
 function renderAbonado(d){
   var nivel = 'bajo';
   if (d.tipoCO2 === 'presurizado' && (d.tipoPlantas === 'alto' || d.tipoPlantas === 'medio')) nivel = 'alto';
-  else if (d.tipoCO2 === 'presurizado' || d.tipoCO2 === 'kit' || d.tipoCO2 === 'fzone' || d.tipoPlantas === 'alto' || (d.tipoPlantas === 'medio' && d.densidad === 'alta')) nivel = 'medio';
+  else if (d.tipoCO2 === 'presurizado' || d.tipoCO2 === 'kit' || d.tipoCO2 === 'fzone' || d.tipoCO2 === 'co2art' || d.tipoCO2 === 'uns-co2' || d.tipoCO2 === 'ada-co2' || d.tipoPlantas === 'alto' || (d.tipoPlantas === 'medio' && d.densidad === 'alta')) nivel = 'medio';
   if (d.tipoPlantas === 'alto' && d.densidad === 'alta') nivel = 'alto';
 
   var esNutritivo = d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto';
@@ -1180,19 +1322,16 @@ function renderAbonado(d){
 // RENDER: AGUA
 // ============================================================
 function renderAgua(d){
-  var phCls = 'ok', phTxt = 'Óptimo';
-  if (d.invertebrados === 'caridina' && (d.ph < 5.8 || d.ph > 6.8)){ phCls = 'warn'; phTxt = 'Caridina: 6.0–6.8'; }
-  else if (d.ph < 6 || d.ph > 8){ phCls = 'warn'; phTxt = 'Fuera de rango'; }
+  var phTxt = 'Óptimo';
+  if (d.invertebrados === 'caridina' && (d.ph < 5.8 || d.ph > 6.8)) phTxt = 'Caridina: 6.0–6.8';
+  else if (d.ph < 6 || d.ph > 8) phTxt = 'Fuera de rango';
 
-  var ghCls = (d.gh < 4 || d.gh > 15) ? 'warn' : 'ok';
   var ghTxt = d.gh < 4 ? 'Muy blando' : (d.gh > 15 ? 'Muy duro' : 'Óptimo');
-
-  var khCls = (d.kh < 2 || d.kh > 10) ? 'warn' : 'ok';
   var khTxt = d.kh < 2 ? 'pH inestable' : (d.kh > 10 ? 'Muy alto' : 'Óptimo');
 
-  var tdsCls = 'ok', tdsTxt = 'Óptimo';
-  if (d.invertebrados === 'caridina' && (d.tds < 100 || d.tds > 180)){ tdsCls = 'warn'; tdsTxt = 'Caridina: 100–180'; }
-  else if (d.tds > 350){ tdsCls = 'warn'; tdsTxt = 'Alto'; }
+  var tdsTxt = 'Óptimo';
+  if (d.invertebrados === 'caridina' && (d.tds < 100 || d.tds > 180)) tdsTxt = 'Caridina: 100–180';
+  else if (d.tds > 350) tdsTxt = 'Alto';
 
   var html = '';
   html += '<div class="bloque">';
@@ -1291,7 +1430,7 @@ function renderAlgas(d){
   if (d.fotoperiodo >= 6 && d.fotoperiodo <= 8) protectores.push('fotoperíodo correcto');
   if (d.tipoCO2 === 'no' && d.tipoPlantas === 'alto'){ riesgo += 3; factores.push('plantas exigentes sin CO₂'); }
   if (d.tipoCO2 === 'casero'){ riesgo += 2; factores.push('CO₂ casero inestable'); }
-  if (d.tipoCO2 === 'presurizado') protectores.push('CO₂ estable');
+  if (d.tipoCO2 === 'presurizado' || d.tipoCO2 === 'co2art' || d.tipoCO2 === 'uns-co2' || d.tipoCO2 === 'ada-co2') protectores.push('CO₂ estable');
   if (d.tipoSustrato === 'inerte-grava' || d.tipoSustrato === 'inerte-arena'){ riesgo += 2; factores.push('sustrato inerte'); }
   if (d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto') protectores.push('sustrato nutritivo');
   if (d.carga === 'alta'){ riesgo += 2; factores.push('carga alta de peces'); }
@@ -1305,8 +1444,7 @@ function renderAlgas(d){
   html += '<div class="bloque">';
   html += '<div class="bloque-titulo">Riesgo de algas</div>';
   html += '<div class="bloque-desc">Objetivo: cero algas a partir de la tercera o cuarta semana.</div>';
-  html += '<div class="stats"><div class="stat" style="grid-column:1/-1;"><div class="stat-lbl">Nivel detectado</div><div class="stat-val" style="font-size:32px;">' + nivel + '</div></div></div>';
-
+  html += '<div class="stats"><div class="stat" style="grid-column:1/-1;"><div class="stat-lbl">Nivel detectado</div><div class="stat-val" style="font-size:30px;">' + nivel + '</div></div></div>';
   if (factores.length) html += '<div class="nota nota-aviso"><strong>Factores de riesgo:</strong> ' + factores.join(' · ') + '.</div>';
   if (protectores.length) html += '<div class="nota nota-acento"><strong>Factores protectores:</strong> ' + protectores.join(' · ') + '.</div>';
   html += '<div class="nota">Las algas son un síntoma, no el problema. Cuando aparecen, indican que las plantas no están consumiendo luz, CO₂ y nutrientes con la eficiencia suficiente.</div>';
@@ -1350,143 +1488,104 @@ function renderAlgas(d){
 }
 
 // ============================================================
-// RENDER: INSUMOS
+// RENDER: CATÁLOGO DE MARCAS
 // ============================================================
-function renderInsumos(d){
+var filtroCatalogoActivo = 'todas';
+
+function renderCatalogo(d){
   var html = '';
-
-  // Detalle de lámpara según marca
-  var lampara = null;
-  if (d.tipoLampara === 'uns'){
-    lampara = {
-      titulo: 'Ultum Nature Systems · Titan 1',
-      texto: 'LED RGB de 200 bulbos Epistar con temperatura de color entre 9,000 y 12,000 K. Cuerpo de aluminio aeronáutico con aletas de disipación y diseño ultra delgado. Altura de colgado recomendada: 30 cm.'
-    };
-  } else if (d.tipoLampara === 'chihiros'){
-    lampara = {
-      titulo: 'Chihiros · WRGB II',
-      texto: 'LED RGB completo con control por aplicación Bluetooth. Permite ajustar cada canal por separado, simular amanecer y atardecer y programar horarios. Excelente relación calidad-precio, muy usado en aquascaping de competición.'
-    };
-  } else if (d.tipoLampara === 'twinstar'){
-    lampara = {
-      titulo: 'Twinstar · S-Line',
-      texto: 'LED WRGB de gama alta con Advanced Spectrum V3.0, seis LEDs de color individual. PPFD de 300 a 370 µmol/m²/s a 20 cm. Construcción robusta en aluminio, prioriza el balance espectral por encima de la intensidad bruta.'
-    };
-  }
-
-  if (lampara){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Iluminación seleccionada</div>';
-    html += '<div class="marca-detalle"><h4>' + lampara.titulo + '</h4><p>' + lampara.texto + '</p></div>';
-    html += '</div>';
-  }
-
   html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Abonos · Aquavitro</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Mineralize — sube GH con calcio y magnesio</li>';
-  html += '<li>Propel — hierro concentrado</li>';
-  html += '<li>Synthesis — nitrógeno en tres formas</li>';
-  html += '<li>Activate — fósforo concentrado</li>';
-  html += '<li>Carbonate — potasio y carbonatos</li>';
-  html += '<li>Envy — microelementos y vitaminas</li>';
-  html += '</ul></div>';
+  html += '<div class="bloque-titulo">Catálogo de marcas del hobby</div>';
+  html += '<div class="bloque-desc">Marcas referentes en cada categoría. Filtra por tipo de producto para ver las opciones más relevantes.</div>';
+  html += '<div class="filtros" id="filtrosCatalogo">';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'todas' ? ' active' : '') + '" data-cat="todas">Todas</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'iluminacion' ? ' active' : '') + '" data-cat="iluminacion">Iluminación</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'filtracion' ? ' active' : '') + '" data-cat="filtracion">Filtración</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'co2' ? ' active' : '') + '" data-cat="co2">CO₂</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'sustratos' ? ' active' : '') + '" data-cat="sustratos">Sustratos</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'fertilizantes' ? ' active' : '') + '" data-cat="fertilizantes">Fertilizantes</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'tests' ? ' active' : '') + '" data-cat="tests">Tests</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'decloradores' ? ' active' : '') + '" data-cat="decloradores">Decloradores</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'bacterias' ? ' active' : '') + '" data-cat="bacterias">Bacterias</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'remineralizantes' ? ' active' : '') + '" data-cat="remineralizantes">Remineralizantes</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'alimentos' ? ' active' : '') + '" data-cat="alimentos">Alimentos</button>';
+  html += '<button class="filtro' + (filtroCatalogoActivo === 'equipamiento' ? ' active' : '') + '" data-cat="equipamiento">Equipamiento</button>';
+  html += '</div>';
+  html += '<div id="listaCatalogo"></div>';
+  html += '</div>';
 
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Sales para soluciones propias</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>KNO₃ · nitrato de potasio</li>';
-  html += '<li>KH₂PO₄ · fosfato monopotásico</li>';
-  html += '<li>K₂SO₄ · sulfato de potasio</li>';
-  html += '<li>Quelato de hierro · Fe-EDTA o Fe-DTPA</li>';
-  if (d.invertebrados === 'caridina' || d.invertebrados === 'neocaridina') html += '<li>Kelamix — verificar que esté sin cobre</li>';
-  else html += '<li>Kelamix — microelementos completos</li>';
-  html += '</ul></div>';
+  document.getElementById('tab-catalogo').innerHTML = html;
 
-  if (d.tipoCO2 === 'no'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Carbono líquido</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Seachem Flourish Excel</li>';
-    html += '<li>API CO₂ Booster</li>';
-    html += '<li>Aquavitro Carbonate</li>';
-    html += '</ul></div>';
-  } else if (d.tipoCO2 === 'casero'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">CO₂ casero · consumibles</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Levadura</li>';
-    html += '<li>Azúcar</li>';
-    html += '<li>Válvula antirretorno</li>';
-    html += '<li>Botella de 2 L</li>';
-    html += '</ul></div>';
-  } else if (d.tipoCO2 === 'fzone'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Fzone CO₂ System</div>';
-    html += '<div class="marca-detalle"><h4>Sistema compacto de 2.5 o 5 L</h4><p>Botella de acero inoxidable SUS304 con regulador integrado y solenoide. Contador de burbujas incluido. Genera CO₂ durante aproximadamente un mes a 1 burbuja por segundo durante 8 horas diarias.</p></div>';
-    html += '</div>';
-  } else {
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Sistema CO₂</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Recarga de botella</li>';
-    html += '<li>Difusor de repuesto</li>';
-    html += '<li>Drop checker con solución 4 dKH</li>';
-    if (d.tipoCO2 === 'presurizado') html += '<li>Solenoide y temporizador</li>';
-    html += '</ul></div>';
+  // Listener de filtros
+  var filtros = document.querySelectorAll('#filtrosCatalogo .filtro');
+  for (var i = 0; i < filtros.length; i++){
+    filtros[i].addEventListener('click', function(){
+      var cat = this.getAttribute('data-cat');
+      filtroCatalogoActivo = cat;
+      var todos = document.querySelectorAll('#filtrosCatalogo .filtro');
+      for (var j = 0; j < todos.length; j++) todos[j].classList.remove('active');
+      this.classList.add('active');
+      pintarListaCatalogo(d);
+    });
   }
 
-  if (d.tipoAgua === 'osmosis'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Remineralizantes</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Salty Shrimp GH+</li>';
-    html += '<li>Seachem Equilibrium</li>';
-    html += '<li>Aquavitro Mineralize</li>';
-    html += '<li>Medidor de TDS</li>';
-    html += '</ul></div>';
-  }
-  if (d.tipoAgua === 'grifo'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Tratamiento del agua</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Declorador · Seachem Prime</li>';
-    html += '<li>Test de cloro</li>';
-    html += '</ul></div>';
-  }
+  pintarListaCatalogo(d);
 
-  if (d.invertebrados === 'caridina' || d.invertebrados === 'neocaridina'){
-    html += '<div class="bloque">';
-    html += '<div class="bloque-titulo">Específicos para gambas</div>';
-    html += '<ul class="lista-lim">';
-    html += '<li>Hojas de almendro indio</li>';
-    html += '<li>Salty Shrimp Mineral</li>';
-    html += '<li>Bacter AE</li>';
-    html += '<li>Test de cobre</li>';
-    html += '</ul></div>';
+  // Añadir detalle del equipo seleccionado
+  var detalle = '';
+  if (d.tipoLampara === 'uns' || d.tipoLampara === 'chihiros' || d.tipoLampara === 'twinstar' || d.tipoLampara === 'ada' || d.tipoLampara === 'onf'){
+    detalle += '<div class="bloque"><div class="bloque-titulo">Tu iluminación seleccionada</div>';
+    detalle += '<div class="marca-detalle">';
+    if (d.tipoLampara === 'uns'){
+      detalle += '<h4>Ultum Nature Systems · Titan 1</h4><p>LED RGB de 200 bulbos Epistar con temperatura de 9,000–12,000 K. Cuerpo de aluminio aeronáutico con aletas de disipación. Altura de colgado recomendada: 30 cm.</p>';
+    } else if (d.tipoLampara === 'chihiros'){
+      detalle += '<h4>Chihiros · WRGB II</h4><p>LED RGB con control por app Bluetooth. Ajuste por canales, simulación amanecer/atardecer y programación horaria. Excelente relación calidad-precio.</p>';
+    } else if (d.tipoLampara === 'twinstar'){
+      detalle += '<h4>Twinstar · S-Line</h4><p>Advanced Spectrum V3.0 con 6 LEDs de color individual. PPFD de 300 a 370 µmol/m²/s a 20 cm. Construcción robusta en aluminio.</p>';
+    } else if (d.tipoLampara === 'ada'){
+      detalle += '<h4>ADA · Aquasky / Solar RGB</h4><p>Iluminación japonesa de referencia mundial en aquascaping. Espectro optimizado para plantas exigentes y colores naturales.</p>';
+    } else if (d.tipoLampara === 'onf'){
+      detalle += '<h4>ONF · Flat One</h4><p>Diseño minimalista con espectro completo. Muy popular en nano acuarios y acuarios de diseño.</p>';
+    }
+    detalle += '</div></div>';
   }
 
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Tests recomendados</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Test de gotas de NO₃ · siempre</li>';
-  html += '<li>Test de gotas de GH y KH' + (d.tieneKitGotas ? '' : ' · siguiente compra') + '</li>';
-  if (d.plantasRojas !== 'no') html += '<li>Test de gotas de hierro</li>';
-  html += '<li>' + (d.tipoCO2 !== 'no' ? 'Drop checker' : 'Medidor de TDS') + '</li>';
-  html += '</ul></div>';
+  if (detalle){
+    var cont = document.getElementById('tab-catalogo');
+    cont.insertAdjacentHTML('beforeend', detalle);
+  }
+}
 
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Herramientas básicas</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Manguera de sifonado</li>';
-  html += '<li>Esponja para cristales</li>';
-  html += '<li>Tijeras de podar curvas</li>';
-  html += '<li>Pinzas de acuario</li>';
-  html += '<li>Jeringas de 1, 5 y 10 ml</li>';
-  html += '<li>Botellas de 500 ml para soluciones madre</li>';
-  html += '</ul></div>';
+function pintarListaCatalogo(d){
+  var cont = document.getElementById('listaCatalogo');
+  if (!cont) return;
+  var html = '';
+  var categorias = filtroCatalogoActivo === 'todas' ? Object.keys(CATALOGO) : [filtroCatalogoActivo];
 
-  document.getElementById('tab-insumos').innerHTML = html;
+  for (var c = 0; c < categorias.length; c++){
+    var cat = categorias[c];
+    var marcas = CATALOGO[cat];
+    if (!marcas) continue;
+
+    html += '<details class="acordeon" ' + (filtroCatalogoActivo !== 'todas' ? 'open' : '') + '>';
+    html += '<summary>' + capitalizar(cat) + ' · ' + marcas.length + ' marcas</summary>';
+    html += '<div class="content">';
+    for (var m = 0; m < marcas.length; m++){
+      var marca = marcas[m];
+      html += '<div class="marca-card">';
+      html += '<h4>' + marca.marca + '<span class="categoria">' + capitalizar(cat) + '</span></h4>';
+      html += '<div class="modelos">' + marca.modelos + '</div>';
+      html += '<div class="nota-marca">' + marca.nota + '</div>';
+      html += '</div>';
+    }
+    html += '</div></details>';
+  }
+
+  cont.innerHTML = html;
+}
+
+function capitalizar(s){
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 // ============================================================
