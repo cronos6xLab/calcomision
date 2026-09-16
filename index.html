@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
 
-<title>los Roles · Panadería Artesanal</title>
+<title>Roles de Familia · Panadería Artesanal</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,69 +14,59 @@
 
 <style>
 /* =========================================================
-   LOS ROLES — Design System
-   Paleta tomada del logotipo: chocolate profundo, crema,
-   caramelo y detalles dorados. Estética seria y elegante.
+   ROLES DE FAMILIA — Design System
+   Paleta del logotipo: chocolate profundo, crema,
+   caramelo y detalles dorados.
 ========================================================= */
 :root {
-    /* Fondo — blanco limpio con calidez sutil */
     --white: #FFFFFF;
     --white-warm: #FDFBF7;
     --cream: #FAF4E8;
     --cream-2: #F5EBD8;
     --cream-3: #EFE1C6;
 
-    /* Chocolate — tomado del logotipo */
     --choco-deep: #2A1608;
     --choco: #3E2010;
     --choco-mid: #5A3319;
     --choco-soft: #7A4A28;
 
-    /* Caramelo y dorado */
     --caramel: #A5703F;
     --caramel-dark: #7E4F26;
     --gold: #C9A24B;
     --gold-soft: #E5D3A4;
     --gold-pale: #F2E6C7;
 
-    /* Tinta */
     --ink: #241509;
     --ink-soft: #6B5849;
     --ink-muted: #9B8B7A;
     --ink-faint: #C7BBAB;
 
-    /* Líneas */
     --line: rgba(42, 22, 8, 0.08);
     --line-2: rgba(42, 22, 8, 0.14);
     --line-3: rgba(42, 22, 8, 0.22);
     --line-gold: rgba(201, 162, 75, 0.32);
 
-    /* Semánticos */
     --success: #1DA851;
     --success-dark: #0E6E36;
     --danger: #B93B2C;
     --danger-soft: rgba(185, 59, 44, 0.08);
 
-    /* Superficies */
     --glass: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(42, 22, 8, 0.06);
     --glass-blur: saturate(180%) blur(20px);
 
-    /* Sombras — muy sutiles, elegantes */
     --shadow-xs: 0 1px 2px rgba(42, 22, 8, 0.04);
     --shadow-sm: 0 2px 6px rgba(42, 22, 8, 0.05);
     --shadow-md: 0 8px 24px rgba(42, 22, 8, 0.07);
     --shadow-lg: 0 20px 48px rgba(42, 22, 8, 0.10);
     --shadow-xl: 0 32px 80px rgba(42, 22, 8, 0.14);
 
-    /* Radios */
     --r-xs: 6px;
     --r-sm: 10px;
     --r: 14px;
     --r-lg: 20px;
     --r-xl: 28px;
 
-    /* Movimiento */
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -98,7 +88,6 @@ body {
     position: relative;
 }
 
-/* Fondo decorativo muy sutil — blanco con un halo cálido */
 body::before {
     content: "";
     position: fixed;
@@ -133,7 +122,7 @@ img { max-width: 100%; display: block; }
 .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
 
 /* =========================================================
-   HEADER — Minimalista y elegante
+   HEADER
 ========================================================= */
 .site-header {
     background: var(--white);
@@ -171,8 +160,8 @@ img { max-width: 100%; display: block; }
     justify-content: center;
 }
 .brand-logo {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     object-fit: cover;
     background: var(--cream);
@@ -180,12 +169,13 @@ img { max-width: 100%; display: block; }
 }
 .brand-name {
     font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 600;
     color: var(--choco-deep);
     line-height: 1;
     letter-spacing: -0.03em;
     font-variation-settings: "SOFT" 20, "WONK" 1;
+    white-space: nowrap;
 }
 .brand-name em {
     font-style: italic;
@@ -194,7 +184,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* =========================================================
-   HERO — Centrado, sobrio
+   HERO
 ========================================================= */
 .hero {
     padding: 72px 0 56px;
@@ -261,7 +251,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* =========================================================
-   PRODUCT CARD — Editorial, minimal
+   PRODUCT
 ========================================================= */
 .product {
     background: var(--white);
@@ -360,11 +350,7 @@ img { max-width: 100%; display: block; }
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
 }
-.attr {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
+.attr { display: flex; flex-direction: column; gap: 3px; }
 .attr-label {
     font-size: 0.62rem;
     letter-spacing: 1.8px;
@@ -372,11 +358,7 @@ img { max-width: 100%; display: block; }
     color: var(--ink-muted);
     font-weight: 700;
 }
-.attr-value {
-    font-size: 0.85rem;
-    color: var(--choco);
-    font-weight: 600;
-}
+.attr-value { font-size: 0.85rem; color: var(--choco); font-weight: 600; }
 
 .product-foot {
     display: flex;
@@ -511,11 +493,7 @@ img { max-width: 100%; display: block; }
     margin: -6px -8px 14px;
     padding: 6px 8px;
 }
-.cart-empty {
-    text-align: center;
-    padding: 36px 16px;
-    color: var(--ink-muted);
-}
+.cart-empty { text-align: center; padding: 36px 16px; color: var(--ink-muted); }
 .cart-empty i {
     font-size: 1.8rem;
     margin-bottom: 14px;
@@ -717,15 +695,8 @@ img { max-width: 100%; display: block; }
     transform: rotate(90deg);
 }
 
-.modal-hero-wrap {
-    position: relative;
-    background: var(--cream);
-}
-.modal-hero {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-}
+.modal-hero-wrap { position: relative; background: var(--cream); }
+.modal-hero { width: 100%; height: 260px; object-fit: cover; }
 
 .modal-body { padding: 32px 32px 28px; }
 
@@ -851,9 +822,7 @@ img { max-width: 100%; display: block; }
     transform: scale(0);
     transition: transform 0.28s var(--spring);
 }
-.m-option input:checked ~ .m-radio {
-    border-color: var(--choco-deep);
-}
+.m-option input:checked ~ .m-radio { border-color: var(--choco-deep); }
 .m-option input:checked ~ .m-radio::after { transform: scale(1); }
 
 .m-option:has(input:checked) {
@@ -1010,7 +979,10 @@ img { max-width: 100%; display: block; }
 
 .field { margin-bottom: 22px; }
 .field label {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     font-weight: 700;
     font-size: 0.68rem;
     letter-spacing: 2px;
@@ -1018,13 +990,13 @@ img { max-width: 100%; display: block; }
     color: var(--choco-deep);
     margin-bottom: 10px;
 }
-.field label .req { color: var(--gold); margin-left: 3px; }
+.field label .label-text { display: inline-flex; align-items: center; gap: 6px; }
+.field label .req { color: var(--gold); }
 .field label .opt {
     color: var(--ink-muted);
     font-weight: 600;
     font-size: 0.62rem;
     letter-spacing: 1.5px;
-    margin-left: 6px;
 }
 
 .input {
@@ -1046,6 +1018,84 @@ img { max-width: 100%; display: block; }
 .input::placeholder { color: var(--ink-faint); }
 textarea.input { resize: vertical; min-height: 88px; }
 
+/* Estados de validación */
+.input.is-valid {
+    border-color: rgba(29, 168, 81, 0.45);
+    background-image: none;
+}
+.input.is-valid:focus {
+    border-color: var(--success);
+    box-shadow: 0 0 0 4px rgba(29, 168, 81, 0.10);
+}
+.input.is-invalid {
+    border-color: rgba(185, 59, 44, 0.55);
+    background: rgba(185, 59, 44, 0.02);
+}
+.input.is-invalid:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(185, 59, 44, 0.10);
+}
+
+/* Wrapper para input con ícono de estado */
+.input-wrap { position: relative; }
+.input-wrap .input { padding-right: 44px; }
+.input-status {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+}
+.input.is-valid ~ .input-status {
+    opacity: 1;
+    color: var(--success);
+}
+.input.is-invalid ~ .input-status {
+    opacity: 1;
+    color: var(--danger);
+}
+
+.field-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.field-hint i { font-size: 0.7rem; }
+.field-hint.is-valid { color: var(--success-dark); }
+.field-hint.is-invalid { color: var(--danger); }
+
+/* Aviso para entrega */
+.delivery-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    border-radius: var(--r-sm);
+    background: rgba(201, 162, 75, 0.10);
+    border: 1px solid rgba(201, 162, 75, 0.28);
+    font-size: 0.78rem;
+    color: var(--choco-mid);
+    line-height: 1.5;
+    animation: riseIn 0.3s var(--ease) both;
+}
+.delivery-notice i {
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+.delivery-notice strong { color: var(--choco-deep); font-weight: 700; }
+
+/* Toggle */
 .toggle-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1321,6 +1371,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     opacity: 1;
 }
 .toast i { color: var(--gold); }
+.toast.toast-error i { color: #F4A3A0; }
 
 /* =========================================================
    FOOTER
@@ -1400,8 +1451,8 @@ textarea.input { resize: vertical; min-height: 88px; }
     .qty-big { width: 42px; height: 42px; }
     .qty-display { font-size: 1.45rem; }
     .toast { bottom: 92px; font-size: 0.82rem; padding: 12px 18px; }
-    .brand-name { font-size: 1.3rem; }
-    .brand-logo { width: 44px; height: 44px; }
+    .brand-name { font-size: 1.25rem; }
+    .brand-logo { width: 46px; height: 46px; }
     .footer-mark { font-size: 1.15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1428,11 +1479,11 @@ textarea.input { resize: vertical; min-height: 88px; }
             <a href="#" class="brand">
                 <!-- 🔁 REEMPLAZA ESTA URL CON TU LOGO REAL -->
                 <img
-                    src="https://placehold.co/120x120/3E2010/FAF4E8?text=lR&font=playfair"
-                    alt="los Roles"
+                    src="https://placehold.co/120x120/3E2010/FAF4E8?text=RF&font=playfair"
+                    alt="Roles de Familia"
                     class="brand-logo"
                 >
-                <span class="brand-name">los <em>Roles</em></span>
+                <span class="brand-name">Roles de <em>Familia</em></span>
             </a>
             <div class="header-side right">
                 <a href="#" id="phoneHeader"><i class="fas fa-phone"></i>&nbsp; Contacto</a>
@@ -1463,7 +1514,7 @@ textarea.input { resize: vertical; min-height: 88px; }
                     </span>
                     <!-- 🔁 REEMPLAZA CON LA FOTO REAL DE TUS ROLES -->
                     <img
-                        src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Tus+Roles+de+Canela&font=playfair"
+                        src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Roles+de+Familia&font=playfair"
                         alt="Roles de canela recién horneados"
                     >
                 </div>
@@ -1548,13 +1599,32 @@ textarea.input { resize: vertical; min-height: 88px; }
         <form id="orderForm" novalidate>
 
             <div class="field">
-                <label for="customerName">Nombre <span class="req">*</span></label>
-                <input type="text" id="customerName" class="input" placeholder="Tu nombre completo" autocomplete="name" required>
+                <label for="customerName">
+                    <span class="label-text">Nombre <span class="req">*</span></span>
+                </label>
+                <input type="text" id="customerName" class="input" placeholder="Tu nombre completo" autocomplete="name" maxlength="60">
             </div>
 
             <div class="field">
-                <label for="customerPhone">Teléfono <span class="req">*</span></label>
-                <input type="tel" id="customerPhone" class="input" placeholder="10 dígitos" autocomplete="tel" inputmode="tel" required>
+                <label for="customerPhone">
+                    <span class="label-text">Teléfono <span class="req">*</span></span>
+                </label>
+                <div class="input-wrap">
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        class="input"
+                        placeholder="Ej. 55 1234 5678"
+                        autocomplete="tel"
+                        inputmode="numeric"
+                        maxlength="15"
+                    >
+                    <i class="fas fa-circle-check input-status" id="phoneStatus"></i>
+                </div>
+                <small class="field-hint" id="phoneHint">
+                    <i class="fas fa-circle-info"></i>
+                    <span>10 dígitos, sin lada internacional</span>
+                </small>
             </div>
 
             <div class="field">
@@ -1573,7 +1643,8 @@ textarea.input { resize: vertical; min-height: 88px; }
 
             <div class="field">
                 <label for="deliveryAddress">
-                    Dirección de entrega <span class="opt" id="addressHint">opcional</span>
+                    <span class="label-text">Dirección de entrega <span class="req" id="addressReq" style="display:none;">*</span></span>
+                    <span class="opt" id="addressHint">opcional</span>
                 </label>
                 <textarea
                     id="deliveryAddress"
@@ -1581,7 +1652,13 @@ textarea.input { resize: vertical; min-height: 88px; }
                     rows="2"
                     placeholder="Calle, número, colonia, referencias..."
                     autocomplete="street-address"
+                    maxlength="300"
                 ></textarea>
+
+                <div class="delivery-notice" id="deliveryNotice" hidden>
+                    <i class="fas fa-circle-info"></i>
+                    <span>Como el pedido es <strong>para alguien más</strong>, necesitamos saber a dónde llevarlo. Comparte la ubicación <strong>o</strong> escribe la dirección.</span>
+                </div>
 
                 <button type="button" class="btn-location" id="shareLocationBtn">
                     <i class="fas fa-location-dot"></i>
@@ -1601,7 +1678,10 @@ textarea.input { resize: vertical; min-height: 88px; }
             </div>
 
             <div class="field">
-                <label for="customerNotes">Notas adicionales <span class="opt">opcional</span></label>
+                <label for="customerNotes">
+                    <span class="label-text">Notas adicionales</span>
+                    <span class="opt">opcional</span>
+                </label>
                 <textarea id="customerNotes" class="input" rows="3" placeholder="Ej. Recoger a las 5 pm, sin nueces..."></textarea>
             </div>
 
@@ -1728,31 +1808,34 @@ textarea.input { resize: vertical; min-height: 88px; }
      FOOTER
 ========================================================= -->
 <footer class="site-footer">
-    <div class="footer-mark">los <em>Roles</em></div>
+    <div class="footer-mark">Roles de <em>Familia</em></div>
     <div class="footer-tagline">Panadería Artesanal · México</div>
     <p>Hechos con cariño, horneados cada día</p>
-    <p class="footer-meta">© <span id="year"></span> los Roles · Todos los derechos reservados</p>
+    <p class="footer-meta">© <span id="year"></span> Roles de Familia · Todos los derechos reservados</p>
 </footer>
 
 <script>
 /* =========================================================
-   CONFIGURACIÓN · LOS ROLES
-   Edita este objeto para personalizar la tienda
+   CONFIGURACIÓN · ROLES DE FAMILIA
 ========================================================= */
 const CONFIG = {
-    brandName: "los Roles",
+    brandName: "Roles de Familia",
     whatsappNumber: "525639569884", // sin +, espacios ni guiones
     currencySymbol: "$",
     currencyCode: "MXN",
-    storageKey: "losRolesCart_v1",
+    storageKey: "rolesDeFamiliaCart_v1",
+
+    /* Validaciones */
+    phoneMinDigits: 10,
+    nameMinLength: 2,
+    addressMinLength: 5,
 
     product: {
-        sku: "LR-001",
+        sku: "RF-001",
         name: "Rol de canela artesanal",
         shortName: "Rol de canela",
         basePrice: 45.00,
 
-        /* Capas de personalización — solo glaseado, sin costo extra */
         modifiers: [
             {
                 id: "glaze",
@@ -1778,6 +1861,7 @@ const CONFIG = {
 let cart = loadCart();
 let modalQty = 1;
 let userLocation = null;
+let phoneIsValid = false;
 
 /* =========================================================
    HELPERS
@@ -1794,12 +1878,14 @@ function loadCart() {
 }
 function saveCart() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(cart)); }
 
-function toast(msg, icon = "fa-check-circle") {
+function toast(msg, icon = "fa-check-circle", type = "success") {
     const el = $("#toast");
+    el.className = "toast";
+    if (type === "error") el.classList.add("toast-error");
     el.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
     el.classList.add("show");
     clearTimeout(el._t);
-    el._t = setTimeout(() => el.classList.remove("show"), 2600);
+    el._t = setTimeout(() => el.classList.remove("show"), 3000);
 }
 function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, c => ({
@@ -1807,6 +1893,79 @@ function escapeHtml(str) {
     }[c]));
 }
 function setBodyLock(lock) { document.body.style.overflow = lock ? "hidden" : ""; }
+
+/* Scroll + focus al campo con error */
+function focusField(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => el.focus({ preventScroll: true }), 300);
+}
+
+/* =========================================================
+   VALIDACIONES
+========================================================= */
+function digitsOnly(str) {
+    return String(str).replace(/\D/g, "");
+}
+
+function validatePhone(phone) {
+    const digits = digitsOnly(phone);
+    return digits.length >= CONFIG.phoneMinDigits;
+}
+
+function validateName(name) {
+    return name.trim().length >= CONFIG.nameMinLength;
+}
+
+function validateAddress(address) {
+    return address.trim().length >= CONFIG.addressMinLength;
+}
+
+/* Feedback en vivo del teléfono */
+function updatePhoneFeedback(showError = false) {
+    const input = $("#customerPhone");
+    const hint  = $("#phoneHint");
+    const status = $("#phoneStatus");
+
+    const value = input.value.trim();
+    const digits = digitsOnly(value);
+
+    input.classList.remove("is-valid", "is-invalid");
+    hint.classList.remove("is-valid", "is-invalid");
+    status.classList.remove("fa-circle-check", "fa-circle-xmark");
+
+    if (!value) {
+        phoneIsValid = false;
+        if (showError) {
+            input.classList.add("is-invalid");
+            hint.classList.add("is-invalid");
+            hint.innerHTML = `<i class="fas fa-circle-exclamation"></i><span>Ingresa tu teléfono</span>`;
+        } else {
+            hint.innerHTML = `<i class="fas fa-circle-info"></i><span>10 dígitos, sin lada internacional</span>`;
+        }
+        return;
+    }
+
+    if (validatePhone(value)) {
+        phoneIsValid = true;
+        input.classList.add("is-valid");
+        hint.classList.add("is-valid");
+        status.classList.add("fa-circle-check");
+        hint.innerHTML = `<i class="fas fa-circle-check"></i><span>Teléfono válido · ${digits.length} dígitos</span>`;
+    } else {
+        phoneIsValid = false;
+        const faltan = CONFIG.phoneMinDigits - digits.length;
+        hint.innerHTML = `<i class="fas fa-circle-info"></i><span>Faltan ${faltan} dígito${faltan === 1 ? "" : "s"} (${digits.length}/${CONFIG.phoneMinDigits})</span>`;
+
+        if (showError) {
+            input.classList.add("is-invalid");
+            hint.classList.add("is-invalid");
+            status.classList.add("fa-circle-xmark");
+            hint.innerHTML = `<i class="fas fa-circle-exclamation"></i><span>El teléfono debe tener al menos ${CONFIG.phoneMinDigits} dígitos</span>`;
+        }
+    }
+}
 
 /* =========================================================
    RENDER MODIFICADORES
@@ -1953,7 +2112,7 @@ $("#addToCartBtn").addEventListener("click", () => {
 
     for (const mod of CONFIG.product.modifiers) {
         if (mod.required && !selections[mod.id]) {
-            toast(`Selecciona ${mod.name.toLowerCase()}`, "fa-exclamation-circle");
+            toast(`Selecciona ${mod.name.toLowerCase()}`, "fa-exclamation-circle", "error");
             return;
         }
     }
@@ -2056,7 +2215,7 @@ cartList.addEventListener("click", e => {
         const i = parseInt(btn.dataset.remove);
         cart.splice(i, 1);
         saveCart(); renderCart();
-        toast("Producto eliminado", "fa-trash");
+        toast("Producto eliminado", "fa-trash", "error");
         return;
     }
 
@@ -2066,7 +2225,7 @@ cartList.addEventListener("click", e => {
     if (op === "+") cart[i].quantity++;
     else if (op === "-") {
         if (cart[i].quantity > 1) cart[i].quantity--;
-        else { cart.splice(i, 1); toast("Producto eliminado", "fa-trash"); }
+        else { cart.splice(i, 1); toast("Producto eliminado", "fa-trash", "error"); }
     }
     saveCart(); renderCart();
 });
@@ -2078,7 +2237,7 @@ const checkoutSection = $("#checkoutSection");
 
 $("#checkoutBtn").addEventListener("click", () => {
     if (cart.length === 0) {
-        toast("Agrega al menos un rol", "fa-exclamation-circle");
+        toast("Agrega al menos un rol", "fa-exclamation-circle", "error");
         return;
     }
     checkoutSection.classList.add("open");
@@ -2095,18 +2254,42 @@ $("#cancelCheckout").addEventListener("click", () => {
 ========================================================= */
 const deliveryRadios = $$('input[name="deliveryFor"]');
 const addressHint = $("#addressHint");
+const addressReq = $("#addressReq");
+const deliveryNotice = $("#deliveryNotice");
 
 function updateAddressHint() {
     const val = document.querySelector('input[name="deliveryFor"]:checked')?.value;
     if (val === "other") {
         addressHint.textContent = "recomendado";
         addressHint.style.color = "var(--caramel-dark)";
+        addressReq.style.display = "inline";
+        deliveryNotice.hidden = false;
     } else {
         addressHint.textContent = "opcional";
         addressHint.style.color = "";
+        addressReq.style.display = "none";
+        deliveryNotice.hidden = true;
     }
 }
 deliveryRadios.forEach(r => r.addEventListener("change", updateAddressHint));
+
+/* =========================================================
+   VALIDACIÓN EN VIVO DEL TELÉFONO
+========================================================= */
+const phoneInput = $("#customerPhone");
+
+phoneInput.addEventListener("input", () => {
+    /* Solo permitir dígitos, espacios y guiones */
+    let v = phoneInput.value.replace(/[^\d\s\-()]/g, "");
+    phoneInput.value = v;
+    updatePhoneFeedback(false);
+});
+
+phoneInput.addEventListener("blur", () => {
+    if (phoneInput.value.trim()) {
+        updatePhoneFeedback(true);
+    }
+});
 
 /* =========================================================
    UBICACIÓN
@@ -2120,7 +2303,7 @@ const shareBtn = $("#shareLocationBtn");
 
 shareBtn.addEventListener("click", () => {
     if (!navigator.geolocation) {
-        toast("Tu navegador no soporta geolocalización", "fa-exclamation-circle");
+        toast("Tu navegador no soporta geolocalización", "fa-exclamation-circle", "error");
         return;
     }
 
@@ -2150,7 +2333,7 @@ shareBtn.addEventListener("click", () => {
             if (err.code === 1) msg = "Permiso de ubicación denegado";
             else if (err.code === 2) msg = "Ubicación no disponible";
             else if (err.code === 3) msg = "Se agotó el tiempo";
-            toast(msg, "fa-exclamation-circle");
+            toast(msg, "fa-exclamation-circle", "error");
         },
         { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
     );
@@ -2170,7 +2353,7 @@ $("#locConfirmOther").addEventListener("click", () => {
     closeLocationModal();
     showLocationPreview("Referencia (para otra persona)");
     setTimeout(() => $("#deliveryAddress").focus(), 250);
-    toast("Agrega la dirección de la otra persona", "fa-info-circle");
+    toast("Comparte la dirección de la otra persona", "fa-info-circle");
 });
 
 function closeLocationModal() {
@@ -2191,8 +2374,58 @@ function showLocationPreview(label) {
 $("#removeLocationBtn").addEventListener("click", () => {
     userLocation = null;
     locationPreview.hidden = true;
-    toast("Ubicación eliminada", "fa-trash");
+    toast("Ubicación eliminada", "fa-trash", "error");
 });
+
+/* =========================================================
+   VALIDACIÓN GLOBAL DEL FORMULARIO
+========================================================= */
+function validateForm() {
+    const name = $("#customerName").value.trim();
+    const phone = $("#customerPhone").value.trim();
+    const address = $("#deliveryAddress").value.trim();
+    const deliveryFor = document.querySelector('input[name="deliveryFor"]:checked')?.value || "self";
+
+    /* 1. Nombre */
+    if (!validateName(name)) {
+        return {
+            ok: false,
+            field: "customerName",
+            msg: "Ingresa tu nombre completo",
+            icon: "fa-user"
+        };
+    }
+
+    /* 2. Teléfono */
+    if (!validatePhone(phone)) {
+        const digits = digitsOnly(phone).length;
+        return {
+            ok: false,
+            field: "customerPhone",
+            msg: digits === 0
+                ? "Ingresa tu número de teléfono"
+                : `El teléfono debe tener ${CONFIG.phoneMinDigits} dígitos (llevas ${digits})`,
+            icon: "fa-phone"
+        };
+    }
+
+    /* 3. Entrega: si es "para alguien más" → requiere dirección O ubicación */
+    if (deliveryFor === "other") {
+        const hasAddress = validateAddress(address);
+        const hasLocation = !!userLocation;
+
+        if (!hasAddress && !hasLocation) {
+            return {
+                ok: false,
+                field: "deliveryAddress",
+                msg: "Comparte la ubicación o escribe la dirección de entrega",
+                icon: "fa-location-dot"
+            };
+        }
+    }
+
+    return { ok: true, deliveryFor, name, phone, address };
+}
 
 /* =========================================================
    ENVIAR WHATSAPP
@@ -2200,24 +2433,22 @@ $("#removeLocationBtn").addEventListener("click", () => {
 $("#orderForm").addEventListener("submit", e => {
     e.preventDefault();
 
-    const name = $("#customerName").value.trim();
-    const phone = $("#customerPhone").value.trim();
-    const address = $("#deliveryAddress").value.trim();
+    /* Marcar el teléfono con error visual si no es válido */
+    updatePhoneFeedback(true);
+
+    const v = validateForm();
+
+    if (!v.ok) {
+        toast(v.msg, "fa-exclamation-circle", "error");
+        focusField(v.field);
+        return;
+    }
+
+    const { name, phone, address, deliveryFor } = v;
     const notes = $("#customerNotes").value.trim();
-    const deliveryFor = document.querySelector('input[name="deliveryFor"]:checked')?.value || "self";
-
-    if (!name || !phone) {
-        toast("Completa nombre y teléfono", "fa-exclamation-circle");
-        return;
-    }
-    if (deliveryFor === "other" && !address && !userLocation) {
-        toast("Agrega la dirección de la otra persona", "fa-exclamation-circle");
-        $("#deliveryAddress").focus();
-        return;
-    }
-
     const total = cart.reduce((s, it) => s + it.unitPrice * it.quantity, 0);
 
+    /* Construir mensaje */
     let msg = `*NUEVO PEDIDO — ${CONFIG.brandName}*\n\n`;
     msg += `*Cliente:* ${name}\n`;
     msg += `*Teléfono:* ${phone}\n\n`;
@@ -2253,6 +2484,7 @@ $("#orderForm").addEventListener("submit", e => {
     cart = [];
     localStorage.removeItem(CONFIG.storageKey);
     userLocation = null;
+    phoneIsValid = false;
     renderCart();
 
     $("#orderForm").reset();
@@ -2260,6 +2492,12 @@ $("#orderForm").addEventListener("submit", e => {
     updateAddressHint();
     locationPreview.hidden = true;
     checkoutSection.classList.remove("open");
+
+    /* Resetear estados visuales */
+    phoneInput.classList.remove("is-valid", "is-invalid");
+    $("#phoneHint").classList.remove("is-valid", "is-invalid");
+    $("#phoneHint").innerHTML = `<i class="fas fa-circle-info"></i><span>10 dígitos, sin lada internacional</span>`;
+    $("#phoneStatus").classList.remove("fa-circle-check", "fa-circle-xmark");
 
     $("#confirmationModal").classList.add("open");
     setBodyLock(true);
