@@ -3,1736 +3,2233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Aqua Planner</title>
+<meta name="theme-color" content="#A5582A">
+
+<title>Cinnamon Aura Bakery · Small Batch Cinnamon Rolls</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-  *{box-sizing:border-box; margin:0; padding:0;}
-  :root{
-    --negro:#111111;
-    --gris-900:#1a1a1a;
-    --gris-700:#4a4a4a;
-    --gris-500:#8a8a8a;
-    --gris-300:#d4d4d4;
-    --gris-200:#e5e5e5;
-    --gris-100:#f2f2f2;
-    --gris-50:#fafafa;
-    --blanco:#ffffff;
-    --acento:#3d5c48;
-    --acento-claro:#e8ede9;
-    --alerta:#b04a3f;
-    --alerta-claro:#f5e6e4;
-  }
-  html{
-    scroll-behavior:smooth;
-    -webkit-text-size-adjust:100%;
-    text-size-adjust:100%;
-  }
-  body{
-    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background:var(--blanco);
-    color:var(--gris-900);
-    line-height:1.6;
-    font-size:15px;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
+/* =========================================================
+   CINNAMON AURA BAKERY — Design System
+   Editorial · Warm · Small Batch
+========================================================= */
+:root {
+    /* Superficies */
+    --bg: #FAF4EA;
+    --bg-warm: #F4E8D2;
+    --surface: #FFFCF6;
+    --surface-2: #FBF5EA;
+    --surface-3: #F6ECDA;
 
-  /* ============ FIX CRÍTICO: ANTI-ZOOM iOS ============ */
-  /* iOS Safari hace zoom cuando font-size < 16px. Forzamos 16px SIEMPRE. */
-  input,
-  select,
-  textarea,
-  button{
-    font-size:16px !important;
-    font-family:inherit;
-    touch-action:manipulation;
-    -webkit-tap-highlight-color:transparent;
-  }
-  input[type="date"]{
-    min-height:44px;
-  }
+    /* Marca */
+    --cognac: #A5582A;
+    --cognac-dark: #7E3E16;
+    --cognac-deep: #4A2610;
+    --terracotta: #B85F3D;
+    --rust: #8E3D1E;
 
-  .app{max-width:720px; margin:0 auto; padding:1.5rem 1.25rem 5rem;}
+    /* Acento metálico */
+    --brass: #C9A24B;
+    --brass-light: #E4C876;
+    --brass-soft: #EFDCA8;
+    --brass-pale: #F5E8C5;
+    --brass-glow: rgba(201, 162, 75, 0.25);
 
-  /* ============ HEADER ============ */
-  .header{
-    padding:1rem 0 1.5rem;
-    border-bottom:1px solid var(--gris-200);
-    margin-bottom:1.5rem;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:1rem;
-  }
-  .header h1{
-    font-size:20px;
-    font-weight:500;
-    letter-spacing:-0.02em;
-    color:var(--negro);
-    margin-bottom:.15rem;
-  }
-  .header .sub{
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    color:var(--gris-500);
-  }
-  .header .aviso{
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--gris-500);
-    text-align:right;
-    line-height:1.5;
-  }
+    /* Tinta */
+    --espresso: #2B1A10;
+    --ink: #3D2A1C;
+    --cocoa: #66493A;
+    --mocha: #9E8674;
+    --taupe: #C8B9A6;
 
-  /* ============ PROGRESO ============ */
-  .progress{margin-bottom:2.5rem;}
-  .progress-line{
-    height:1px;
-    background:var(--gris-200);
-    position:relative;
-    margin-bottom:.9rem;
-  }
-  #progressBar{
-    position:absolute;
-    top:-1px;
-    left:0;
-    height:3px;
-    background:var(--negro);
-    width:0%;
-    transition:width .5s ease;
-  }
-  .progress-steps{
-    display:flex;
-    justify-content:space-between;
-    gap:.4rem;
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--gris-500);
-    overflow:hidden;
-  }
-  .progress-steps span{transition:color .2s; white-space:nowrap;}
-  .progress-steps span.active{color:var(--negro); font-weight:600;}
-  .progress-steps span.done{color:var(--gris-700);}
-  @media(max-width:400px){
-    .progress-steps span:not(.active):not(.done){display:none;}
-  }
+    /* Líneas */
+    --line: rgba(74, 38, 16, 0.09);
+    --line-2: rgba(74, 38, 16, 0.16);
+    --line-gold: rgba(201, 162, 75, 0.35);
 
-  /* ============ SECCIONES ============ */
-  .step{display:none;}
-  .step.active{display:block; animation:appear .4s ease;}
-  @keyframes appear{
-    from{opacity:0; transform:translateY(6px);}
-    to{opacity:1; transform:translateY(0);}
-  }
+    /* Semánticos */
+    --success: #25D366;
+    --success-dark: #0F7B4A;
+    --danger: #C33D2E;
+    --danger-soft: rgba(195, 61, 46, 0.10);
 
-  .bloque{
-    padding:1.5rem 0;
-    border-bottom:1px solid var(--gris-200);
-  }
-  .bloque:last-child{border-bottom:none;}
+    /* Glass */
+    --glass: rgba(255, 252, 246, 0.72);
+    --glass-strong: rgba(255, 253, 248, 0.94);
+    --glass-border: rgba(255, 253, 246, 0.95);
+    --glass-blur: saturate(180%) blur(22px);
 
-  .bloque-titulo{
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    color:var(--gris-700);
-    font-weight:500;
-    margin-bottom:.4rem;
-  }
-  .bloque-desc{
-    font-size:13px;
-    color:var(--gris-500);
-    margin-bottom:1.25rem;
-    max-width:520px;
-    line-height:1.6;
-  }
+    /* Sombras cálidas */
+    --shadow-xs: 0 1px 3px rgba(74, 38, 16, 0.06);
+    --shadow-sm: 0 2px 8px rgba(74, 38, 16, 0.06);
+    --shadow-md: 0 10px 28px rgba(74, 38, 16, 0.09);
+    --shadow-lg: 0 22px 55px rgba(74, 38, 16, 0.13);
+    --shadow-xl: 0 35px 90px rgba(74, 38, 16, 0.20);
 
-  /* ============ FIELDS ============ */
-  .field{margin-bottom:1.25rem;}
-  .field label{
-    display:block;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.12em;
-    color:var(--gris-500);
-    margin-bottom:.4rem;
-    font-weight:500;
-  }
-  .field input,
-  .field select{
-    width:100%;
-    padding:.7rem 0;
-    border:none;
-    border-bottom:1px solid var(--gris-300);
-    border-radius:0;
-    background:transparent;
-    color:var(--negro);
-    transition:border-color .2s;
-    appearance:none;
-    -webkit-appearance:none;
-  }
-  .field select{
-    background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3e%3cpath d='M1 1L5 5L9 1' stroke='%238a8a8a' stroke-width='1.2'/%3e%3c/svg%3e");
-    background-repeat:no-repeat;
-    background-position:right center;
-    padding-right:1.5rem;
-  }
-  .field input:focus,
-  .field select:focus{
-    outline:none;
-    border-bottom-color:var(--negro);
-  }
+    /* Formas */
+    --r-xs: 8px;
+    --r-sm: 12px;
+    --r: 16px;
+    --r-lg: 22px;
+    --r-xl: 28px;
+    --r-2xl: 40px;
 
-  .row{display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1.25rem;}
-  @media(max-width:500px){ .row{grid-template-columns:1fr;} }
+    /* Movimiento */
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  /* ============ CHIPS ============ */
-  .chips{display:flex; flex-wrap:wrap; gap:.5rem;}
-  .chip{
-    display:inline-flex;
-    align-items:center;
-    gap:.35rem;
-    padding:.55rem .95rem;
-    border:1px solid var(--gris-300);
-    background:var(--blanco);
-    font-size:13px;
-    color:var(--gris-700);
-    cursor:pointer;
-    transition:all .15s;
-    user-select:none;
-    -webkit-user-select:none;
-    touch-action:manipulation;
-  }
-  .chip:hover{border-color:var(--gris-500);}
-  .chip input{display:none;}
-  .chip.checked{
-    border-color:var(--negro);
-    background:var(--negro);
-    color:var(--blanco);
-  }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-  /* ============ NAV ============ */
-  .nav{
-    display:flex;
-    justify-content:space-between;
-    gap:.75rem;
-    padding-top:1.5rem;
-    margin-top:1.5rem;
-    border-top:1px solid var(--gris-200);
-    flex-wrap:wrap;
-  }
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:.5rem;
-    padding:.95rem 1.75rem;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    font-weight:500;
-    border:1px solid var(--negro);
-    background:var(--negro);
-    color:var(--blanco);
-    cursor:pointer;
-    transition:all .2s;
-    border-radius:0;
-    min-height:44px;
-  }
-  .btn:hover{background:var(--blanco); color:var(--negro);}
-  .btn-ghost{
-    background:transparent;
-    color:var(--gris-700);
-    border-color:transparent;
-    text-decoration:underline;
-    text-underline-offset:4px;
-  }
-  .btn-ghost:hover{background:transparent; color:var(--negro); border-color:transparent;}
-  .btn-lg{padding:1.1rem 2rem;}
-  .btn-full{width:100%;}
+body {
+    min-height: 100dvh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 15.5px;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background:
+        radial-gradient(1200px 700px at 8% -8%, rgba(201, 162, 75, 0.22), transparent 60%),
+        radial-gradient(900px 600px at 100% 8%, rgba(184, 95, 61, 0.16), transparent 55%),
+        radial-gradient(1400px 900px at 50% 108%, rgba(244, 232, 210, 0.9), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
 
-  /* ============ TABS ============ */
-  .tabs{
-    display:flex;
-    gap:1.25rem;
-    overflow-x:auto;
-    border-bottom:1px solid var(--gris-200);
-    margin-bottom:1.75rem;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  .tabs::-webkit-scrollbar{display:none;}
-  .tab{
-    padding:.75rem 0;
-    border:none;
-    background:transparent;
-    color:var(--gris-500);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.13em;
-    font-weight:500;
-    cursor:pointer;
-    transition:color .2s;
-    white-space:nowrap;
-    position:relative;
-  }
-  .tab::after{
-    content:"";
-    position:absolute;
-    bottom:-1px;
-    left:0;
-    right:0;
-    height:1px;
-    background:var(--negro);
-    transform:scaleX(0);
-    transition:transform .2s;
-  }
-  .tab.active{color:var(--negro);}
-  .tab.active::after{transform:scaleX(1);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block; animation:appear .3s ease;}
+h1, h2, h3, h4, h5 {
+    font-family: 'Fraunces', 'Times New Roman', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    font-variation-settings: "SOFT" 50, "WONK" 1, "opsz" 40;
+}
 
-  /* ============ NOTAS ============ */
-  .nota{
-    font-size:13px;
-    line-height:1.65;
-    color:var(--gris-700);
-    padding:.9rem 0 .9rem 1.1rem;
-    border-left:2px solid var(--gris-300);
-    margin:.85rem 0;
-  }
-  .nota strong{color:var(--negro); font-weight:600;}
-  .nota-acento{border-left-color:var(--acento); background:var(--acento-claro); padding:.9rem 1rem;}
-  .nota-aviso{border-left-color:var(--alerta); background:var(--alerta-claro); padding:.9rem 1rem;}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+img { max-width: 100%; display: block; }
+::selection { background: var(--brass); color: var(--cognac-deep); }
 
-  /* ============ TABLAS ============ */
-  .tabla{width:100%; border-collapse:collapse; font-size:13px; margin:.4rem 0;}
-  .tabla th{
-    text-align:left;
-    padding:.7rem 0;
-    border-bottom:1px solid var(--gris-300);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--gris-500);
-    font-weight:500;
-  }
-  .tabla td{
-    padding:.7rem 0;
-    border-bottom:1px solid var(--gris-100);
-    color:var(--gris-700);
-    vertical-align:top;
-  }
-  .tabla td strong{color:var(--negro); font-weight:600;}
-  .tabla tr:last-child td{border-bottom:none;}
-  .tabla-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -.25rem; padding:0 .25rem;}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(165, 88, 42, 0.22); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(165, 88, 42, 0.42); }
 
-  /* ============ STATS ============ */
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
-    gap:1.25rem;
-    padding:1.25rem 0;
-  }
-  .stat{
-    text-align:left;
-    padding-left:.9rem;
-    border-left:1px solid var(--gris-300);
-  }
-  .stat-lbl{
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.12em;
-    color:var(--gris-500);
-    margin-bottom:.25rem;
-  }
-  .stat-val{
-    font-size:20px;
-    color:var(--negro);
-    font-weight:400;
-    letter-spacing:-0.02em;
-    line-height:1.2;
-  }
-  .stat-sub{font-size:11px; color:var(--gris-500); margin-top:.15rem;}
+.container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 22px; }
 
-  /* ============ ACORDEONES ============ */
-  details.acordeon{
-    border-bottom:1px solid var(--gris-200);
-  }
-  details.acordeon:first-of-type{border-top:1px solid var(--gris-200);}
-  details.acordeon summary{
-    padding:1.1rem 0;
-    cursor:pointer;
-    font-size:13px;
-    color:var(--gris-900);
-    font-weight:500;
-    list-style:none;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-    touch-action:manipulation;
-    -webkit-tap-highlight-color:transparent;
-  }
-  details.acordeon summary::-webkit-details-marker{display:none;}
-  details.acordeon summary::after{
-    content:"+";
-    color:var(--gris-500);
-    font-size:18px;
-    font-weight:300;
-    flex-shrink:0;
-  }
-  details.acordeon[open] summary::after{content:"−";}
-  details.acordeon .content{
-    padding-bottom:1.25rem;
-    font-size:13px;
-    color:var(--gris-700);
-    line-height:1.7;
-  }
-  details.acordeon .content ul{list-style:none; padding:0;}
-  details.acordeon .content ul li{
-    padding:.35rem 0 .35rem .9rem;
-    position:relative;
-  }
-  details.acordeon .content ul li::before{
-    content:"—";
-    position:absolute;
-    left:0;
-    color:var(--gris-500);
-  }
+/* =========================================================
+   HEADER — Editorial
+========================================================= */
+.site-header {
+    position: relative;
+    padding: 28px 0 110px;
+    background: linear-gradient(180deg, rgba(255, 253, 248, 0.9), rgba(246, 236, 218, 0.35));
+    border-bottom: 1px solid var(--line-gold);
+    overflow: hidden;
+}
+.site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(600px 220px at 15% 105%, rgba(184, 95, 61, 0.18), transparent 70%),
+        radial-gradient(500px 200px at 88% -10%, rgba(201, 162, 75, 0.24), transparent 70%);
+    pointer-events: none;
+}
+.site-header::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: 0;
+    width: 180px; height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+    opacity: 0.8;
+}
 
-  /* ============ LISTAS ============ */
-  .lista-lim{list-style:none; padding:0;}
-  .lista-lim li{
-    font-size:13px;
-    color:var(--gris-700);
-    padding:.55rem 0;
-    border-bottom:1px solid var(--gris-100);
-    display:flex;
-    gap:.65rem;
-    align-items:baseline;
-  }
-  .lista-lim li:last-child{border-bottom:none;}
-  .lista-lim li::before{
-    content:"—";
-    color:var(--gris-300);
-    flex-shrink:0;
-  }
+.header-inner { position: relative; display: flex; justify-content: center; align-items: center; }
+.brand { display: flex; align-items: center; gap: 20px; text-decoration: none; }
 
-  /* ============ MARCAS / CATÁLOGO ============ */
-  .marca-card{
-    padding:1.1rem;
-    background:var(--gris-50);
-    margin-bottom:.65rem;
-  }
-  .marca-card h4{
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.12em;
-    color:var(--gris-900);
-    font-weight:600;
-    margin-bottom:.4rem;
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:.75rem;
-    flex-wrap:wrap;
-  }
-  .marca-card h4 .categoria{
-    font-size:9px;
-    color:var(--gris-500);
-    font-weight:400;
-    letter-spacing:.1em;
-  }
-  .marca-card .modelos{
-    font-size:12px;
-    color:var(--gris-700);
-    line-height:1.7;
-    margin-bottom:.4rem;
-  }
-  .marca-card .nota-marca{
-    font-size:11px;
-    color:var(--gris-500);
-    font-style:italic;
-  }
+.brand-logo {
+    width: 82px; height: 82px; border-radius: 50%; object-fit: cover;
+    background: var(--surface);
+    padding: 3px;
+    border: 1px solid var(--brass-soft);
+    box-shadow:
+        0 0 0 5px rgba(201, 162, 75, 0.10),
+        0 0 40px 0 rgba(201, 162, 75, 0.35),
+        0 12px 26px rgba(74, 38, 16, 0.13);
+    transition: transform 0.5s var(--spring);
+}
+.brand:hover .brand-logo { transform: rotate(-5deg) scale(1.04); }
 
-  .filtros{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.4rem;
-    margin-bottom:1.25rem;
-  }
-  .filtro{
-    padding:.5rem .9rem;
-    border:1px solid var(--gris-300);
-    background:var(--blanco);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    color:var(--gris-700);
-    cursor:pointer;
-    transition:all .15s;
-    touch-action:manipulation;
-  }
-  .filtro.active{
-    background:var(--negro);
-    color:var(--blanco);
-    border-color:var(--negro);
-  }
+.brand-text { display: flex; flex-direction: column; }
+.brand-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--cognac);
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+}
+.brand-eyebrow i { color: var(--brass); }
 
-  /* ============ MARCAS DETALLE ============ */
-  .marca-detalle{
-    padding:1.25rem;
-    background:var(--gris-50);
-    margin:.75rem 0;
-  }
-  .marca-detalle h4{
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    color:var(--gris-900);
-    font-weight:500;
-    margin-bottom:.6rem;
-  }
-  .marca-detalle p{font-size:13px; color:var(--gris-700); line-height:1.7;}
+.brand-name {
+    font-size: clamp(1.65rem, 4.6vw, 2.3rem);
+    color: var(--cognac-deep);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+}
+.brand-name em {
+    font-style: italic;
+    color: var(--cognac);
+    font-variation-settings: "SOFT" 80, "WONK" 1, "opsz" 100;
+}
 
-  /* ============ AVANCES ============ */
-  .avance-form{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
-    gap:1.25rem;
-  }
-  .chart{
-    display:flex;
-    align-items:flex-end;
-    gap:.3rem;
-    height:90px;
-    border-bottom:1px solid var(--gris-300);
-    margin:1.25rem 0 1.75rem;
-  }
-  .chart .bar{
-    flex:1;
-    min-width:6px;
-    background:var(--negro);
-    min-height:2px;
-    opacity:.85;
-  }
-  .chart-info{
-    font-size:11px;
-    color:var(--gris-500);
-    text-align:center;
-    letter-spacing:.05em;
-  }
-  .historial{list-style:none; padding:0;}
-  .historial li{
-    display:grid;
-    grid-template-columns:80px 1fr auto;
-    gap:.85rem;
-    align-items:baseline;
-    padding:.8rem 0;
-    border-bottom:1px solid var(--gris-100);
-    font-size:13px;
-  }
-  .historial li .fecha{color:var(--gris-900); font-weight:500;}
-  .historial li .datos{color:var(--gris-500); font-size:12px; line-height:1.5;}
-  .historial li button{
-    background:transparent;
-    border:none;
-    color:var(--gris-500);
-    cursor:pointer;
-    font-size:14px;
-    padding:.2rem .4rem;
-    touch-action:manipulation;
-  }
-  .historial li button:hover{color:var(--alerta);}
-  .vacio{
-    text-align:center;
-    padding:2.5rem 1rem;
-    color:var(--gris-500);
-    font-size:13px;
-    font-style:italic;
-  }
+.brand-meta {
+    margin-top: 6px;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mocha);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.brand-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.brand-meta span i { color: var(--brass); font-size: 0.6rem; }
+.brand-meta span + span::before {
+    content: "·";
+    color: var(--taupe);
+    margin-right: 6px;
+}
 
-  /* ============ HERO ============ */
-  .hero{
-    text-align:center;
-    padding:2.5rem .75rem 2rem;
-    border-bottom:1px solid var(--gris-200);
-    margin-bottom:1.5rem;
-  }
-  .hero h2{
-    font-size:24px;
-    font-weight:400;
-    letter-spacing:-0.02em;
-    color:var(--negro);
-    line-height:1.3;
-    margin-bottom:1rem;
-    max-width:480px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  .hero p{
-    font-size:14px;
-    color:var(--gris-500);
-    max-width:440px;
-    margin:0 auto 1.75rem;
-    line-height:1.7;
-  }
-  .hero .features{
-    display:flex;
-    flex-wrap:wrap;
-    gap:1.5rem;
-    justify-content:center;
-    margin-bottom:2rem;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.12em;
-    color:var(--gris-500);
-  }
+/* =========================================================
+   HERO
+========================================================= */
+.hero {
+    margin: -65px auto 44px;
+    max-width: 800px;
+    padding: 38px 32px 34px;
+    text-align: center;
+    background: var(--glass-strong);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-xl);
+    box-shadow:
+        var(--shadow-lg),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    position: relative;
+    z-index: 5;
+    animation: riseIn 0.7s var(--ease) both;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+@keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 
-  .oculto{display:none !important;}
+.hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.66rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--cognac);
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content: "";
+    width: 30px; height: 1px;
+    background: var(--brass);
+    opacity: 0.7;
+}
 
-  @media(max-width:500px){
-    .app{padding:1rem 1rem 4rem;}
-    .header{flex-direction:column; align-items:flex-start;}
-    .header .aviso{text-align:left;}
-    .hero{padding:1.75rem 0 1.5rem;}
-    .hero h2{font-size:20px;}
-    .btn{padding:.85rem 1.35rem; font-size:11px;}
-    .historial li{grid-template-columns:1fr; gap:.25rem;}
-  }
+.hero h2 {
+    font-size: clamp(1.6rem, 4.4vw, 2.25rem);
+    color: var(--cognac-deep);
+    margin-bottom: 14px;
+    line-height: 1.15;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+.hero h2 em {
+    font-style: italic;
+    color: var(--cognac);
+    font-variation-settings: "SOFT" 80, "WONK" 1, "opsz" 100;
+}
+.hero p {
+    color: var(--cocoa);
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.hero-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+}
+.hero-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border: 1px solid var(--line-2);
+    background: rgba(255, 253, 248, 0.85);
+    color: var(--cocoa);
+}
+.hero-chip i { font-size: 0.85rem; }
+.hero-chip.green { color: var(--success-dark); border-color: rgba(15, 123, 74, 0.20); background: rgba(37, 211, 102, 0.08); }
+.hero-chip.green i { color: var(--success); }
+.hero-chip.gold { color: var(--cognac-dark); border-color: var(--line-gold); background: linear-gradient(135deg, var(--brass-pale), rgba(255, 253, 248, 0.85)); }
+.hero-chip.gold i { color: var(--brass); }
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+.main-grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+
+.panel {
+    background: var(--glass);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-lg);
+    box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    padding: 28px;
+}
+.panel-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+}
+.panel-head::after {
+    content: "";
+    position: absolute; left: 0; bottom: -1px;
+    width: 42px; height: 2px;
+    background: var(--brass);
+    border-radius: 2px;
+}
+.panel-title {
+    font-size: 1.3rem;
+    color: var(--cognac-deep);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+.panel-count {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mocha);
+    font-weight: 700;
+}
+
+/* =========================================================
+   PRODUCT CARD — Editorial
+========================================================= */
+.product {
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+    cursor: pointer;
+    position: relative;
+}
+.product:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--brass-soft);
+}
+.product-media {
+    position: relative;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    background: linear-gradient(135deg, #D9B58C, #A5703F);
+}
+.product-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
+.product:hover .product-media img { transform: scale(1.05); }
+.product-media::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(43, 26, 16, 0.28));
+    pointer-events: none;
+}
+
+.product-badge {
+    position: absolute; top: 16px; left: 16px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(255, 253, 248, 0.96);
+    backdrop-filter: blur(8px);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cognac-dark);
+    box-shadow: 0 2px 8px rgba(74, 38, 16, 0.12);
+    display: inline-flex; align-items: center; gap: 6px;
+    z-index: 2;
+}
+.product-badge i { color: var(--brass); }
+
+.product-sku {
+    position: absolute; bottom: 16px; left: 18px;
+    font-size: 0.65rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255, 253, 248, 0.9);
+    font-weight: 700;
+    z-index: 2;
+}
+
+.product-body { padding: 24px 24px 22px; }
+.product-name {
+    font-size: 1.55rem;
+    color: var(--cognac-deep);
+    margin-bottom: 8px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+}
+.product-name em {
+    font-style: italic;
+    color: var(--cognac);
+    font-variation-settings: "SOFT" 80, "WONK" 1;
+}
+.product-text { color: var(--cocoa); font-size: 0.9rem; margin-bottom: 22px; line-height: 1.6; }
+
+.product-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.meta-chip {
+    font-size: 0.68rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--mocha);
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--surface-3);
+    border: 1px solid var(--line);
+}
+.meta-chip.gold { color: var(--cognac-dark); background: var(--brass-pale); border-color: var(--line-gold); }
+
+.product-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+.product-price {
+    color: var(--cognac-deep);
+    display: flex; align-items: baseline; gap: 6px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+}
+.product-price .amount { font-size: 1.85rem; letter-spacing: -0.03em; line-height: 1; }
+.product-price .currency { font-size: 1rem; color: var(--cognac); font-weight: 600; margin-right: -2px; }
+.product-price .unit { font-size: 0.72rem; color: var(--mocha); font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 9px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-weight: 700; font-size: 0.88rem;
+    transition: all 0.28s var(--ease);
+    white-space: nowrap;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.01em;
+}
+.btn:active { transform: scale(0.97); }
+.btn i { font-size: 0.9em; }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--cognac), var(--cognac-dark));
+    color: #FFFCF6;
+    box-shadow:
+        0 8px 22px rgba(126, 62, 22, 0.32),
+        0 2px 6px rgba(126, 62, 22, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+.btn-primary:hover {
+    box-shadow:
+        0 14px 32px rgba(126, 62, 22, 0.42),
+        0 2px 6px rgba(126, 62, 22, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #2CD671, #128C4D);
+    color: #fff;
+    box-shadow:
+        0 8px 22px rgba(18, 140, 77, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.btn-success:hover {
+    box-shadow: 0 14px 32px rgba(18, 140, 77, 0.42);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: var(--surface);
+    border: 1.5px solid var(--line-2);
+    color: var(--cognac-deep);
+}
+.btn-outline:hover {
+    background: var(--brass-pale);
+    border-color: var(--brass);
+    color: var(--cognac-dark);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--mocha);
+    padding: 11px;
+    font-weight: 600;
+}
+.btn-ghost:hover { color: var(--cognac); }
+
+.btn-block { width: 100%; }
+.btn-sm { padding: 10px 18px; font-size: 0.82rem; }
+
+/* =========================================================
+   CART
+========================================================= */
+.cart-panel { position: sticky; top: 22px; }
+.cart-list { max-height: 380px; overflow-y: auto; margin: -8px -8px 14px; padding: 8px; }
+
+.cart-empty { text-align: center; padding: 40px 14px; color: var(--mocha); }
+.cart-empty i { font-size: 2.4rem; margin-bottom: 14px; color: var(--brass); opacity: 0.55; }
+.cart-empty p { font-size: 0.88rem; }
+.cart-empty small { display: block; margin-top: 6px; font-size: 0.75rem; color: var(--taupe); }
+
+.cart-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--line);
+    animation: itemIn 0.35s var(--ease) both;
+    border-radius: var(--r-xs);
+    transition: background 0.2s;
+}
+@keyframes itemIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+.cart-item:hover { background: rgba(201, 162, 75, 0.05); }
+.cart-item:last-child { border-bottom: none; }
+
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 50, "WONK" 1;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cognac-deep);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+.cart-item-mods {
+    font-size: 0.75rem;
+    color: var(--cocoa);
+    margin-bottom: 8px;
+    line-height: 1.45;
+    display: flex; flex-direction: column; gap: 2px;
+}
+.cart-item-mods span { display: flex; gap: 6px; align-items: flex-start; }
+.cart-item-mods span::before {
+    content: "";
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--brass);
+    margin-top: 7px;
+    flex-shrink: 0;
+}
+.cart-item-price { font-size: 0.78rem; color: var(--cognac); font-weight: 700; letter-spacing: 0.2px; }
+.cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+.qty {
+    display: inline-flex; align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    overflow: hidden;
+    height: 34px;
+}
+.qty-btn {
+    width: 30px; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cognac);
+    font-size: 0.72rem;
+    transition: background 0.2s, color 0.2s;
+}
+.qty-btn:hover { background: var(--brass-pale); color: var(--cognac-dark); }
+.qty-value { min-width: 28px; text-align: center; font-weight: 700; font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--cognac-deep); }
+
+.remove {
+    width: 30px; height: 30px; border-radius: 50%;
+    color: var(--danger); background: var(--danger-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; transition: all 0.2s;
+}
+.remove:hover { background: rgba(195, 61, 46, 0.20); transform: scale(1.08); }
+
+.totals {
+    background: linear-gradient(135deg, var(--brass-pale), var(--surface));
+    border: 1px solid var(--line-gold);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    margin-top: 8px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.totals-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 0;
+    font-size: 0.85rem;
+    color: var(--cocoa);
+}
+.totals-row span:first-child { font-weight: 500; }
+.totals-row strong { font-weight: 600; color: var(--cognac-deep); }
+.totals-row.final {
+    border-top: 1px dashed var(--line-gold);
+    margin-top: 12px; padding-top: 14px;
+    color: var(--cognac-deep);
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+    font-weight: 500;
+}
+.totals-row.final span:first-child {
+    font-size: 0.75rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--cognac);
+}
+.totals-row.final strong {
+    color: var(--cognac-deep);
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+.modal {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    background: rgba(43, 26, 16, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s var(--ease), visibility 0.3s;
+}
+.modal.open { opacity: 1; visibility: visible; }
+.modal-card {
+    width: 100%; max-width: 540px;
+    max-height: 92dvh; overflow: hidden auto;
+    background: var(--surface);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--line-gold);
+    border-radius: var(--r-xl);
+    box-shadow:
+        var(--shadow-xl),
+        0 0 0 1px rgba(201, 162, 75, 0.15),
+        0 0 60px -20px rgba(201, 162, 75, 0.4);
+    position: relative;
+    transform: scale(0.94) translateY(12px);
+    transition: transform 0.45s var(--spring);
+    overscroll-behavior: contain;
+}
+.modal.open .modal-card { transform: scale(1) translateY(0); }
+.modal-close {
+    position: absolute; top: 18px; right: 18px;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255, 253, 248, 0.96);
+    color: var(--cognac-deep);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5;
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line-gold);
+    transition: all 0.25s var(--ease);
+}
+.modal-close:hover { transform: rotate(90deg); background: var(--brass-pale); color: var(--cognac-dark); }
+
+.modal-hero {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    position: relative;
+}
+.modal-hero-wrap { position: relative; }
+.modal-hero-wrap::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(43, 26, 16, 0.15));
+    pointer-events: none;
+}
+.modal-hero-sku {
+    position: absolute;
+    bottom: 16px; left: 20px;
+    font-size: 0.65rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255, 253, 248, 0.95);
+    font-weight: 700;
+    z-index: 2;
+}
+
+.modal-body { padding: 28px; }
+
+.modal-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--brass);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.modal-body h3 {
+    font-size: 1.75rem;
+    color: var(--cognac-deep);
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+}
+.modal-body h3 em {
+    font-style: italic;
+    color: var(--cognac);
+    font-variation-settings: "SOFT" 80, "WONK" 1;
+}
+.modal-body .modal-desc {
+    color: var(--cocoa);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+.modal-base-price {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+    color: var(--cognac);
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    display: flex; align-items: baseline; gap: 6px;
+}
+.modal-base-price small {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--mocha);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Modifier section */
+.modifier {
+    margin-top: 26px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+}
+.modifier-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.modifier-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cognac-dark);
+    font-weight: 800;
+    margin-bottom: 3px;
+}
+.modifier-title .required {
+    color: var(--brass);
+    font-weight: 700;
+    margin-left: 6px;
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+}
+.modifier-sub {
+    font-size: 0.78rem;
+    color: var(--mocha);
+    font-weight: 500;
+}
+.modifier-counter {
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    color: var(--cognac);
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--brass-pale);
+    border: 1px solid var(--line-gold);
+    white-space: nowrap;
+}
+.modifier-counter.max { background: rgba(37, 211, 102, 0.14); border-color: rgba(18, 140, 77, 0.28); color: var(--success-dark); }
+
+.modifier-options { display: flex; flex-direction: column; gap: 8px; }
+
+.m-option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border-radius: var(--r-sm);
+    background: var(--surface-2);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--line);
+}
+.m-option:hover {
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1.5px var(--brass-soft);
+}
+.m-option input { position: absolute; opacity: 0; pointer-events: none; }
+
+.m-check {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s var(--ease);
+    background: var(--surface);
+    border: 1.5px solid var(--taupe);
+    position: relative;
+}
+/* Radio dot */
+.m-option input[type="radio"] ~ .m-check { border-radius: 50%; }
+.m-option input[type="radio"] ~ .m-check::after {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cognac), var(--cognac-dark));
+    transform: scale(0);
+    transition: transform 0.28s var(--spring);
+}
+/* Checkbox tick */
+.m-option input[type="checkbox"] ~ .m-check { border-radius: 6px; }
+.m-option input[type="checkbox"] ~ .m-check::after {
+    content: "";
+    width: 10px; height: 6px;
+    border-left: 2px solid #FFFCF6;
+    border-bottom: 2px solid #FFFCF6;
+    transform: rotate(-45deg) translate(1px, -1px) scale(0);
+    transition: transform 0.28s var(--spring);
+    margin-top: -3px;
+}
+
+.m-option input:checked ~ .m-check {
+    border-color: var(--cognac);
+    background: var(--cognac);
+}
+.m-option input[type="radio"]:checked ~ .m-check { background: var(--surface); border-color: var(--cognac); }
+.m-option input[type="radio"]:checked ~ .m-check::after { transform: scale(1); }
+.m-option input[type="checkbox"]:checked ~ .m-check::after { transform: rotate(-45deg) translate(1px, -1px) scale(1); }
+
+.m-option:has(input:checked) {
+    background: linear-gradient(135deg, var(--brass-pale), var(--surface));
+    box-shadow:
+        inset 0 0 0 1.5px var(--brass),
+        0 4px 12px rgba(201, 162, 75, 0.15);
+}
+.m-option:has(input:checked) .m-name { color: var(--cognac-dark); }
+
+.m-text { flex: 1; min-width: 0; }
+.m-name { display: block; font-weight: 600; font-size: 0.92rem; color: var(--ink); transition: color 0.2s; }
+.m-desc { display: block; font-size: 0.75rem; color: var(--mocha); margin-top: 2px; }
+
+.m-price {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--cognac);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(201, 162, 75, 0.14);
+}
+.m-price.included {
+    color: var(--mocha);
+    background: transparent;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0;
+}
+
+/* Quantity */
+.qty-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 24px;
+    margin: 28px 0 22px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+}
+.qty-big {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1.5px solid var(--line-2);
+    background: var(--surface);
+    color: var(--cognac);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+    transition: all 0.25s var(--ease);
+    box-shadow: var(--shadow-xs);
+}
+.qty-big:hover {
+    background: linear-gradient(135deg, var(--cognac), var(--cognac-dark));
+    color: #fff;
+    border-color: var(--cognac-dark);
+    transform: scale(1.06);
+    box-shadow: 0 8px 20px rgba(126, 62, 22, 0.30);
+}
+.qty-big:active { transform: scale(0.94); }
+.qty-big:disabled { opacity: 0.35; cursor: not-allowed; transform: none; background: var(--surface); color: var(--mocha); }
+
+.qty-display {
+    min-width: 48px; text-align: center;
+    font-size: 1.7rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--cognac-deep);
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+    letter-spacing: -0.02em;
+}
+
+.modal-total {
+    padding: 16px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--brass-pale), var(--surface));
+    border: 1px solid var(--line-gold);
+    border-radius: var(--r-sm);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.modal-total-label {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cognac);
+    font-weight: 800;
+}
+.modal-total strong {
+    color: var(--cognac-deep);
+    font-size: 1.45rem;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+}
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+.checkout { display: none; max-width: 700px; margin: 32px auto 0; animation: riseIn 0.5s var(--ease) both; }
+.checkout.open { display: block; }
+
+.field { margin-bottom: 20px; }
+.field label {
+    display: block; font-weight: 700;
+    font-size: 0.75rem; margin-bottom: 9px;
+    color: var(--cognac-dark);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.field label .req { color: var(--brass); margin-left: 3px; }
+.field label .opt { color: var(--mocha); font-weight: 500; font-size: 0.68rem; letter-spacing: 1px; margin-left: 4px; }
+
+.input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--r-sm);
+    border: 1.5px solid var(--line-2);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.94rem;
+    transition: all 0.22s var(--ease);
+    outline: none;
+    font-family: inherit;
+}
+.input:focus {
+    border-color: var(--cognac);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(165, 88, 42, 0.10);
+}
+.input::placeholder { color: var(--taupe); }
+textarea.input { resize: vertical; min-height: 90px; }
+
+/* Toggle */
+.toggle-group {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: var(--surface-3);
+    padding: 5px;
+    border-radius: var(--r-sm);
+    border: 1.5px solid var(--line);
+}
+.toggle-opt { position: relative; cursor: pointer; }
+.toggle-opt input { position: absolute; opacity: 0; }
+.toggle-opt span {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 8px;
+    border-radius: 9px;
+    font-size: 0.85rem; font-weight: 700;
+    color: var(--cocoa);
+    transition: all 0.28s var(--ease);
+}
+.toggle-opt span i { font-size: 0.8rem; }
+.toggle-opt input:checked + span {
+    background: var(--surface);
+    color: var(--cognac-dark);
+    box-shadow:
+        0 2px 8px rgba(74, 38, 16, 0.08),
+        inset 0 0 0 1px var(--brass-soft);
+}
+
+/* Location */
+.btn-location {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px dashed var(--cognac);
+    color: var(--cognac-dark);
+    padding: 15px;
+    border-radius: var(--r-sm);
+    font-weight: 700; font-size: 0.88rem;
+    transition: all 0.28s var(--ease);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 10px;
+    letter-spacing: 0.3px;
+}
+.btn-location:hover {
+    background: var(--brass-pale);
+    border-style: solid;
+}
+.btn-location:disabled { opacity: 0.7; cursor: wait; }
+.btn-location i { font-size: 0.95rem; }
+
+.location-preview {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; margin-top: 12px;
+    border-radius: var(--r-sm);
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.10), var(--surface));
+    border: 1.5px solid rgba(18, 140, 77, 0.28);
+    animation: riseIn 0.35s var(--ease) both;
+}
+.location-preview > i:first-child { color: var(--success); font-size: 1.15rem; }
+.location-preview-info { flex: 1; min-width: 0; }
+.location-preview-info strong { display: block; font-size: 0.82rem; color: var(--success-dark); margin-bottom: 2px; font-weight: 700; }
+.location-preview-info small {
+    display: block; font-size: 0.72rem; color: var(--cocoa);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+}
+.location-remove {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--surface);
+    color: var(--danger);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; flex-shrink: 0;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-xs);
+}
+.location-remove:hover { background: var(--danger); color: #fff; transform: scale(1.05); }
+
+.location-icon {
+    width: 78px; height: 78px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--brass-pale), rgba(201, 162, 75, 0.15));
+    color: var(--cognac-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 18px;
+    box-shadow:
+        inset 0 0 0 2px var(--line-gold),
+        0 0 40px -10px rgba(201, 162, 75, 0.6);
+    animation: successPulse 0.7s var(--spring);
+}
+@keyframes successPulse {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+.location-question { text-align: center; margin-bottom: 22px; }
+.location-question h3 { font-size: 1.4rem; color: var(--cognac-deep); margin-bottom: 8px; font-weight: 500; letter-spacing: -0.02em; }
+.location-question p { color: var(--cocoa); font-size: 0.88rem; }
+.location-question .location-coords {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(37, 211, 102, 0.10);
+    color: var(--success-dark);
+    font-size: 0.74rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 0 0 1px rgba(18, 140, 77, 0.22);
+    letter-spacing: 0.5px;
+}
+
+.checkout-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+
+/* =========================================================
+   FAB
+========================================================= */
+.fab {
+    display: none;
+    position: fixed;
+    right: 18px; bottom: 18px;
+    width: 62px; height: 62px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cognac), var(--cognac-dark));
+    color: #FFFCF6;
+    align-items: center; justify-content: center;
+    font-size: 1.15rem;
+    box-shadow:
+        0 12px 32px rgba(126, 62, 22, 0.42),
+        0 4px 12px rgba(126, 62, 22, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    z-index: 900;
+    transition: transform 0.3s var(--spring);
+    animation: fabPulse 2.6s ease-in-out infinite;
+}
+.fab:hover { transform: scale(1.08); }
+.fab:active { transform: scale(0.94); }
+@keyframes fabPulse {
+    0%, 100% { box-shadow: 0 12px 32px rgba(126, 62, 22, 0.42), 0 0 0 0 rgba(201, 162, 75, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
+    50%      { box-shadow: 0 12px 32px rgba(126, 62, 22, 0.42), 0 0 0 16px rgba(201, 162, 75, 0), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
+}
+.fab-badge {
+    position: absolute; top: -3px; right: -3px;
+    min-width: 24px; height: 24px; padding: 0 6px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brass-light), var(--brass));
+    color: var(--cognac-deep);
+    border: 2.5px solid var(--surface);
+    font-size: 0.7rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s var(--spring);
+    box-shadow: 0 2px 8px rgba(201, 162, 75, 0.5);
+}
+.fab-badge.pop { animation: badgePop 0.4s var(--spring); }
+@keyframes badgePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+.toast {
+    position: fixed;
+    left: 50%; bottom: 24px;
+    transform: translateX(-50%) translateY(120%);
+    background: linear-gradient(135deg, var(--cognac-deep), #1A0E05);
+    color: var(--brass-pale);
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-size: 0.86rem; font-weight: 600;
+    z-index: 3000;
+    box-shadow:
+        0 14px 36px rgba(43, 26, 16, 0.4),
+        inset 0 0 0 1px var(--line-gold);
+    opacity: 0;
+    transition: transform 0.45s var(--spring), opacity 0.3s;
+    max-width: calc(100vw - 40px);
+    display: flex; align-items: center; gap: 10px;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast i { color: var(--brass-light); }
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+.success { text-align: center; padding: 44px 30px; }
+.success-icon {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.16), rgba(37, 211, 102, 0.04));
+    color: var(--success);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.4rem;
+    margin: 0 auto 22px;
+    box-shadow:
+        inset 0 0 0 2px rgba(37, 211, 102, 0.25),
+        0 12px 30px rgba(37, 211, 102, 0.20);
+    animation: successPulse 0.7s var(--spring);
+}
+.success h3 {
+    font-size: 1.6rem;
+    color: var(--cognac-deep);
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+.success p { color: var(--cocoa); font-size: 0.92rem; margin-bottom: 26px; max-width: 340px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer {
+    margin-top: 70px; padding: 44px 20px 50px;
+    text-align: center;
+    color: var(--mocha); font-size: 0.8rem;
+    border-top: 1px solid var(--line);
+    position: relative;
+}
+.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 70px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+.footer-mark {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 100;
+    font-size: 1.15rem;
+    color: var(--cognac-deep);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+.footer-mark em { font-style: italic; color: var(--cognac); }
+.site-footer p + p { margin-top: 4px; }
+.site-footer .footer-meta {
+    margin-top: 14px;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--taupe);
+    font-weight: 600;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 950px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .cart-panel { position: static; }
+    .fab { display: flex; }
+    .cart-list { max-height: 280px; }
+}
+@media (max-width: 620px) {
+    body { font-size: 15px; }
+    .container { padding: 0 16px; }
+    .site-header { padding: 22px 0 88px; }
+    .brand-logo { width: 64px; height: 64px; }
+    .brand-name { font-size: 1.45rem; }
+    .brand-eyebrow { font-size: 0.58rem; letter-spacing: 3px; }
+    .brand-meta { font-size: 0.6rem; letter-spacing: 2px; }
+    .hero { padding: 28px 22px; margin-top: -55px; border-radius: var(--r-lg); }
+    .hero h2 { font-size: 1.5rem; }
+    .hero p { font-size: 0.92rem; }
+    .hero-chip { font-size: 0.72rem; padding: 7px 12px; }
+    .panel { padding: 20px 18px; border-radius: var(--r); }
+    .panel-title { font-size: 1.2rem; }
+    .product-body { padding: 20px; }
+    .product-name { font-size: 1.35rem; }
+    .product-price .amount { font-size: 1.6rem; }
+    .product-foot { flex-direction: column; align-items: stretch; }
+    .product-foot .btn { justify-content: center; }
+    .modal { padding: 12px; align-items: flex-end; }
+    .modal-card { border-radius: var(--r-lg) var(--r-lg) 0 0; max-height: 96dvh; }
+    .modal-hero { height: 190px; }
+    .modal-body { padding: 24px 20px; }
+    .modal-body h3 { font-size: 1.5rem; }
+    .qty-big { width: 44px; height: 44px; }
+    .qty-display { font-size: 1.5rem; }
+    .toast { bottom: 92px; font-size: 0.82rem; padding: 12px 18px; }
+    .cart-item-name { font-size: 0.94rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
 </style>
 </head>
+
 <body>
-<div class="app">
 
-  <header class="header">
-    <div>
-      <h1>Aqua Planner</h1>
-      <p class="sub">Asistente para acuarios plantados</p>
-    </div>
-    <div class="aviso">Guía<br>orientativa</div>
-  </header>
-
-  <div class="progress">
-    <div class="progress-line"><div id="progressBar"></div></div>
-    <div class="progress-steps" id="progressSteps">
-      <span data-step="0" class="active">Básicos</span>
-      <span data-step="1">Equipo</span>
-      <span data-step="2">Plantas</span>
-      <span data-step="3">Plan</span>
-      <span data-step="4">Avances</span>
-    </div>
-  </div>
-
-  <!-- PASO 0 -->
-  <section class="step active" data-step="0">
-    <div class="hero">
-      <h2>Un acuario plantado, planificado con precisión.</h2>
-      <p>En cuatro pasos tendrás una guía completa de arranque, abonado, mantenimiento, prevención de algas y catálogo de marcas del hobby.</p>
-      <div class="features">
-        <span>Arranque</span>
-        <span>Abonado</span>
-        <span>CO₂</span>
-        <span>Algas</span>
-        <span>Catálogo</span>
-      </div>
-      <button class="btn btn-lg" onclick="goToStep(1)">Comenzar</button>
-    </div>
-  </section>
-
-  <!-- PASO 1 -->
-  <section class="step" data-step="1">
-    <div class="bloque">
-      <div class="bloque-titulo">Medidas del acuario</div>
-      <div class="bloque-desc">Largo, ancho y alto en centímetros. Calculamos el volumen neto aproximado descontando sustrato y decoración.</div>
-      <div class="row">
-        <div class="field"><label>Largo (cm)</label><input type="number" id="largo" value="80" min="20" inputmode="numeric"></div>
-        <div class="field"><label>Ancho (cm)</label><input type="number" id="ancho" value="35" min="20" inputmode="numeric"></div>
-        <div class="field"><label>Alto (cm)</label><input type="number" id="alto" value="40" min="20" inputmode="numeric"></div>
-      </div>
-      <div class="field">
-        <label>Sustrato y decoración</label>
-        <select id="porcentajeDecoracion">
-          <option value="10">Poco — 10%</option>
-          <option value="15" selected>Medio — 15%</option>
-          <option value="20">Mucho — 20%</option>
-          <option value="25">Aquascape denso — 25%</option>
-        </select>
-      </div>
-      <div class="nota nota-acento"><strong>Volumen neto estimado:</strong> <span id="volNetoTxt">—</span> L</div>
-    </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Parámetros del agua</div>
-      <div class="bloque-desc">Si no los conoces, deja los valores por defecto. Podrás ajustarlos más tarde.</div>
-      <div class="row">
-        <div class="field"><label>pH</label><input type="number" id="ph" value="7.0" step="0.1" inputmode="decimal"></div>
-        <div class="field"><label>GH (°dGH)</label><input type="number" id="gh" value="8" step="0.5" inputmode="decimal"></div>
-        <div class="field"><label>KH (°dKH)</label><input type="number" id="kh" value="4" step="0.5" inputmode="decimal"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>TDS (ppm)</label><input type="number" id="tds" value="200" step="10" inputmode="numeric"></div>
-        <div class="field"><label>Temperatura (°C)</label><input type="number" id="temperatura" value="25" step="0.5" inputmode="decimal"></div>
-      </div>
-    </div>
-
-    <div class="nav">
-      <button class="btn btn-ghost" onclick="goToStep(0)">Atrás</button>
-      <button class="btn" onclick="goToStep(2)">Siguiente</button>
-    </div>
-  </section>
-
-  <!-- PASO 2 -->
-  <section class="step" data-step="2">
-    <div class="bloque">
-      <div class="bloque-titulo">Iluminación</div>
-      <div class="row">
-        <div class="field">
-          <label>Nivel</label>
-          <select id="iluminacion">
-            <option value="baja">Baja — menos de 0.5 W/L</option>
-            <option value="media" selected>Media — 0.5 a 1 W/L</option>
-            <option value="alta">Alta — más de 1 W/L</option>
-          </select>
+<!-- HEADER -->
+<header class="site-header">
+    <div class="container">
+        <div class="header-inner">
+            <div class="brand">
+                <img src="https://placehold.co/180x180/7E3E16/FFFCF6?text=A&font=playfair" alt="Cinnamon Aura" class="brand-logo">
+                <div class="brand-text">
+                    <span class="brand-eyebrow">
+                        <i class="fas fa-star"></i> Small Batch Bakery
+                    </span>
+                    <h1 class="brand-name">Cinnamon <em>Aura</em></h1>
+                    <div class="brand-meta">
+                        <span><i class="fas fa-fire"></i> Baked Fresh Daily</span>
+                        <span><i class="fas fa-leaf"></i> Premium Korintje</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="field">
-          <label>Fotoperíodo (h)</label>
-          <input type="number" id="fotoperiodo" value="8" min="4" max="14" inputmode="numeric">
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-eyebrow">Signature Collection</div>
+        <h2>Rollos artesanales, <em>recién horneados</em></h2>
+        <p>Esponjosos, cálidos y personalizados con glaseados y toppings premium. Elige tu combinación perfecta.</p>
+        <div class="hero-chips">
+            <span class="hero-chip gold"><i class="fas fa-star"></i> Signature</span>
+            <span class="hero-chip"><i class="fas fa-fire"></i> Recién horneados</span>
+            <span class="hero-chip green"><i class="fab fa-whatsapp"></i> Pedido por WhatsApp</span>
         </div>
-      </div>
-      <div class="field">
-        <label>Marca / modelo</label>
-        <select id="tipoLampara">
-          <option value="generico">LED genérico</option>
-          <option value="chihiros">Chihiros — WRGB II / Pro</option>
-          <option value="twinstar">Twinstar — S-Line / E-Line</option>
-          <option value="uns">Ultum Nature Systems — Titan 1</option>
-          <option value="ada">ADA — Aquasky / Solar RGB</option>
-          <option value="onf">ONF — Flat One / Nano</option>
-          <option value="fluval">Fluval — Plant 3.0</option>
-          <option value="finnex">Finnex — Planted+ 24/7</option>
-          <option value="nicrew">Nicrew — Planted</option>
-          <option value="t5">Tubos T5 / T8</option>
-        </select>
-      </div>
+    </section>
+
+    <!-- PRODUCT + CART -->
+    <div class="main-grid">
+
+        <section class="panel">
+            <div class="panel-head">
+                <h2 class="panel-title">Signature Roll</h2>
+                <span class="panel-count">01 producto</span>
+            </div>
+
+            <article class="product" role="button" tabindex="0" data-open-modal>
+                <div class="product-media">
+                    <span class="product-badge"><i class="fas fa-star"></i> Best Seller</span>
+                    <span class="product-sku">CR-001</span>
+                    <img src="https://placehold.co/900x620/A5582A/FFFCF6?text=The+Original+Aura&font=playfair" alt="The Original Aura Cinnamon Roll">
+                </div>
+                <div class="product-body">
+                    <h3 class="product-name">The Original <em>Aura</em></h3>
+                    <p class="product-text">Nuestro rollo insignia: esponjoso, cálido y hecho con canela Korintje premium. Personaliza tu glaseado y toppings favoritos.</p>
+
+                    <div class="product-meta">
+                        <span class="meta-chip">4.50 base</span>
+                        <span class="meta-chip gold"><i class="fas fa-plus"></i> 2 capas</span>
+                        <span class="meta-chip">Stock disponible</span>
+                    </div>
+
+                    <div class="product-foot">
+                        <div class="product-price" data-product-price>
+                            <span class="currency">$</span><span class="amount">4.50</span><span class="unit">USD base</span>
+                        </div>
+                        <button class="btn btn-primary" data-open-modal>
+                            <i class="fas fa-sliders"></i> Personalizar
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <aside class="panel cart-panel" id="cartPanel">
+            <div class="panel-head">
+                <h2 class="panel-title">Tu pedido</h2>
+                <span class="panel-count" id="cartCountLabel">Vacío</span>
+            </div>
+
+            <div class="cart-list" id="cartList">
+                <div class="cart-empty">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>Aún no has agregado nada</p>
+                    <small>Personaliza tu rollo y aparecerá aquí</small>
+                </div>
+            </div>
+
+            <div class="totals">
+                <div class="totals-row">
+                    <span>Subtotal</span>
+                    <strong id="subtotal">$0.00</strong>
+                </div>
+                <div class="totals-row final">
+                    <span>Total</span>
+                    <strong id="total">$0.00</strong>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="checkoutBtn" style="margin-top:16px;">
+                Continuar pedido <i class="fas fa-arrow-right"></i>
+            </button>
+        </aside>
     </div>
 
-    <div class="bloque">
-      <div class="bloque-titulo">CO₂</div>
-      <div class="field">
-        <label>Sistema</label>
-        <select id="tipoCO2">
-          <option value="no" selected>Sin CO₂</option>
-          <option value="casero">CO₂ casero — levadura</option>
-          <option value="kit">Kit comercial desechable</option>
-          <option value="fzone">Fzone — Generator 2.5 L</option>
-          <option value="co2art">CO2Art — PRO-SE / Elite</option>
-          <option value="uns-co2">Ultum Nature Systems — CO₂ Kit</option>
-          <option value="ada-co2">ADA — CO₂ System 74</option>
-          <option value="presurizado">CO₂ presurizado genérico</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Filtración</div>
-      <div class="row">
-        <div class="field">
-          <label>Tipo</label>
-          <select id="tipoFiltracion">
-            <option value="interno">Interno</option>
-            <option value="mochila">Mochila (HOB)</option>
-            <option value="canister" selected>Canister externo</option>
-            <option value="esponja">Esponja</option>
-            <option value="sumidero">Sumidero</option>
-          </select>
+    <!-- CHECKOUT -->
+    <section class="panel checkout" id="checkoutSection">
+        <div class="panel-head">
+            <h2 class="panel-title">Finalizar pedido</h2>
+            <span class="panel-count">Último paso</span>
         </div>
-        <div class="field">
-          <label>Caudal (L/h)</label>
-          <input type="number" id="caudal" value="600" step="50" inputmode="numeric">
+
+        <form id="orderForm" novalidate>
+            <div class="field">
+                <label for="customerName">Nombre <span class="req">*</span></label>
+                <input type="text" id="customerName" class="input" placeholder="Tu nombre completo" autocomplete="name" required>
+            </div>
+
+            <div class="field">
+                <label for="customerPhone">Teléfono <span class="req">*</span></label>
+                <input type="tel" id="customerPhone" class="input" placeholder="10 dígitos" autocomplete="tel" inputmode="tel" required>
+            </div>
+
+            <div class="field">
+                <label>¿Para quién es la entrega?</label>
+                <div class="toggle-group">
+                    <label class="toggle-opt">
+                        <input type="radio" name="deliveryFor" value="self" checked>
+                        <span><i class="fas fa-user"></i> Para mí</span>
+                    </label>
+                    <label class="toggle-opt">
+                        <input type="radio" name="deliveryFor" value="other">
+                        <span><i class="fas fa-user-friends"></i> Alguien más</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="deliveryAddress">
+                    Dirección de entrega <span class="opt" id="addressHint">opcional</span>
+                </label>
+                <textarea id="deliveryAddress" class="input" rows="2" placeholder="Calle, número, colonia, referencias..." autocomplete="street-address"></textarea>
+
+                <button type="button" class="btn-location" id="shareLocationBtn">
+                    <i class="fas fa-location-dot"></i>
+                    <span>Compartir ubicación actual</span>
+                </button>
+
+                <div class="location-preview" id="locationPreview" hidden>
+                    <i class="fas fa-map-pin"></i>
+                    <div class="location-preview-info">
+                        <strong id="locationLabel">Ubicación capturada</strong>
+                        <small id="locationCoords">—</small>
+                    </div>
+                    <button type="button" class="location-remove" id="removeLocationBtn" aria-label="Eliminar ubicación">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="customerNotes">Notas adicionales <span class="opt">opcional</span></label>
+                <textarea id="customerNotes" class="input" rows="3" placeholder="Ej. Recoger a las 5 pm, sin nueces..."></textarea>
+            </div>
+
+            <div class="checkout-actions">
+                <button type="submit" class="btn btn-success btn-block">
+                    <i class="fab fa-whatsapp"></i>
+                    Enviar pedido por WhatsApp
+                </button>
+                <button type="button" class="btn btn-ghost btn-block" id="cancelCheckout">
+                    <i class="fas fa-arrow-left"></i> Regresar al pedido
+                </button>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<!-- MODAL PRODUCTO -->
+<div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+        <button class="modal-close" data-close-modal aria-label="Cerrar">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="modal-hero-wrap">
+            <img src="https://placehold.co/900x620/A5582A/FFFCF6?text=The+Original+Aura&font=playfair" alt="The Original Aura" class="modal-hero">
+            <span class="modal-hero-sku">CR-001 · Small Batch</span>
         </div>
-      </div>
-      <div class="field">
-        <label>Marca</label>
-        <select id="marcaFiltro">
-          <option value="generico">Genérica</option>
-          <option value="eheim">Eheim — Classic / Pro 4+</option>
-          <option value="fluval">Fluval — 207 / 307 / 407 / FX</option>
-          <option value="oase">OASE — BioMaster</option>
-          <option value="sunsun">Sunsun — HW Series</option>
-          <option value="aquaclear">AquaClear — HOB</option>
-        </select>
-      </div>
-    </div>
 
-    <div class="bloque">
-      <div class="bloque-titulo">Sustrato</div>
-      <div class="row">
-        <div class="field">
-          <label>Tipo</label>
-          <select id="tipoSustrato">
-            <option value="inerte-grava">Grava inerte</option>
-            <option value="inerte-arena">Arena inerte</option>
-            <option value="nutritivo" selected>Nutritivo comercial</option>
-            <option value="mixto">Mixto</option>
-          </select>
+        <div class="modal-body">
+            <div class="modal-eyebrow">Signature Cinnamon Roll</div>
+            <h3 id="modalTitle">The Original <em>Aura</em></h3>
+            <p class="modal-desc">Nuestro rollo insignia: cálido, esponjoso y elaborado con canela Korintje premium. Personaliza cada capa a tu gusto.</p>
+            <div class="modal-base-price" data-product-price>
+                <span class="currency" style="font-size: 1.1rem; color: var(--cognac); font-weight:600;">$</span>
+                <span>4.50</span>
+                <small>base</small>
+            </div>
+
+            <div id="modifierContainer"><!-- se renderiza dinámicamente --></div>
+
+            <div class="qty-row">
+                <button type="button" class="qty-big" id="decreaseQty" aria-label="Disminuir">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <div class="qty-display" id="qtyDisplay">1</div>
+                <button type="button" class="qty-big" id="increaseQty" aria-label="Aumentar">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <div class="modal-total">
+                <span class="modal-total-label">Total</span>
+                <strong id="modalTotal">$4.50</strong>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="addToCartBtn">
+                <i class="fas fa-shopping-bag"></i> Añadir al pedido
+            </button>
         </div>
-        <div class="field">
-          <label>Antigüedad</label>
-          <select id="antiguedadSustrato">
-            <option value="nuevo" selected>Nuevo — menos de 3 meses</option>
-            <option value="maduro">Maduro — 3 a 12 meses</option>
-            <option value="viejo">Viejo — más de 1 año</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Marca</label>
-        <select id="marcaSustrato">
-          <option value="generico">Genérica</option>
-          <option value="ada">ADA — Amazonia / Aqua Soil</option>
-          <option value="uns">Ultum Nature Systems — Controsoil</option>
-          <option value="tropica">Tropica — Aquarium Soil</option>
-          <option value="seachem">Seachem — Flourite</option>
-          <option value="dennerle">Dennerle — Scapers Soil</option>
-          <option value="caribsea">CaribSea — Eco-Complete</option>
-        </select>
-      </div>
     </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Agua y fauna</div>
-      <div class="row">
-        <div class="field">
-          <label>Tipo de agua</label>
-          <select id="tipoAgua">
-            <option value="grifo" selected>Grifo + declorador</option>
-            <option value="osmosis">Ósmosis inversa</option>
-            <option value="mezcla">Mezcla RO + grifo</option>
-            <option value="pozo">Pozo</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Invertebrados</label>
-          <select id="invertebrados">
-            <option value="ninguno" selected>Ninguno</option>
-            <option value="neocaridina">Neocaridina</option>
-            <option value="caridina">Caridina</option>
-            <option value="caracoles">Caracoles</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="field">
-          <label>Carga de peces</label>
-          <select id="carga">
-            <option value="baja">Baja</option>
-            <option value="media" selected>Media</option>
-            <option value="alta">Alta</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Rocas</label>
-          <select id="tipoRocas">
-            <option value="ninguna" selected>Ninguna</option>
-            <option value="inertes">Inertes</option>
-            <option value="dragon">Dragon Stone</option>
-            <option value="seiryu">Seiryu</option>
-            <option value="caliza">Caliza — sube dureza</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Herramientas de medición</div>
-      <div class="bloque-desc">Marca lo que tienes. La recomendación se adapta a tus herramientas.</div>
-      <div class="chips">
-        <label class="chip checked"><input type="checkbox" id="tieneTiras" checked>Tiras reactivas</label>
-        <label class="chip checked"><input type="checkbox" id="tieneTDS" checked>Medidor TDS</label>
-        <label class="chip checked"><input type="checkbox" id="tienePH" checked>Medidor pH</label>
-        <label class="chip"><input type="checkbox" id="tieneKitGotas">Kit de gotas</label>
-      </div>
-    </div>
-
-    <div class="nav">
-      <button class="btn btn-ghost" onclick="goToStep(1)">Atrás</button>
-      <button class="btn" onclick="goToStep(3)">Siguiente</button>
-    </div>
-  </section>
-
-  <!-- PASO 3 -->
-  <section class="step" data-step="3">
-    <div class="bloque">
-      <div class="bloque-titulo">Tipo de plantas</div>
-      <div class="bloque-desc">Esto define el nivel de abonado, luz y CO₂ necesario.</div>
-
-      <div class="field">
-        <label>Nivel de requerimiento</label>
-        <select id="tipoPlantas">
-          <option value="bajo">Bajo — Anubias, helechos, musgos</option>
-          <option value="medio" selected>Medio — Rotalas, ludwigias</option>
-          <option value="alto">Alto — Tapizantes, plantas rojas</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Densidad de plantado</label>
-        <select id="densidad">
-          <option value="baja">Baja — Pocas plantas</option>
-          <option value="media" selected>Media — Plantado moderado</option>
-          <option value="alta">Alta — Selva densa</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Plantas rojas o exigentes</label>
-        <select id="plantasRojas">
-          <option value="no" selected>No</option>
-          <option value="algunas">Algunas</option>
-          <option value="muchas">Sí, predominan</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="nav">
-      <button class="btn btn-ghost" onclick="goToStep(2)">Atrás</button>
-      <button class="btn btn-lg" onclick="generarPlan()">Generar mi plan</button>
-    </div>
-  </section>
-
-  <!-- PASO 4: RESULTADOS -->
-  <section class="step" data-step="4">
-    <div class="tabs" id="resultTabs">
-      <button class="tab active" data-tab="arranque">Arranque</button>
-      <button class="tab" data-tab="abonado">Abonado</button>
-      <button class="tab" data-tab="agua">Agua</button>
-      <button class="tab" data-tab="mantenimiento">Mantenimiento</button>
-      <button class="tab" data-tab="algas">Algas</button>
-      <button class="tab" data-tab="catalogo">Catálogo</button>
-    </div>
-    <div id="tab-arranque" class="tab-panel active"></div>
-    <div id="tab-abonado" class="tab-panel"></div>
-    <div id="tab-agua" class="tab-panel"></div>
-    <div id="tab-mantenimiento" class="tab-panel"></div>
-    <div id="tab-algas" class="tab-panel"></div>
-    <div id="tab-catalogo" class="tab-panel"></div>
-
-    <div class="nav">
-      <button class="btn btn-ghost" onclick="goToStep(3)">Editar datos</button>
-      <button class="btn" onclick="goToStep(5)">Ver avances</button>
-    </div>
-  </section>
-
-  <!-- PASO 5: AVANCES -->
-  <section class="step" data-step="5">
-    <div class="bloque">
-      <div class="bloque-titulo">Registrar avance</div>
-      <div class="bloque-desc">Los datos se guardan en tu navegador. Completamente privado.</div>
-      <div class="avance-form">
-        <div class="field"><label>Fecha</label><input type="date" id="avFecha"></div>
-        <div class="field"><label>Peso (kg)</label><input type="number" id="avPeso" step="0.1" placeholder="Opcional" inputmode="decimal"></div>
-        <div class="field"><label>Glucosa (mg/dL)</label><input type="number" id="avGlucosa" placeholder="Opcional" inputmode="numeric"></div>
-        <div class="field"><label>PA sistólica</label><input type="number" id="avPA" placeholder="Opcional" inputmode="numeric"></div>
-        <div class="field"><label>Calorías</label><input type="number" id="avKcal" placeholder="Opcional" inputmode="numeric"></div>
-        <div class="field"><label>Ejercicio (min)</label><input type="number" id="avEjercicio" placeholder="Opcional" inputmode="numeric"></div>
-        <div class="field"><label>Adherencia (%)</label><input type="number" id="avAdherencia" min="0" max="100" placeholder="0 – 100" inputmode="numeric"></div>
-        <div class="field"><label>Notas</label><input type="text" id="avNotas" placeholder="Opcional"></div>
-      </div>
-      <button class="btn btn-full" onclick="guardarAvance()" style="margin-top:1rem;">Guardar avance</button>
-    </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Tendencia de peso</div>
-      <div id="chartPeso" class="chart"></div>
-      <p class="chart-info" id="chartPesoInfo">Sin datos aún.</p>
-    </div>
-
-    <div class="bloque">
-      <div class="bloque-titulo">Historial</div>
-      <ul class="historial" id="historial"></ul>
-      <div style="display:flex; gap:1.25rem; margin-top:1.25rem; flex-wrap:wrap;">
-        <button class="btn btn-ghost" onclick="exportarCSV()" style="padding:.5rem 0;">Exportar CSV</button>
-        <button class="btn btn-ghost" onclick="borrarHistorial()" style="padding:.5rem 0; color:var(--alerta);">Borrar historial</button>
-      </div>
-    </div>
-
-    <div class="nav">
-      <button class="btn btn-ghost" onclick="goToStep(4)">Volver al plan</button>
-    </div>
-  </section>
-
 </div>
 
+<!-- MODAL CONFIRMACIÓN UBICACIÓN -->
+<div class="modal" id="locationModal" role="dialog" aria-modal="true">
+    <div class="modal-card" style="max-width: 460px;">
+        <div class="modal-body">
+            <div class="location-icon">
+                <i class="fas fa-location-dot"></i>
+            </div>
+            <div class="location-question">
+                <h3>Ubicación capturada</h3>
+                <p>¿La entrega del pedido será en esta ubicación?</p>
+                <span class="location-coords" id="locationModalCoords">—</span>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="locConfirmSelf" style="margin-bottom:10px;">
+                <i class="fas fa-home"></i> Sí, entregar aquí
+            </button>
+            <button class="btn btn-outline btn-block" id="locConfirmOther">
+                <i class="fas fa-user-friends"></i> No, es para otra persona
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMACIÓN FINAL -->
+<div class="modal" id="confirmationModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <div class="success">
+            <div class="success-icon">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h3>¡Pedido enviado!</h3>
+            <p>Tu pedido fue enviado por WhatsApp. Te contactaremos pronto para confirmar los detalles.</p>
+            <button class="btn btn-primary btn-block" data-close-confirmation>
+                <i class="fas fa-check"></i> Entendido
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab" aria-label="Ver pedido">
+    <i class="fas fa-shopping-bag"></i>
+    <span class="fab-badge" id="fabBadge">0</span>
+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer class="site-footer">
+    <div class="footer-mark">Cinnamon <em>Aura</em> Bakery</div>
+    <p>Small Batch · Baked Fresh Daily</p>
+    <p class="footer-meta">© <span id="year"></span> · Handcrafted with care</p>
+</footer>
+
 <script>
-// ============================================================
-// CATÁLOGO DE MARCAS DEL HOBBY
-// ============================================================
-var CATALOGO = {
-  iluminacion: [
-    { marca:'Chihiros', modelos:'WRGB II, WRGB II Pro, Vivid II, A Series', nota:'Control Bluetooth, ajuste por canales RGB, simulación amanecer/atardecer. Excelente relación calidad-precio.' },
-    { marca:'Twinstar', modelos:'S-Line, E-Line, EA Series', nota:'Advanced Spectrum V3.0 con 6 LEDs de color individual. PPFD 300–370 µmol/m²/s a 20 cm.' },
-    { marca:'Ultum Nature Systems', modelos:'Titan 1, Solar RGB', nota:'200 bulbos Epistar RGB, 9,000–12,000 K. Aluminio aeronáutico, diseño ultra delgado.' },
-    { marca:'ADA', modelos:'Aquasky, Solar RGB, Solar I, Mist', nota:'Referente japonés del aquascaping. Espectro optimizado para plantas exigentes.' },
-    { marca:'ONF', modelos:'Flat One, Flat Nano', nota:'Diseño minimalista, muy popular en nano acuarios.' },
-    { marca:'Fluval', modelos:'Plant 3.0, Plant 2.0', nota:'Buena relación calidad-precio, app FluvalSmart.' },
-    { marca:'Finnex', modelos:'Planted+ 24/7, FugeRay', nota:'Programable 24/7, muy usado en USA.' },
-    { marca:'Nicrew', modelos:'ClassicLED, Planted', nota:'Económico, buena opción de entrada.' }
-  ],
-  filtracion: [
-    { marca:'Eheim', modelos:'Classic 2213, Pro 4+ 250, eXperience 250', nota:'Fiabilidad alemana, referencia del hobby desde décadas.' },
-    { marca:'Fluval', modelos:'207, 307, 407, FX4, FX6', nota:'Canister popular, fácil mantenimiento, buena circulación.' },
-    { marca:'OASE', modelos:'BioMaster 250, BioMaster 350, FiltoSmart', nota:'Pre-filtro integrado extraíble, muy práctico.' },
-    { marca:'Sunsun', modelos:'HW-302, HW-303B, HW-304B', nota:'Económico, buena capacidad para el precio.' },
-    { marca:'AquaClear', modelos:'30, 50, 70', nota:'HOB de referencia, filtro de esponja reutilizable.' }
-  ],
-  co2: [
-    { marca:'CO2Art', modelos:'PRO-SE, PRO-Elite', nota:'Reguladores premium, solenoide de alta calidad.' },
-    { marca:'Fzone', modelos:'Generator 2.5 L, Generator 5 L', nota:'Botella SUS304 con regulador integrado y contador de burbujas.' },
-    { marca:'Ultum Nature Systems', modelos:'UNS CO2 Kit', nota:'Estética limpia, integrado con la línea UNS.' },
-    { marca:'Aquario Neo', modelos:'Neo CO2 Kit', nota:'Compacto, ideal para nano acuarios.' },
-    { marca:'Green Leaf Aquariums', modelos:'GRO-1, PRO-1', nota:'Reguladores de alta gama, precisión quirúrgica.' },
-    { marca:'Milwaukee', modelos:'MA957', nota:'Regulador económico fiable, opción de entrada.' },
-    { marca:'ADA', modelos:'CO2 System 74-YA', nota:'Sistema japonés de referencia, acabado impecable.' }
-  ],
-  sustratos: [
-    { marca:'ADA', modelos:'Amazonia, Amazonia Light, Aqua Soil', nota:'El estándar dorado. Rico en nutrientes, ideal para tapizantes.' },
-    { marca:'Ultum Nature Systems', modelos:'Controsoil', nota:'No enturbia el agua, excelente para acuarios con gambas.' },
-    { marca:'Tropica', modelos:'Aquarium Soil, Plant Growth Substrate', nota:'Buena alternativa a ADA, menos amoniaco inicial.' },
-    { marca:'Seachem', modelos:'Flourite, Flourite Black Sand', nota:'Inerte, no se deshace. Requiere root tabs.' },
-    { marca:'Dennerle', modelos:'Scapers Soil, DeponitMix', nota:'Gama alemana completa, con sistema por capas.' },
-    { marca:'CaribSea', modelos:'Eco-Complete', nota:'Sustrato nutritivo económico, listo para usar.' }
-  ],
-  fertilizantes: [
-    { marca:'Seachem', modelos:'Flourish, Flourish Excel, Iron, Nitrogen, Phosphorus, Potassium', nota:'Gama completa y accesible. Excel es el carbono líquido más usado.' },
-    { marca:'Aquavitro', modelos:'Mineralize, Propel, Synthesis, Activate, Carbonate, Envy', nota:'Gama premium de Seachem, con fórmulas más concentradas.' },
-    { marca:'ADA', modelos:'Green Brighty Neutral K, Mineral, Iron, Nitrogen', nota:'Gama japonesa de referencia, muy equilibrada.' },
-    { marca:'Tropica', modelos:'Specialised Nutrition, Premium Nutrition, Plant Growth', nota:'Gama danesa, muy usada en acuarios de competición.' },
-    { marca:'NilocG', modelos:'Thrive, Thrive+, ThriveC', nota:'EI dosing (Estimative Index), popular en USA.' },
-    { marca:'Dennerle', modelos:'V30 Complete, S7 Vital, E15 FerActiv', nota:'Sistema alemán completo, con dosificación diaria.' },
-    { marca:'Aquarium Co-Op', modelos:'Easy Green, Easy Iron, Easy Carbon', nota:'Fórmula simplificada, ideal para principiantes.' }
-  ],
-  tests: [
-    { marca:'API', modelos:'Freshwater Master Test Kit, GH & KH Test', nota:'El más usado. Económico y suficiente para la mayoría.' },
-    { marca:'Salifert', modelos:'NO3, PO4, pH, KH', nota:'Alta precisión, escalas finas. Referencia para plantados.' },
-    { marca:'JBL', modelos:'ProAquaTest, ProScan', nota:'Gama alemana, muy completa.' },
-    { marca:'Sera', modelos:'Aqua-Test Box', nota:'Kits completos, buena calidad-precio.' },
-    { marca:'Hanna Instruments', modelos:'HI713 (fosfato), HI764', nota:'Fotómetro digital de laboratorio, máxima precisión.' }
-  ],
-  decloradores: [
-    { marca:'Seachem', modelos:'Prime', nota:'El estándar del hobby. Neutraliza cloro, cloramina y amoniaco.' },
-    { marca:'API', modelos:'Stress Coat+, Tap Water Conditioner', nota:'Económico, funciona bien con cloro pero no cloramina.' },
-    { marca:'Aquavitro', modelos:'Alpha', nota:'Versión premium de Prime.' },
-    { marca:'Brightwell Aquatics', modelos:'Bioscape, Erase-Cl', nota:'Gama marina adaptada a agua dulce.' }
-  ],
-  bacterias: [
-    { marca:'Seachem', modelos:'Stability', nota:'El más usado. Mantiene el ciclado bajo control.' },
-    { marca:'API', modelos:'Quick Start', nota:'Económico, buen arranque.' },
-    { marca:'Microbe-Lift', modelos:'Special Blend, Nite-Out II', nota:'Gama profesional, muy concentrada.' },
-    { marca:'Fritz', modelos:'FritzZyme 7, Turbo Start 700', nota:'Alta concentración, ciclado rápido.' },
-    { marca:'Brightwell Aquatics', modelos:'MicroBacter7, MicroBacter Start XLM', nota:'Gama marina/plantada de alta calidad.' }
-  ],
-  remineralizantes: [
-    { marca:'Salty Shrimp', modelos:'GH+, GH/KH+, Bee Shrimp Mineral', nota:'Especializado en gambas, muy preciso.' },
-    { marca:'Seachem', modelos:'Equilibrium, Alkaline Buffer, Acid Buffer', nota:'Ajuste de GH y KH con precisión.' },
-    { marca:'Aquavitro', modelos:'Mineralize', nota:'Sube GH con calcio y magnesio quelados.' },
-    { marca:'Brightwell Aquatics', modelos:'Remineraliz, Alkalin8.3-P', nota:'Precisión marina aplicada a agua dulce.' },
-    { marca:'Dennerle', modelos:'Nano Shrimp Mineral', nota:'Para gambas y acuarios pequeños.' }
-  ],
-  alimentos: [
-    { marca:'Hikari', modelos:'Micro Pellets, Tropical Micro Pellets, Cichlid Gold', nota:'Referente japonés, alta palatabilidad.' },
-    { marca:'New Life Spectrum', modelos:'Thera+A, Cichlid Formula', nota:'Alta palatabilidad, sin rellenos.' },
-    { marca:'Repashy', modelos:'Community Plus, Soilent Green, Super Green', nota:'Gel food, excelente para peces y gambas.' },
-    { marca:'Fluval', modelos:'Bug Bites, Colour Enhancing Pellets', nota:'Alto en proteína de insectos.' },
-    { marca:'NorthFin', modelos:'Community, Cichlid Formula', nota:'Gama premium, ingredientes naturales.' },
-    { marca:'Xtreme Aquatic Foods', modelos:'Nano, Krill Flake', nota:'Popular entre criadores profesionales.' }
-  ],
-  equipamiento: [
-    { marca:'Eheim', modelos:'Skim 350, Jager Heater, Stream Pump', nota:'Fiabilidad alemana, décadas de reputación.' },
-    { marca:'Fluval', modelos:'Heater, Circulation Pump', nota:'Calidad accesible.' },
-    { marca:'Ultum Nature Systems', modelos:'Titan Heater, Rimless Tank', nota:'Estética premium, muy usado en aquascaping.' },
-    { marca:'ADA', modelos:'Super Jet Filter, Beam Stand', nota:'Referente japonés, acabados impecables.' },
-    { marca:'Tropica', modelos:'Plant Tools, Scissors, Pinsettes', nota:'Herramientas de precisión para poda y plantado.' }
-  ]
+/* =========================================================
+   CONFIGURACIÓN · CINNAMON AURA BAKERY
+   Edita este objeto para personalizar toda la tienda
+========================================================= */
+const CONFIG = {
+    brandName: "Cinnamon Aura Bakery",
+    whatsappNumber: "525639569884", // sin +, espacios ni guiones
+    currencySymbol: "$",
+    currencyCode: "USD",
+    storageKey: "cinnamonAuraCart_v1",
+
+    product: {
+        sku: "CR-001",
+        name: "The Original Aura Cinnamon Roll",
+        shortName: "The Original Aura",
+        basePrice: 4.50,
+
+        /* Capas de personalización */
+        modifiers: [
+            {
+                id: "glaze",
+                name: "Choose Your Glaze",
+                subtitle: "Elige 1 glaseado",
+                required: true,
+                max: 1,
+                type: "radio",
+                options: [
+                    { id: "G-01", name: "Classic Cream Cheese",  desc: "Cremoso y clásico",              price: 0.00 },
+                    { id: "G-02", name: "Salted Caramel Drizzle", desc: "Caramelo salado artesanal",      price: 0.50 },
+                    { id: "G-03", name: "Spiced Maple Glaze",     desc: "Maple con especias cálidas",     price: 0.50 }
+                ]
+            },
+            {
+                id: "toppings",
+                name: "Add Extra Toppings",
+                subtitle: "Opcional · Máximo 3",
+                required: false,
+                max: 3,
+                type: "checkbox",
+                options: [
+                    { id: "T-01", name: "Toasted Pecans",            desc: "Nueces tostadas",           price: 0.75 },
+                    { id: "T-02", name: "Crispy Bacon Bits",         desc: "Tocino crujiente",          price: 1.00 },
+                    { id: "T-03", name: "Extra Cinnamon Sugar Dust", desc: "Azúcar con canela extra",   price: 0.25 }
+                ]
+            }
+        ]
+    }
 };
 
-// ============================================================
-// ESTADO
-// ============================================================
-var currentStep = 0;
-var historial = [];
-try { historial = JSON.parse(localStorage.getItem('aquaPlannerHistorial') || '[]'); } catch(e){ historial = []; }
+/* =========================================================
+   ESTADO
+========================================================= */
+let cart = loadCart();
+let modalQty = 1;
+let userLocation = null;
 
-// ============================================================
-// NAVEGACIÓN
-// ============================================================
-function goToStep(n){
-  currentStep = n;
-  var steps = document.querySelectorAll('.step');
-  for (var i = 0; i < steps.length; i++){
-    var s = steps[i];
-    if (parseInt(s.getAttribute('data-step')) === n) s.classList.add('active');
-    else s.classList.remove('active');
-  }
-  var bar = document.getElementById('progressBar');
-  if (bar) bar.style.width = ((n / (steps.length - 1)) * 100) + '%';
+/* =========================================================
+   HELPERS
+========================================================= */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const money = n => `$${Number(n).toFixed(2)}`;
 
-  var spans = document.querySelectorAll('#progressSteps span');
-  for (var j = 0; j < spans.length; j++){
-    var sp = spans[j];
-    var num = parseInt(sp.getAttribute('data-step'));
-    if (num === n) sp.classList.add('active');
-    else sp.classList.remove('active');
-    if (num < n) sp.classList.add('done');
-    else sp.classList.remove('done');
-  }
-  window.scrollTo({top:0, behavior:'smooth'});
+function loadCart() {
+    try {
+        const raw = localStorage.getItem(CONFIG.storageKey);
+        return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
 }
+function saveCart() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(cart)); }
 
-// ============================================================
-// CHIPS
-// ============================================================
-function setupChips(){
-  var chips = document.querySelectorAll('.chip');
-  for (var i = 0; i < chips.length; i++){
-    (function(chip){
-      var input = chip.querySelector('input[type=checkbox]');
-      if (!input) return;
-      if (input.checked) chip.classList.add('checked');
-      input.addEventListener('change', function(){
-        if (this.checked) chip.classList.add('checked');
-        else chip.classList.remove('checked');
-      });
-    })(chips[i]);
-  }
+function toast(msg, icon = "fa-check-circle") {
+    const el = $("#toast");
+    el.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    el.classList.add("show");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("show"), 2600);
 }
-
-// ============================================================
-// VOLUMEN
-// ============================================================
-function calcularVolumen(){
-  var l = parseFloat(document.getElementById('largo').value) || 0;
-  var a = parseFloat(document.getElementById('ancho').value) || 0;
-  var h = parseFloat(document.getElementById('alto').value) || 0;
-  var d = parseFloat(document.getElementById('porcentajeDecoracion').value) || 15;
-  var bruto = (l * a * h) / 1000;
-  var neto = bruto * (1 - d/100);
-  var txt = document.getElementById('volNetoTxt');
-  if (txt) txt.textContent = neto.toFixed(1);
-  return neto;
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
 }
+function setBodyLock(lock) { document.body.style.overflow = lock ? "hidden" : ""; }
 
-function calcularCambioAgua(d){
-  if (d.invertebrados === 'caridina') return '20–30%';
-  if (d.carga === 'alta') return '50–60%';
-  if (d.densidad === 'alta') return '50%';
-  if (d.litros < 60) return '30–40%';
-  if (d.litros > 200) return '40–50%';
-  return '30–50%';
-}
+/* =========================================================
+   RENDER MODIFICADORES (dinámico desde CONFIG)
+========================================================= */
+function renderModifiers() {
+    const container = $("#modifierContainer");
 
-// ============================================================
-// GENERAR PLAN
-// ============================================================
-function generarPlan(){
-  try {
-    var litros = calcularVolumen();
-    if (litros <= 0){ alert('Introduce medidas válidas.'); return; }
+    container.innerHTML = CONFIG.product.modifiers.map(mod => {
+        const requiredLabel = mod.required
+            ? `<span class="required">Requerido</span>`
+            : "";
 
-    var d = {
-      litros: litros,
-      ph: parseFloat(document.getElementById('ph').value) || 7,
-      gh: parseFloat(document.getElementById('gh').value) || 8,
-      kh: parseFloat(document.getElementById('kh').value) || 4,
-      tds: parseFloat(document.getElementById('tds').value) || 200,
-      temp: parseFloat(document.getElementById('temperatura').value) || 25,
-      iluminacion: document.getElementById('iluminacion').value,
-      tipoLampara: document.getElementById('tipoLampara').value,
-      fotoperiodo: parseFloat(document.getElementById('fotoperiodo').value) || 8,
-      tipoCO2: document.getElementById('tipoCO2').value,
-      tipoFiltracion: document.getElementById('tipoFiltracion').value,
-      caudal: parseFloat(document.getElementById('caudal').value) || 600,
-      marcaFiltro: document.getElementById('marcaFiltro').value,
-      tipoSustrato: document.getElementById('tipoSustrato').value,
-      antiguedad: document.getElementById('antiguedadSustrato').value,
-      marcaSustrato: document.getElementById('marcaSustrato').value,
-      tipoAgua: document.getElementById('tipoAgua').value,
-      invertebrados: document.getElementById('invertebrados').value,
-      carga: document.getElementById('carga').value,
-      tipoRocas: document.getElementById('tipoRocas').value,
-      tieneTiras: document.getElementById('tieneTiras').checked,
-      tieneTDS: document.getElementById('tieneTDS').checked,
-      tienePH: document.getElementById('tienePH').checked,
-      tieneKitGotas: document.getElementById('tieneKitGotas').checked,
-      tipoPlantas: document.getElementById('tipoPlantas').value,
-      densidad: document.getElementById('densidad').value,
-      plantasRojas: document.getElementById('plantasRojas').value
-    };
+        const counterHTML = mod.type === "checkbox"
+            ? `<span class="modifier-counter" data-counter="${mod.id}">0 / ${mod.max}</span>`
+            : "";
 
-    d.cambioAgua = calcularCambioAgua(d);
+        const optionsHTML = mod.options.map((opt, i) => {
+            const priceHTML = opt.price > 0
+                ? `<span class="m-price">+ ${money(opt.price)}</span>`
+                : `<span class="m-price included">Incluido</span>`;
 
-    renderArranque(d);
-    renderAbonado(d);
-    renderAgua(d);
-    renderMantenimiento(d);
-    renderAlgas(d);
-    renderCatalogo(d);
+            const checked = (mod.type === "radio" && mod.required && i === 0) ? "checked" : "";
 
-    var tabs = document.querySelectorAll('.tab');
-    var panels = document.querySelectorAll('.tab-panel');
-    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-    for (var j = 0; j < panels.length; j++) panels[j].classList.remove('active');
-    tabs[0].classList.add('active');
-    document.getElementById('tab-arranque').classList.add('active');
+            return `
+                <label class="m-option">
+                    <input
+                        type="${mod.type}"
+                        name="${mod.id}"
+                        value="${opt.id}"
+                        data-name="${escapeHtml(opt.name)}"
+                        data-price="${opt.price}"
+                        ${checked}
+                    >
+                    <span class="m-check"></span>
+                    <span class="m-text">
+                        <span class="m-name">${escapeHtml(opt.name)}</span>
+                        ${opt.desc ? `<span class="m-desc">${escapeHtml(opt.desc)}</span>` : ""}
+                    </span>
+                    ${priceHTML}
+                </label>
+            `;
+        }).join("");
 
-    goToStep(4);
-  } catch(err){
-    console.error(err);
-    alert('Error al generar el plan: ' + err.message);
-  }
-}
+        return `
+            <section class="modifier" data-modifier="${mod.id}">
+                <div class="modifier-head">
+                    <div>
+                        <div class="modifier-title">${escapeHtml(mod.name)}${requiredLabel}</div>
+                        <div class="modifier-sub">${escapeHtml(mod.subtitle)}</div>
+                    </div>
+                    ${counterHTML}
+                </div>
+                <div class="modifier-options">
+                    ${optionsHTML}
+                </div>
+            </section>
+        `;
+    }).join("");
 
-// ============================================================
-// RENDER: ARRANQUE
-// ============================================================
-function renderArranque(d){
-  var esNutritivo = d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto';
-  var abonoInicial = esNutritivo ? 'Nada' : 'Potasio 0.5 ml / 10 L';
-  var nota = esNutritivo
-    ? 'Con sustrato nutritivo no abonamos en columna durante las primeras dos semanas. El sustrato ya libera nutrientes.'
-    : 'Con sustrato inerte comenzamos con potasio a partir del tercer o cuarto día.';
-
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Protocolo de arranque</div>';
-  html += '<div class="bloque-desc">Los primeros 90 días determinan el éxito del acuario. La paciencia es el ingrediente principal.</div>';
-  html += '<div class="nota nota-acento">' + nota + '</div>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Cronograma semana a semana</div>';
-  html += '<div class="tabla-wrap"><table class="tabla">';
-  html += '<thead><tr><th>Semana</th><th>Luz</th><th>CO₂</th><th>Abonado</th><th>Cambio agua</th></tr></thead>';
-  html += '<tbody>';
-  html += '<tr><td><strong>1</strong></td><td>6 h · baja</td><td>1 bps</td><td>' + abonoInicial + '</td><td>Cada 2 días · 30%</td></tr>';
-  html += '<tr><td><strong>2</strong></td><td>6 h · +10%</td><td>1–1.5 bps</td><td>Potasio 0.5 ml/10 L</td><td>Cada 2 días · 30%</td></tr>';
-  html += '<tr><td><strong>3</strong></td><td>7 h · +10%</td><td>1.5 bps</td><td>K + micros 0.5 ml/10 L</td><td>2× semana · 30%</td></tr>';
-  html += '<tr><td><strong>4</strong></td><td>7–8 h</td><td>2 bps</td><td>K + micros 1 ml/10 L</td><td>2× semana · 30%</td></tr>';
-  html += '<tr><td><strong>5–6</strong></td><td>8 h · 100%</td><td>2–2.5 bps</td><td>50% dosis completa</td><td>1× semana · 30–50%</td></tr>';
-  html += '<tr><td><strong>7+</strong></td><td>8 h estable</td><td>2–3 bps</td><td>Dosis completa</td><td>1× semana · 30–50%</td></tr>';
-  html += '</tbody></table></div></div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Ciclo del nitrógeno</div>';
-  html += '<details class="acordeon" open><summary>Etapas del ciclado</summary><div class="content"><ul>';
-  html += '<li><strong>Días 1–7:</strong> el amonio sube. Cambios de agua del 30% cada dos días.</li>';
-  html += '<li><strong>Días 7–21:</strong> pico de nitrito. Cambios de agua del 30% cada dos días.</li>';
-  html += '<li><strong>Días 21–35:</strong> aparece el nitrato. Cambio semanal del 30%.</li>';
-  html += '<li><strong>Semanas 5–8:</strong> ciclado completo. NH₃ y NO₂ en cero antes de introducir peces.</li>';
-  html += '</ul></div></details>';
-  html += '<details class="acordeon"><summary>Errores críticos a evitar</summary><div class="content">';
-  html += '<div class="nota nota-aviso"><strong>Evitar:</strong> sobreabonar, introducir peces antes de ciclar, exponer a luz solar directa, cambiar el 100% del agua, lavar el filtro con agua del grifo, usar algicidas durante el arranque.</div>';
-  html += '<div class="nota nota-acento"><strong>Priorizar:</strong> plantar denso desde el primer día, usar temporizador, medir cada dos o tres días, introducir caracoles y Otocinclus en la segunda semana.</div>';
-  html += '</div></details></div>';
-
-  document.getElementById('tab-arranque').innerHTML = html;
-}
-
-// ============================================================
-// RENDER: ABONADO
-// ============================================================
-function renderAbonado(d){
-  var nivel = 'bajo';
-  if (d.tipoCO2 === 'presurizado' && (d.tipoPlantas === 'alto' || d.tipoPlantas === 'medio')) nivel = 'alto';
-  else if (d.tipoCO2 === 'presurizado' || d.tipoCO2 === 'kit' || d.tipoCO2 === 'fzone' || d.tipoCO2 === 'co2art' || d.tipoCO2 === 'uns-co2' || d.tipoCO2 === 'ada-co2' || d.tipoPlantas === 'alto' || (d.tipoPlantas === 'medio' && d.densidad === 'alta')) nivel = 'medio';
-  if (d.tipoPlantas === 'alto' && d.densidad === 'alta') nivel = 'alto';
-
-  var esNutritivo = d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto';
-  var fSust = esNutritivo ? 0.7 : 1.0;
-  var fGam = d.invertebrados === 'caridina' ? 0.6 : (d.invertebrados === 'neocaridina' ? 0.8 : 1.0);
-  var fKit = d.tieneKitGotas ? 1.0 : 0.8;
-  var factor = fSust * fGam * fKit;
-
-  var no3, po4, k, fe;
-  if (nivel === 'bajo'){ no3 = 5; po4 = 0.3; k = 5; fe = 0.05; }
-  else if (nivel === 'medio'){ no3 = 10; po4 = 0.8; k = 10; fe = 0.1; }
-  else { no3 = 15; po4 = 1.5; k = 15; fe = 0.2; }
-
-  if (d.plantasRojas === 'muchas') fe *= 1.5;
-  else if (d.plantasRojas === 'algunas') fe *= 1.2;
-
-  no3 *= factor; po4 *= factor; k *= factor; fe *= fGam;
-
-  var gKNO3 = (no3 * d.litros) / (6.1 * 100);
-  var gKH2PO4 = (po4 * d.litros) / (7.0 * 100);
-  var gK2SO4 = (k * d.litros) / (4.5 * 100);
-  var gFe = (fe * d.litros) / 1000;
-
-  var frec = nivel === 'bajo' ? '2× semana — lunes y jueves' : (nivel === 'alto' ? 'Diario o 4× semana' : '3× semana — lunes, miércoles, viernes');
-  var frecM = nivel === 'bajo' ? '1× semana — martes' : (nivel === 'alto' ? '3× semana' : '2× semana — martes y jueves');
-
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Rutina de abonado</div>';
-  html += '<div class="bloque-desc">Nivel detectado: <strong>' + nivel.toUpperCase() + '</strong> · Volumen: ' + d.litros.toFixed(1) + ' L</div>';
-
-  if (d.invertebrados === 'caridina' || d.invertebrados === 'neocaridina'){
-    html += '<div class="nota nota-aviso">Abonos sin cobre. Es letal para las gambas incluso en trazas.</div>';
-  }
-  if (!d.tieneKitGotas){
-    html += '<div class="nota nota-aviso">Sin kit de gotas: dosis de macros reducidas un 20% por seguridad.</div>';
-  }
-  if (d.tipoCO2 === 'no' && d.iluminacion === 'alta'){
-    html += '<div class="nota nota-aviso">Luz alta sin CO₂: añade carbono líquido o reduce el fotoperíodo a 6 horas.</div>';
-  }
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Dosis semanales</div>';
-  html += '<div class="tabla-wrap"><table class="tabla">';
-  html += '<thead><tr><th>Nutriente</th><th>Sal</th><th>ppm</th><th>Cantidad</th></tr></thead>';
-  html += '<tbody>';
-  html += '<tr><td>Nitrato (NO₃)</td><td>KNO₃</td><td>' + no3.toFixed(2) + '</td><td><strong>' + gKNO3.toFixed(3) + ' g</strong></td></tr>';
-  html += '<tr><td>Fosfato (PO₄)</td><td>KH₂PO₄</td><td>' + po4.toFixed(2) + '</td><td><strong>' + gKH2PO4.toFixed(3) + ' g</strong></td></tr>';
-  html += '<tr><td>Potasio (K)</td><td>K₂SO₄</td><td>' + k.toFixed(2) + '</td><td><strong>' + gK2SO4.toFixed(3) + ' g</strong></td></tr>';
-  html += '<tr><td>Hierro (Fe)</td><td>Quelato Fe</td><td>' + fe.toFixed(3) + '</td><td><strong>' + gFe.toFixed(4) + ' g</strong></td></tr>';
-  html += '</tbody></table></div>';
-  html += '<div class="nota nota-acento"><strong>Macros:</strong> ' + frec + '<br><strong>Micros y Fe:</strong> ' + frecM + '</div>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Soluciones madre · 500 ml</div>';
-  html += '<details class="acordeon" open><summary>Solución A — Macros</summary><div class="content">';
-  html += 'Disuelve <strong>' + (gKNO3*10).toFixed(2) + ' g de KNO₃</strong>, <strong>' + (gKH2PO4*10).toFixed(2) + ' g de KH₂PO₄</strong> y <strong>' + (gK2SO4*10).toFixed(2) + ' g de K₂SO₄</strong> en 500 ml de agua destilada.<br><br><strong>Dosis:</strong> 10 ml por cada 100 L, según la frecuencia indicada.';
-  html += '</div></details>';
-  html += '<details class="acordeon"><summary>Solución B — Micros y hierro</summary><div class="content">';
-  html += 'Disuelve <strong>' + (fe*d.litros/100).toFixed(3) + ' g de quelato de hierro</strong> junto con Kelamix en 500 ml de agua destilada.<br><br><strong>Dosis:</strong> 5 ml por cada 100 L, dos o tres veces por semana.';
-  html += '</div></details>';
-  html += '<details class="acordeon"><summary>Conservación</summary><div class="content">Guardar en nevera. Consumir en 4 a 6 semanas. Agitar antes de usar.</div></details>';
-  html += '</div>';
-
-  document.getElementById('tab-abonado').innerHTML = html;
-}
-
-// ============================================================
-// RENDER: AGUA
-// ============================================================
-function renderAgua(d){
-  var phTxt = 'Óptimo';
-  if (d.invertebrados === 'caridina' && (d.ph < 5.8 || d.ph > 6.8)) phTxt = 'Caridina: 6.0–6.8';
-  else if (d.ph < 6 || d.ph > 8) phTxt = 'Fuera de rango';
-
-  var ghTxt = d.gh < 4 ? 'Muy blando' : (d.gh > 15 ? 'Muy duro' : 'Óptimo');
-  var khTxt = d.kh < 2 ? 'pH inestable' : (d.kh > 10 ? 'Muy alto' : 'Óptimo');
-
-  var tdsTxt = 'Óptimo';
-  if (d.invertebrados === 'caridina' && (d.tds < 100 || d.tds > 180)) tdsTxt = 'Caridina: 100–180';
-  else if (d.tds > 350) tdsTxt = 'Alto';
-
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Diagnóstico del agua</div>';
-  html += '<div class="bloque-desc">Análisis basado en tus parámetros y en la fauna que mantienes.</div>';
-  html += '<div class="stats">';
-  html += '<div class="stat"><div class="stat-lbl">pH</div><div class="stat-val">' + d.ph + '</div><div class="stat-sub">' + phTxt + '</div></div>';
-  html += '<div class="stat"><div class="stat-lbl">GH</div><div class="stat-val">' + d.gh + '</div><div class="stat-sub">' + ghTxt + '</div></div>';
-  html += '<div class="stat"><div class="stat-lbl">KH</div><div class="stat-val">' + d.kh + '</div><div class="stat-sub">' + khTxt + '</div></div>';
-  html += '<div class="stat"><div class="stat-lbl">TDS</div><div class="stat-val">' + d.tds + '</div><div class="stat-sub">' + tdsTxt + '</div></div>';
-  html += '</div></div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Cómo medir con tus herramientas</div>';
-  html += '<details class="acordeon" open><summary>Tiras reactivas — alcance real</summary><div class="content">';
-  html += '<div class="nota nota-acento"><strong>Sirven para:</strong> detectar amonio durante el ciclado, confirmar que el nitrato no está a cero, chequeo rápido de GH y KH.</div>';
-  html += '<div class="nota nota-aviso"><strong>No sirven para:</strong> medir nitrato entre 1 y 10 ppm, medir fosfato o hierro, distinguir KH 4 de KH 6.</div>';
-  html += '</div></details>';
-  html += '<details class="acordeon"><summary>Medidor de TDS — la herramienta más útil</summary><div class="content">';
-  html += 'Si el TDS sube semana a semana sin cambios de agua, estás acumulando sales. Haz un cambio de agua del 30 al 50% o reduce la dosis de abono. Si baja después del cambio, todo va bien.';
-  html += '</div></details>';
-  html += '<details class="acordeon"><summary>Medidor de pH digital</summary><div class="content">';
-  html += 'Calibrar cada dos a cuatro semanas con soluciones 4.0 y 6.86. Guardar el electrodo húmedo. Con CO₂, es normal que el pH baje entre 0.8 y 1.0 puntos durante el fotoperíodo.';
-  html += '</div></details>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Protocolo semanal de medición</div>';
-  html += '<div class="tabla-wrap"><table class="tabla">';
-  html += '<thead><tr><th>Día</th><th>Qué medir</th><th>Herramienta</th></tr></thead>';
-  html += '<tbody>';
-  html += '<tr><td>Sábado · antes del cambio</td><td>pH, GH, KH, NO₃</td><td>Tiras y pH</td></tr>';
-  html += '<tr><td>Sábado · después del cambio</td><td>TDS</td><td>Medidor TDS</td></tr>';
-  html += '<tr><td>Lunes</td><td>TDS</td><td>Medidor TDS</td></tr>';
-  html += '<tr><td>Miércoles</td><td>Observación visual</td><td>Ojos</td></tr>';
-  html += '<tr><td>Viernes</td><td>pH</td><td>Medidor pH</td></tr>';
-  html += '</tbody></table></div></div>';
-
-  document.getElementById('tab-agua').innerHTML = html;
-}
-
-// ============================================================
-// RENDER: MANTENIMIENTO
-// ============================================================
-function renderMantenimiento(d){
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Rutina de mantenimiento</div>';
-  html += '<div class="bloque-desc">Cambio de agua recomendado: <strong>' + d.cambioAgua + '</strong> · Volumen neto: ' + d.litros.toFixed(1) + ' L</div>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Tareas semanales</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Cambio de agua del ' + d.cambioAgua + '. Sifonar suavemente sin remover el sustrato.</li>';
-  html += '<li>Poda escalonada: retirar hojas amarillas y tallos crecidos. Nunca todo de golpe.</li>';
-  html += '<li>Limpiar cristales con esponja o rasqueta específica.</li>';
-  html += '<li>Limpiar el prefiltro o esponja del filtro en agua del acuario.</li>';
-  html += '<li>Medir pH, GH, KH y NO₃ antes del cambio.</li>';
-  html += '<li>Reponer el agua evaporada con agua de ósmosis o destilada.</li>';
-  html += '</ul></div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Observación diaria · 5 minutos</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Estado de las plantas: color, crecimiento, aparición de algas.</li>';
-  if (d.tipoCO2 !== 'no') html += '<li>Que el CO₂ burbujee y el drop checker esté en verde.</li>';
-  html += '<li>Temperatura y funcionamiento del filtro y calentador.</li>';
-  html += '<li>Retirar hojas muertas y restos de comida visibles.</li>';
-  html += '</ul></div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Tareas mensuales</div>';
-  html += '<ul class="lista-lim">';
-  html += '<li>Limpieza completa del filtro, mangueras incluidas, en agua del acuario.</li>';
-  html += '<li>Revisión del difusor de CO₂ y limpieza con lejía diluida.</li>';
-  html += '<li>Poda de raíces aéreas y replantado de esquejes.</li>';
-  html += '<li>Revisión y limpieza del sistema de iluminación.</li>';
-  if (d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto') html += '<li>Pinchar suavemente el sustrato para evitar zonas anaerobias.</li>';
-  html += '</ul></div>';
-
-  document.getElementById('tab-mantenimiento').innerHTML = html;
-}
-
-// ============================================================
-// RENDER: ALGAS
-// ============================================================
-function renderAlgas(d){
-  var riesgo = 0;
-  var factores = [];
-  var protectores = [];
-
-  if (d.iluminacion === 'alta' && d.tipoCO2 === 'no'){ riesgo += 3; factores.push('luz alta sin CO₂'); }
-  if (d.iluminacion === 'alta' && d.tipoCO2 !== 'no') protectores.push('luz alta con CO₂');
-  if (d.fotoperiodo > 9){ riesgo += 2; factores.push('fotoperíodo de ' + d.fotoperiodo + ' h'); }
-  if (d.fotoperiodo >= 6 && d.fotoperiodo <= 8) protectores.push('fotoperíodo correcto');
-  if (d.tipoCO2 === 'no' && d.tipoPlantas === 'alto'){ riesgo += 3; factores.push('plantas exigentes sin CO₂'); }
-  if (d.tipoCO2 === 'casero'){ riesgo += 2; factores.push('CO₂ casero inestable'); }
-  if (d.tipoCO2 === 'presurizado' || d.tipoCO2 === 'co2art' || d.tipoCO2 === 'uns-co2' || d.tipoCO2 === 'ada-co2') protectores.push('CO₂ estable');
-  if (d.tipoSustrato === 'inerte-grava' || d.tipoSustrato === 'inerte-arena'){ riesgo += 2; factores.push('sustrato inerte'); }
-  if (d.tipoSustrato === 'nutritivo' || d.tipoSustrato === 'mixto') protectores.push('sustrato nutritivo');
-  if (d.carga === 'alta'){ riesgo += 2; factores.push('carga alta de peces'); }
-  if (d.densidad === 'baja'){ riesgo += 2; factores.push('plantado escaso'); }
-  if (d.densidad === 'alta') protectores.push('plantado denso');
-  if (d.invertebrados === 'neocaridina' || d.invertebrados === 'caridina') protectores.push('gambas limpiadoras');
-
-  var nivel = riesgo >= 5 ? 'Alto' : (riesgo >= 3 ? 'Medio' : 'Bajo');
-
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Riesgo de algas</div>';
-  html += '<div class="bloque-desc">Objetivo: cero algas a partir de la tercera o cuarta semana.</div>';
-  html += '<div class="stats"><div class="stat" style="grid-column:1/-1;"><div class="stat-lbl">Nivel detectado</div><div class="stat-val" style="font-size:30px;">' + nivel + '</div></div></div>';
-  if (factores.length) html += '<div class="nota nota-aviso"><strong>Factores de riesgo:</strong> ' + factores.join(' · ') + '.</div>';
-  if (protectores.length) html += '<div class="nota nota-acento"><strong>Factores protectores:</strong> ' + protectores.join(' · ') + '.</div>';
-  html += '<div class="nota">Las algas son un síntoma, no el problema. Cuando aparecen, indican que las plantas no están consumiendo luz, CO₂ y nutrientes con la eficiencia suficiente.</div>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Protocolo por fases</div>';
-  html += '<details class="acordeon" open><summary>Fase 1 · Semanas 1 a 2 · Diatomeas marrones</summary><div class="content">Es normal. No combatir agresivamente. Fotoperíodo de 6 horas, cambios de agua del 30 al 40%, Otocinclus y caracoles. Desaparecerán solas cuando el sistema madure.</div></details>';
-  html += '<details class="acordeon"><summary>Fase 2 · Semanas 3 a 6 · Estabilización</summary><div class="content">Las plantas empiezan a ganar la competencia. Fotoperíodo de 7 a 8 horas, abonado al 50%, nitrato entre 5 y 15 ppm. Retirar manualmente cualquier alga nueva.</div></details>';
-  html += '<details class="acordeon"><summary>Fase 3 · Semana 7 en adelante · Objetivo cero algas</summary><div class="content">Fotoperíodo de 8 horas estable, dosis completa. Cualquier brote mayor a 1 cm² indica desequilibrio: actuar en 24 a 48 horas.</div></details>';
-  html += '</div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Identificación rápida</div>';
-  html += '<div class="tabla-wrap"><table class="tabla">';
-  html += '<thead><tr><th>Tipo</th><th>Causa</th><th>Solución</th></tr></thead>';
-  html += '<tbody>';
-  html += '<tr><td>Marrón · diatomeas</td><td>Acuario nuevo</td><td>Esperar 2 a 4 semanas · Otocinclus</td></tr>';
-  html += '<tr><td>Verde polvo</td><td>Fotoperíodo largo</td><td>Reducir a 6–8 h · revisar PO₄</td></tr>';
-  html += '<tr><td>Filamentosa verde</td><td>CO₂ bajo o inestable</td><td>Estabilizar CO₂ · retirar a mano</td></tr>';
-  html += '<tr><td>Barba negra · BBA</td><td>CO₂ fluctuante</td><td>Estabilizar CO₂ · reducir PO₄</td></tr>';
-  html += '<tr><td>Cianobacteria</td><td>Flujo bajo · NO₃ a cero</td><td>Más circulación · cambio 50% · blackout</td></tr>';
-  html += '<tr><td>Agua verde</td><td>Exceso de luz</td><td>Filtro UV · plantas flotantes</td></tr>';
-  html += '</tbody></table></div></div>';
-
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Calendario semanal</div>';
-  html += '<div class="tabla-wrap"><table class="tabla">';
-  html += '<thead><tr><th>Día</th><th>Acción</th></tr></thead>';
-  html += '<tbody>';
-  html += '<tr><td>Lunes</td><td>Abonado macros · NPK</td></tr>';
-  html += '<tr><td>Martes</td><td>Micros y hierro</td></tr>';
-  html += '<tr><td>Miércoles</td><td>Abonado macros · NPK</td></tr>';
-  html += '<tr><td>Jueves</td><td>Micros y hierro</td></tr>';
-  html += '<tr><td>Viernes</td><td>Macros · poda ligera</td></tr>';
-  html += '<tr><td>Sábado</td><td>Cambio de agua del ' + d.cambioAgua + '</td></tr>';
-  html += '<tr><td>Domingo</td><td><strong>Descanso de abonado</strong></td></tr>';
-  html += '</tbody></table></div></div>';
-
-  document.getElementById('tab-algas').innerHTML = html;
-}
-
-// ============================================================
-// RENDER: CATÁLOGO DE MARCAS
-// ============================================================
-var filtroCatalogoActivo = 'todas';
-
-function renderCatalogo(d){
-  var html = '';
-  html += '<div class="bloque">';
-  html += '<div class="bloque-titulo">Catálogo de marcas del hobby</div>';
-  html += '<div class="bloque-desc">Marcas referentes en cada categoría. Filtra por tipo de producto para ver las opciones más relevantes.</div>';
-  html += '<div class="filtros" id="filtrosCatalogo">';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'todas' ? ' active' : '') + '" data-cat="todas">Todas</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'iluminacion' ? ' active' : '') + '" data-cat="iluminacion">Iluminación</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'filtracion' ? ' active' : '') + '" data-cat="filtracion">Filtración</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'co2' ? ' active' : '') + '" data-cat="co2">CO₂</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'sustratos' ? ' active' : '') + '" data-cat="sustratos">Sustratos</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'fertilizantes' ? ' active' : '') + '" data-cat="fertilizantes">Fertilizantes</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'tests' ? ' active' : '') + '" data-cat="tests">Tests</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'decloradores' ? ' active' : '') + '" data-cat="decloradores">Decloradores</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'bacterias' ? ' active' : '') + '" data-cat="bacterias">Bacterias</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'remineralizantes' ? ' active' : '') + '" data-cat="remineralizantes">Remineralizantes</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'alimentos' ? ' active' : '') + '" data-cat="alimentos">Alimentos</button>';
-  html += '<button class="filtro' + (filtroCatalogoActivo === 'equipamiento' ? ' active' : '') + '" data-cat="equipamiento">Equipamiento</button>';
-  html += '</div>';
-  html += '<div id="listaCatalogo"></div>';
-  html += '</div>';
-
-  document.getElementById('tab-catalogo').innerHTML = html;
-
-  // Listener de filtros
-  var filtros = document.querySelectorAll('#filtrosCatalogo .filtro');
-  for (var i = 0; i < filtros.length; i++){
-    filtros[i].addEventListener('click', function(){
-      var cat = this.getAttribute('data-cat');
-      filtroCatalogoActivo = cat;
-      var todos = document.querySelectorAll('#filtrosCatalogo .filtro');
-      for (var j = 0; j < todos.length; j++) todos[j].classList.remove('active');
-      this.classList.add('active');
-      pintarListaCatalogo(d);
+    /* Eventos: radio */
+    $$('input[type="radio"]', container).forEach(r => {
+        r.addEventListener("change", () => updateModalTotal());
     });
-  }
 
-  pintarListaCatalogo(d);
+    /* Eventos: checkbox con límite máximo */
+    $$('input[type="checkbox"]', container).forEach(cb => {
+        cb.addEventListener("change", e => {
+            const modId = e.target.name;
+            const mod = CONFIG.product.modifiers.find(m => m.id === modId);
+            const checked = $$(`input[name="${modId}"]:checked`);
 
-  // Añadir detalle del equipo seleccionado
-  var detalle = '';
-  if (d.tipoLampara === 'uns' || d.tipoLampara === 'chihiros' || d.tipoLampara === 'twinstar' || d.tipoLampara === 'ada' || d.tipoLampara === 'onf'){
-    detalle += '<div class="bloque"><div class="bloque-titulo">Tu iluminación seleccionada</div>';
-    detalle += '<div class="marca-detalle">';
-    if (d.tipoLampara === 'uns'){
-      detalle += '<h4>Ultum Nature Systems · Titan 1</h4><p>LED RGB de 200 bulbos Epistar con temperatura de 9,000–12,000 K. Cuerpo de aluminio aeronáutico con aletas de disipación. Altura de colgado recomendada: 30 cm.</p>';
-    } else if (d.tipoLampara === 'chihiros'){
-      detalle += '<h4>Chihiros · WRGB II</h4><p>LED RGB con control por app Bluetooth. Ajuste por canales, simulación amanecer/atardecer y programación horaria. Excelente relación calidad-precio.</p>';
-    } else if (d.tipoLampara === 'twinstar'){
-      detalle += '<h4>Twinstar · S-Line</h4><p>Advanced Spectrum V3.0 con 6 LEDs de color individual. PPFD de 300 a 370 µmol/m²/s a 20 cm. Construcción robusta en aluminio.</p>';
-    } else if (d.tipoLampara === 'ada'){
-      detalle += '<h4>ADA · Aquasky / Solar RGB</h4><p>Iluminación japonesa de referencia mundial en aquascaping. Espectro optimizado para plantas exigentes y colores naturales.</p>';
-    } else if (d.tipoLampara === 'onf'){
-      detalle += '<h4>ONF · Flat One</h4><p>Diseño minimalista con espectro completo. Muy popular en nano acuarios y acuarios de diseño.</p>';
-    }
-    detalle += '</div></div>';
-  }
+            if (checked.length > mod.max) {
+                e.target.checked = false;
+                toast(`Máximo ${mod.max} opciones`, "fa-info-circle");
+            }
 
-  if (detalle){
-    var cont = document.getElementById('tab-catalogo');
-    cont.insertAdjacentHTML('beforeend', detalle);
-  }
-}
-
-function pintarListaCatalogo(d){
-  var cont = document.getElementById('listaCatalogo');
-  if (!cont) return;
-  var html = '';
-  var categorias = filtroCatalogoActivo === 'todas' ? Object.keys(CATALOGO) : [filtroCatalogoActivo];
-
-  for (var c = 0; c < categorias.length; c++){
-    var cat = categorias[c];
-    var marcas = CATALOGO[cat];
-    if (!marcas) continue;
-
-    html += '<details class="acordeon" ' + (filtroCatalogoActivo !== 'todas' ? 'open' : '') + '>';
-    html += '<summary>' + capitalizar(cat) + ' · ' + marcas.length + ' marcas</summary>';
-    html += '<div class="content">';
-    for (var m = 0; m < marcas.length; m++){
-      var marca = marcas[m];
-      html += '<div class="marca-card">';
-      html += '<h4>' + marca.marca + '<span class="categoria">' + capitalizar(cat) + '</span></h4>';
-      html += '<div class="modelos">' + marca.modelos + '</div>';
-      html += '<div class="nota-marca">' + marca.nota + '</div>';
-      html += '</div>';
-    }
-    html += '</div></details>';
-  }
-
-  cont.innerHTML = html;
-}
-
-function capitalizar(s){
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-// ============================================================
-// TABS
-// ============================================================
-function setupTabs(){
-  var tabs = document.querySelectorAll('.tab');
-  for (var i = 0; i < tabs.length; i++){
-    tabs[i].addEventListener('click', function(){
-      var allTabs = document.querySelectorAll('.tab');
-      var allPanels = document.querySelectorAll('.tab-panel');
-      for (var a = 0; a < allTabs.length; a++) allTabs[a].classList.remove('active');
-      for (var b = 0; b < allPanels.length; b++) allPanels[b].classList.remove('active');
-      this.classList.add('active');
-      var panel = document.getElementById('tab-' + this.getAttribute('data-tab'));
-      if (panel) panel.classList.add('active');
+            updateCounter(modId);
+            updateModalTotal();
+        });
     });
-  }
 }
 
-// ============================================================
-// AVANCES
-// ============================================================
-function guardarAvance(){
-  var fecha = document.getElementById('avFecha').value || new Date().toISOString().slice(0,10);
-  var reg = {
-    id: Date.now(),
-    fecha: fecha,
-    peso: parseFloat(document.getElementById('avPeso').value) || null,
-    glucosa: parseFloat(document.getElementById('avGlucosa').value) || null,
-    pa: parseFloat(document.getElementById('avPA').value) || null,
-    kcal: parseFloat(document.getElementById('avKcal').value) || null,
-    ejercicio: parseFloat(document.getElementById('avEjercicio').value) || null,
-    adherencia: parseFloat(document.getElementById('avAdherencia').value) || null,
-    notas: document.getElementById('avNotas').value || ''
-  };
-  historial.push(reg);
-  historial.sort(function(a,b){ return new Date(a.fecha) - new Date(b.fecha); });
-  localStorage.setItem('aquaPlannerHistorial', JSON.stringify(historial));
-  var campos = ['avPeso','avGlucosa','avPA','avKcal','avEjercicio','avAdherencia','avNotas'];
-  for (var i = 0; i < campos.length; i++) document.getElementById(campos[i]).value = '';
-  renderHistorial();
+function updateCounter(modId) {
+    const counter = document.querySelector(`[data-counter="${modId}"]`);
+    if (!counter) return;
+    const mod = CONFIG.product.modifiers.find(m => m.id === modId);
+    const checked = $$(`input[name="${modId}"]:checked`).length;
+    counter.textContent = `${checked} / ${mod.max}`;
+    counter.classList.toggle("max", checked === mod.max);
 }
 
-function renderHistorial(){
-  var ul = document.getElementById('historial');
-  if (historial.length === 0){
-    ul.innerHTML = '<li class="vacio" style="display:block;">Sin registros aún.</li>';
-    document.getElementById('chartPeso').innerHTML = '';
-    document.getElementById('chartPesoInfo').textContent = 'Sin datos de peso aún.';
-    return;
-  }
-  var html = '';
-  for (var i = historial.length - 1; i >= 0; i--){
-    var r = historial[i];
-    html += '<li>';
-    html += '<span class="fecha">' + r.fecha + '</span>';
-    html += '<span class="datos">';
-    var partes = [];
-    if (r.peso) partes.push(r.peso + ' kg');
-    if (r.glucosa) partes.push(r.glucosa + ' mg/dL');
-    if (r.pa) partes.push(r.pa + ' mmHg');
-    if (r.kcal) partes.push(r.kcal + ' kcal');
-    if (r.ejercicio) partes.push(r.ejercicio + ' min');
-    if (r.adherencia) partes.push(r.adherencia + '%');
-    if (r.notas) partes.push(r.notas);
-    html += partes.join(' · ') || 'Sin datos';
-    html += '</span>';
-    html += '<button onclick="eliminarAvance(' + r.id + ')">✕</button>';
-    html += '</li>';
-  }
-  ul.innerHTML = html;
+/* =========================================================
+   OBTENER SELECCIONES
+========================================================= */
+function getSelections() {
+    const selections = {};
+    let extras = 0;
 
-  var conPeso = [];
-  for (var k = 0; k < historial.length; k++) if (historial[k].peso !== null) conPeso.push(historial[k]);
+    CONFIG.product.modifiers.forEach(mod => {
+        if (mod.type === "radio") {
+            const checked = document.querySelector(`input[name="${mod.id}"]:checked`);
+            if (checked) {
+                selections[mod.id] = {
+                    id: checked.value,
+                    name: checked.dataset.name,
+                    price: parseFloat(checked.dataset.price)
+                };
+                extras += parseFloat(checked.dataset.price);
+            }
+        } else if (mod.type === "checkbox") {
+            const checked = $$(`input[name="${mod.id}"]:checked`);
+            selections[mod.id] = checked.map(c => ({
+                id: c.value,
+                name: c.dataset.name,
+                price: parseFloat(c.dataset.price)
+            }));
+            extras += checked.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
+        }
+    });
 
-  var chart = document.getElementById('chartPeso');
-  var info = document.getElementById('chartPesoInfo');
-  if (conPeso.length === 0){
-    chart.innerHTML = '';
-    info.textContent = 'Sin datos de peso aún.';
-    return;
-  }
-  var pesos = [];
-  for (var m = 0; m < conPeso.length; m++) pesos.push(conPeso[m].peso);
-  var min = Math.min.apply(null, pesos);
-  var max = Math.max.apply(null, pesos);
-  var rango = max - min || 1;
-  var bars = '';
-  for (var n = 0; n < conPeso.length; n++){
-    var reg = conPeso[n];
-    var h = Math.max(5, ((reg.peso - min) / rango) * 100);
-    bars += '<div class="bar" style="height:' + h + '%;" title="' + reg.fecha + ': ' + reg.peso + ' kg"></div>';
-  }
-  chart.innerHTML = bars;
-  var ultimo = pesos[pesos.length - 1];
-  var primero = pesos[0];
-  var dif = (ultimo - primero).toFixed(1);
-  info.textContent = 'Primero: ' + primero + ' kg · Último: ' + ultimo + ' kg · Cambio: ' + (dif > 0 ? '+' : '') + dif + ' kg';
+    return { selections, extras };
 }
 
-function eliminarAvance(id){
-  var nuevo = [];
-  for (var i = 0; i < historial.length; i++) if (historial[i].id !== id) nuevo.push(historial[i]);
-  historial = nuevo;
-  localStorage.setItem('aquaPlannerHistorial', JSON.stringify(historial));
-  renderHistorial();
+function buildCartKey(selections) {
+    return Object.keys(selections).sort().map(k => {
+        const v = selections[k];
+        if (Array.isArray(v)) return v.map(x => x.id).sort().join(",");
+        return v.id;
+    }).join("|");
 }
 
-function exportarCSV(){
-  if (historial.length === 0){ alert('Sin datos para exportar.'); return; }
-  var csv = 'Fecha,Peso,Glucosa,PA,Kcal,Ejercicio,Adherencia,Notas\n';
-  for (var i = 0; i < historial.length; i++){
-    var r = historial[i];
-    csv += r.fecha + ',' + (r.peso||'') + ',' + (r.glucosa||'') + ',' + (r.pa||'') + ',' + (r.kcal||'') + ',' + (r.ejercicio||'') + ',' + (r.adherencia||'') + ',"' + (r.notas||'').replace(/"/g,'""') + '"\n';
-  }
-  var blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'avances_acuario_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
+function getUnitPrice() {
+    const { extras } = getSelections();
+    return CONFIG.product.basePrice + extras;
 }
 
-function borrarHistorial(){
-  if (!confirm('¿Borrar todo el historial?')) return;
-  historial = [];
-  localStorage.removeItem('aquaPlannerHistorial');
-  renderHistorial();
+/* =========================================================
+   MODAL PRODUCTO
+========================================================= */
+const productModal = $("#productModal");
+
+function openModal() {
+    modalQty = 1;
+    $("#qtyDisplay").textContent = "1";
+
+    /* Reset modificadores a estado por defecto */
+    CONFIG.product.modifiers.forEach(mod => {
+        if (mod.type === "radio") {
+            const inputs = $$(`input[name="${mod.id}"]`);
+            inputs.forEach((inp, i) => inp.checked = (mod.required && i === 0));
+        } else if (mod.type === "checkbox") {
+            $$(`input[name="${mod.id}"]`).forEach(inp => inp.checked = false);
+            updateCounter(mod.id);
+        }
+    });
+
+    updateModalTotal();
+    productModal.classList.add("open");
+    setBodyLock(true);
+}
+function closeModal() {
+    productModal.classList.remove("open");
+    setBodyLock(false);
 }
 
-// ============================================================
-// INICIALIZACIÓN
-// ============================================================
-document.addEventListener('DOMContentLoaded', function(){
-  setupChips();
-  setupTabs();
-  calcularVolumen();
+$$("[data-open-modal]").forEach(el => el.addEventListener("click", openModal));
+$$("[data-close-modal]").forEach(el => el.addEventListener("click", closeModal));
+productModal.addEventListener("click", e => { if (e.target === productModal) closeModal(); });
 
-  var ids = ['largo','ancho','alto','porcentajeDecoracion'];
-  for (var i = 0; i < ids.length; i++){
-    document.getElementById(ids[i]).addEventListener('input', calcularVolumen);
-    document.getElementById(ids[i]).addEventListener('change', calcularVolumen);
-  }
+document.querySelectorAll(".product").forEach(el => {
+    el.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(); }
+    });
+});
 
-  document.getElementById('avFecha').value = new Date().toISOString().slice(0,10);
-  renderHistorial();
+/* =========================================================
+   CANTIDAD MODAL
+========================================================= */
+$("#increaseQty").addEventListener("click", () => { modalQty++; updateModalQty(); });
+$("#decreaseQty").addEventListener("click", () => { if (modalQty > 1) { modalQty--; updateModalQty(); } });
+
+function updateModalQty() {
+    $("#qtyDisplay").textContent = modalQty;
+    updateModalTotal();
+}
+
+function updateModalTotal() {
+    const unit = getUnitPrice();
+    $("#modalTotal").textContent = money(unit * modalQty);
+}
+
+/* =========================================================
+   AÑADIR AL CARRITO
+========================================================= */
+$("#addToCartBtn").addEventListener("click", () => {
+    const { selections } = getSelections();
+
+    /* Validar requeridos */
+    for (const mod of CONFIG.product.modifiers) {
+        if (mod.required) {
+            const val = selections[mod.id];
+            const hasValue = Array.isArray(val) ? val.length > 0 : !!val;
+            if (!hasValue) {
+                toast(`Selecciona ${mod.name.toLowerCase()}`, "fa-exclamation-circle");
+                return;
+            }
+        }
+    }
+
+    const unitPrice = getUnitPrice();
+    const key = buildCartKey(selections);
+
+    const existingIdx = cart.findIndex(item => item.key === key);
+    if (existingIdx >= 0) {
+        cart[existingIdx].quantity += modalQty;
+    } else {
+        cart.push({
+            sku: CONFIG.product.sku,
+            name: CONFIG.product.name,
+            shortName: CONFIG.product.shortName,
+            selections,
+            unitPrice,
+            quantity: modalQty,
+            key
+        });
+    }
+
+    saveCart();
+    renderCart();
+    closeModal();
+    toast("Agregado al pedido", "fa-check-circle");
+});
+
+/* =========================================================
+   RENDER CARRITO
+========================================================= */
+const cartList = $("#cartList");
+const fabBadge = $("#fabBadge");
+const cartCountLabel = $("#cartCountLabel");
+
+function renderCart() {
+    if (cart.length === 0) {
+        cartList.innerHTML = `
+            <div class="cart-empty">
+                <i class="fas fa-shopping-bag"></i>
+                <p>Aún no has agregado nada</p>
+                <small>Personaliza tu rollo y aparecerá aquí</small>
+            </div>`;
+        cartCountLabel.textContent = "Vacío";
+    } else {
+        cartList.innerHTML = cart.map((item, i) => {
+            const glaze = item.selections.glaze;
+            const toppings = item.selections.toppings || [];
+
+            const modsHTML = `
+                ${glaze ? `<span>${escapeHtml(glaze.name)}</span>` : ""}
+                ${toppings.length ? `<span>${toppings.map(t => escapeHtml(t.name)).join(" · ")}</span>` : ""}
+            `;
+
+            return `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${escapeHtml(item.shortName)}</div>
+                        <div class="cart-item-mods">${modsHTML}</div>
+                        <div class="cart-item-price">${money(item.unitPrice)} c/u</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="qty">
+                            <button class="qty-btn" data-qty="-" data-idx="${i}" aria-label="Disminuir">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="qty-value">${item.quantity}</span>
+                            <button class="qty-btn" data-qty="+" data-idx="${i}" aria-label="Aumentar">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button class="remove" data-remove="${i}" aria-label="Eliminar">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        const totalItems = cart.reduce((s, it) => s + it.quantity, 0);
+        cartCountLabel.textContent = `${totalItems} ${totalItems === 1 ? "rollo" : "rollos"}`;
+    }
+
+    const subtotal = cart.reduce((s, it) => s + it.unitPrice * it.quantity, 0);
+    $("#subtotal").textContent = money(subtotal);
+    $("#total").textContent = money(subtotal);
+
+    const totalItems = cart.reduce((s, it) => s + it.quantity, 0);
+    const prev = parseInt(fabBadge.textContent) || 0;
+    fabBadge.textContent = totalItems;
+    if (totalItems !== prev) {
+        fabBadge.classList.remove("pop");
+        void fabBadge.offsetWidth;
+        fabBadge.classList.add("pop");
+    }
+}
+
+cartList.addEventListener("click", e => {
+    const btn = e.target.closest("[data-qty], [data-remove]");
+    if (!btn) return;
+
+    if (btn.dataset.remove !== undefined) {
+        const i = parseInt(btn.dataset.remove);
+        cart.splice(i, 1);
+        saveCart(); renderCart();
+        toast("Producto eliminado", "fa-trash");
+        return;
+    }
+
+    const i = parseInt(btn.dataset.idx);
+    const op = btn.dataset.qty;
+
+    if (op === "+") cart[i].quantity++;
+    else if (op === "-") {
+        if (cart[i].quantity > 1) cart[i].quantity--;
+        else { cart.splice(i, 1); toast("Producto eliminado", "fa-trash"); }
+    }
+    saveCart(); renderCart();
+});
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+const checkoutSection = $("#checkoutSection");
+
+$("#checkoutBtn").addEventListener("click", () => {
+    if (cart.length === 0) {
+        toast("Agrega al menos un rollo", "fa-exclamation-circle");
+        return;
+    }
+    checkoutSection.classList.add("open");
+    checkoutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+$("#cancelCheckout").addEventListener("click", () => {
+    checkoutSection.classList.remove("open");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* =========================================================
+   TOGGLE PARA MÍ / ALGUIEN MÁS
+========================================================= */
+const deliveryRadios = $$('input[name="deliveryFor"]');
+const addressHint = $("#addressHint");
+
+function updateAddressHint() {
+    const val = document.querySelector('input[name="deliveryFor"]:checked')?.value;
+    if (val === "other") {
+        addressHint.textContent = "recomendado";
+        addressHint.style.color = "var(--cognac)";
+    } else {
+        addressHint.textContent = "opcional";
+        addressHint.style.color = "";
+    }
+}
+deliveryRadios.forEach(r => r.addEventListener("change", updateAddressHint));
+
+/* =========================================================
+   UBICACIÓN
+========================================================= */
+const locationModal = $("#locationModal");
+const locationPreview = $("#locationPreview");
+const locationCoords = $("#locationCoords");
+const locationModalCoords = $("#locationModalCoords");
+const locationLabel = $("#locationLabel");
+const shareBtn = $("#shareLocationBtn");
+
+shareBtn.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+        toast("Tu navegador no soporta geolocalización", "fa-exclamation-circle");
+        return;
+    }
+
+    shareBtn.disabled = true;
+    const original = shareBtn.innerHTML;
+    shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Obteniendo ubicación...</span>';
+
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            userLocation = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                accuracy: Math.round(pos.coords.accuracy)
+            };
+            shareBtn.disabled = false;
+            shareBtn.innerHTML = original;
+
+            const coordStr = `${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)}`;
+            locationModalCoords.textContent = coordStr;
+            locationModal.classList.add("open");
+            setBodyLock(true);
+        },
+        err => {
+            shareBtn.disabled = false;
+            shareBtn.innerHTML = original;
+            let msg = "No se pudo obtener la ubicación";
+            if (err.code === 1) msg = "Permiso de ubicación denegado";
+            else if (err.code === 2) msg = "Ubicación no disponible";
+            else if (err.code === 3) msg = "Se agotó el tiempo";
+            toast(msg, "fa-exclamation-circle");
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+});
+
+$("#locConfirmSelf").addEventListener("click", () => {
+    document.querySelector('input[name="deliveryFor"][value="self"]').checked = true;
+    updateAddressHint();
+    closeLocationModal();
+    showLocationPreview("Entrega en esta ubicación");
+    toast("Ubicación de entrega guardada", "fa-check-circle");
+});
+
+$("#locConfirmOther").addEventListener("click", () => {
+    document.querySelector('input[name="deliveryFor"][value="other"]').checked = true;
+    updateAddressHint();
+    closeLocationModal();
+    showLocationPreview("Referencia (para otra persona)");
+    setTimeout(() => $("#deliveryAddress").focus(), 250);
+    toast("Agrega la dirección de la otra persona", "fa-info-circle");
+});
+
+function closeLocationModal() {
+    locationModal.classList.remove("open");
+    setBodyLock(false);
+}
+locationModal.addEventListener("click", e => {
+    if (e.target === locationModal) closeLocationModal();
+});
+
+function showLocationPreview(label) {
+    if (!userLocation) return;
+    locationLabel.textContent = label;
+    locationCoords.textContent = `${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)} · ±${userLocation.accuracy}m`;
+    locationPreview.hidden = false;
+}
+
+$("#removeLocationBtn").addEventListener("click", () => {
+    userLocation = null;
+    locationPreview.hidden = true;
+    toast("Ubicación eliminada", "fa-trash");
+});
+
+/* =========================================================
+   ENVIAR WHATSAPP
+========================================================= */
+$("#orderForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const name = $("#customerName").value.trim();
+    const phone = $("#customerPhone").value.trim();
+    const address = $("#deliveryAddress").value.trim();
+    const notes = $("#customerNotes").value.trim();
+    const deliveryFor = document.querySelector('input[name="deliveryFor"]:checked')?.value || "self";
+
+    if (!name || !phone) {
+        toast("Completa nombre y teléfono", "fa-exclamation-circle");
+        return;
+    }
+    if (deliveryFor === "other" && !address && !userLocation) {
+        toast("Agrega la dirección de la otra persona", "fa-exclamation-circle");
+        $("#deliveryAddress").focus();
+        return;
+    }
+
+    const total = cart.reduce((s, it) => s + it.unitPrice * it.quantity, 0);
+
+    let msg = `*NUEVO PEDIDO — ${CONFIG.brandName}*\n\n`;
+    msg += `*Cliente:* ${name}\n`;
+    msg += `*Teléfono:* ${phone}\n\n`;
+    msg += `*Entrega:* ${deliveryFor === "self" ? "Para mí" : "Para otra persona"}\n`;
+
+    if (address) msg += `*Dirección:* ${address}\n`;
+    if (userLocation) {
+        const mapUrl = `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`;
+        msg += `*📍 Ubicación:* ${mapUrl}\n`;
+    }
+    if (!address && !userLocation) msg += `*Entrega:* Por definir\n`;
+
+    msg += `\n*Detalle del pedido:*\n`;
+
+    cart.forEach(it => {
+        const glaze = it.selections.glaze;
+        const toppings = it.selections.toppings || [];
+        const itemSub = it.unitPrice * it.quantity;
+
+        msg += `• ${it.name}\n`;
+        if (glaze) {
+            const glazeExtra = glaze.price > 0 ? ` (+$${glaze.price.toFixed(2)})` : "";
+            msg += `   Glaseado: ${glaze.name}${glazeExtra}\n`;
+        }
+        if (toppings.length) {
+            msg += `   Toppings: ${toppings.map(t => t.name + (t.price > 0 ? ` (+$${t.price.toFixed(2)})` : "")).join(", ")}\n`;
+        }
+        msg += `   Cantidad: ${it.quantity} × $${it.unitPrice.toFixed(2)}\n`;
+        msg += `   Importe: $${itemSub.toFixed(2)}\n\n`;
+    });
+
+    msg += `*TOTAL: $${total.toFixed(2)} ${CONFIG.currencyCode}*\n`;
+    if (notes) msg += `\n*Notas:* ${notes}\n`;
+    msg += `\n_${new Date().toLocaleString("es-MX")}_`;
+
+    const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+
+    /* Limpiar todo */
+    cart = [];
+    localStorage.removeItem(CONFIG.storageKey);
+    userLocation = null;
+    renderCart();
+
+    $("#orderForm").reset();
+    document.querySelector('input[name="deliveryFor"][value="self"]').checked = true;
+    updateAddressHint();
+    locationPreview.hidden = true;
+    checkoutSection.classList.remove("open");
+
+    $("#confirmationModal").classList.add("open");
+    setBodyLock(true);
+});
+
+/* =========================================================
+   CONFIRMACIÓN FINAL
+========================================================= */
+const confirmModal = $("#confirmationModal");
+function closeConfirm() { confirmModal.classList.remove("open"); setBodyLock(false); }
+$$("[data-close-confirmation]").forEach(el => el.addEventListener("click", closeConfirm));
+confirmModal.addEventListener("click", e => { if (e.target === confirmModal) closeConfirm(); });
+
+/* =========================================================
+   FAB
+========================================================= */
+$("#fab").addEventListener("click", () => {
+    const panel = $("#cartPanel");
+    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+    panel.animate(
+        [{ transform: "scale(1)" }, { transform: "scale(1.02)" }, { transform: "scale(1)" }],
+        { duration: 600, easing: "ease-out" }
+    );
+});
+
+/* =========================================================
+   ESC
+========================================================= */
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        closeModal();
+        closeLocationModal();
+        closeConfirm();
+    }
+});
+
+/* =========================================================
+   INIT
+========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+    $("#year").textContent = new Date().getFullYear();
+    renderModifiers();
+    renderCart();
+    updateAddressHint();
 });
 </script>
+
 </body>
 </html>
