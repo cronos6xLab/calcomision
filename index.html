@@ -13,11 +13,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* =========================================================
-   ROLES DE FAMILIA — Design System
-   Paleta del logotipo: chocolate profundo, crema,
-   caramelo y detalles dorados.
-========================================================= */
 :root {
     --white: #FFFFFF;
     --white-warm: #FDFBF7;
@@ -51,10 +46,6 @@
     --danger: #B93B2C;
     --danger-soft: rgba(185, 59, 44, 0.08);
 
-    --glass: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(42, 22, 8, 0.06);
-    --glass-blur: saturate(180%) blur(20px);
-
     --shadow-xs: 0 1px 2px rgba(42, 22, 8, 0.04);
     --shadow-sm: 0 2px 6px rgba(42, 22, 8, 0.05);
     --shadow-md: 0 8px 24px rgba(42, 22, 8, 0.07);
@@ -80,7 +71,6 @@ body {
     color: var(--ink);
     line-height: 1.55;
     font-size: 15.5px;
-    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--white);
@@ -121,11 +111,9 @@ img { max-width: 100%; display: block; }
 
 .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
 
-/* =========================================================
-   HEADER
-========================================================= */
+/* HEADER */
 .site-header {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.92);
     border-bottom: 1px solid var(--line);
     padding: 22px 0;
     position: sticky;
@@ -133,7 +121,6 @@ img { max-width: 100%; display: block; }
     z-index: 100;
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
-    background: rgba(255, 255, 255, 0.92);
 }
 .header-inner {
     display: grid;
@@ -183,13 +170,8 @@ img { max-width: 100%; display: block; }
     font-weight: 500;
 }
 
-/* =========================================================
-   HERO
-========================================================= */
-.hero {
-    padding: 72px 0 56px;
-    text-align: center;
-}
+/* HERO */
+.hero { padding: 72px 0 56px; text-align: center; }
 .hero-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -239,9 +221,7 @@ img { max-width: 100%; display: block; }
     opacity: 0.5;
 }
 
-/* =========================================================
-   MAIN GRID
-========================================================= */
+/* MAIN GRID */
 .main-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 380px;
@@ -250,9 +230,7 @@ img { max-width: 100%; display: block; }
     padding-bottom: 40px;
 }
 
-/* =========================================================
-   PRODUCT
-========================================================= */
+/* PRODUCT */
 .product {
     background: var(--white);
     border: 1px solid var(--line);
@@ -287,7 +265,6 @@ img { max-width: 100%; display: block; }
     background: linear-gradient(180deg, transparent 60%, rgba(42, 22, 8, 0.06));
     pointer-events: none;
 }
-
 .product-tag {
     position: absolute;
     top: 20px;
@@ -310,7 +287,6 @@ img { max-width: 100%; display: block; }
 .product-tag i { color: var(--gold); font-size: 0.65rem; }
 
 .product-body { padding: 28px 30px 30px; }
-
 .product-cat {
     font-size: 0.68rem;
     letter-spacing: 3px;
@@ -319,7 +295,6 @@ img { max-width: 100%; display: block; }
     font-weight: 700;
     margin-bottom: 12px;
 }
-
 .product-name {
     font-size: 1.75rem;
     line-height: 1.15;
@@ -333,7 +308,6 @@ img { max-width: 100%; display: block; }
     color: var(--caramel-dark);
     font-variation-settings: "SOFT" 60, "WONK" 1;
 }
-
 .product-text {
     color: var(--ink-soft);
     font-size: 0.92rem;
@@ -341,7 +315,6 @@ img { max-width: 100%; display: block; }
     margin-bottom: 24px;
     max-width: 480px;
 }
-
 .product-attributes {
     display: flex;
     gap: 20px;
@@ -388,9 +361,7 @@ img { max-width: 100%; display: block; }
     margin-left: 4px;
 }
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+/* BUTTONS */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -419,7 +390,6 @@ img { max-width: 100%; display: block; }
     box-shadow: 0 8px 20px rgba(42, 22, 8, 0.20);
     transform: translateY(-1px);
 }
-
 .btn-success {
     background: var(--success);
     color: #FFFFFF;
@@ -430,17 +400,12 @@ img { max-width: 100%; display: block; }
     box-shadow: 0 8px 20px rgba(14, 110, 54, 0.25);
     transform: translateY(-1px);
 }
-
 .btn-outline {
     background: var(--white);
     border: 1px solid var(--line-2);
     color: var(--choco-deep);
 }
-.btn-outline:hover {
-    border-color: var(--choco-deep);
-    background: var(--cream);
-}
-
+.btn-outline:hover { border-color: var(--choco-deep); background: var(--cream); }
 .btn-ghost {
     background: transparent;
     color: var(--ink-muted);
@@ -448,12 +413,9 @@ img { max-width: 100%; display: block; }
     font-weight: 500;
 }
 .btn-ghost:hover { color: var(--choco); }
-
 .btn-block { width: 100%; }
 
-/* =========================================================
-   CART
-========================================================= */
+/* CART */
 .cart-panel {
     position: sticky;
     top: 100px;
@@ -463,7 +425,6 @@ img { max-width: 100%; display: block; }
     padding: 26px 24px 24px;
     box-shadow: var(--shadow-xs);
 }
-
 .cart-head {
     display: flex;
     align-items: baseline;
@@ -486,7 +447,6 @@ img { max-width: 100%; display: block; }
     color: var(--ink-muted);
     font-weight: 700;
 }
-
 .cart-list {
     max-height: 380px;
     overflow-y: auto;
@@ -494,12 +454,7 @@ img { max-width: 100%; display: block; }
     padding: 6px 8px;
 }
 .cart-empty { text-align: center; padding: 36px 16px; color: var(--ink-muted); }
-.cart-empty i {
-    font-size: 1.8rem;
-    margin-bottom: 14px;
-    color: var(--caramel);
-    opacity: 0.5;
-}
+.cart-empty i { font-size: 1.8rem; margin-bottom: 14px; color: var(--caramel); opacity: 0.5; }
 .cart-empty p { font-size: 0.85rem; margin-bottom: 4px; }
 .cart-empty small { font-size: 0.72rem; color: var(--ink-faint); }
 
@@ -516,7 +471,6 @@ img { max-width: 100%; display: block; }
     to { opacity: 1; transform: translateY(0); }
 }
 .cart-item:last-child { border-bottom: none; }
-
 .cart-item-info { flex: 1; min-width: 0; }
 .cart-item-name {
     font-family: 'Fraunces', serif;
@@ -550,14 +504,12 @@ img { max-width: 100%; display: block; }
     font-weight: 700;
     letter-spacing: 0.2px;
 }
-
 .cart-item-actions {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
 }
-
 .qty {
     display: inline-flex;
     align-items: center;
@@ -586,7 +538,6 @@ img { max-width: 100%; display: block; }
     font-variant-numeric: tabular-nums;
     color: var(--choco-deep);
 }
-
 .remove {
     width: 26px;
     height: 26px;
@@ -615,7 +566,6 @@ img { max-width: 100%; display: block; }
 }
 .totals-row span:first-child { font-weight: 500; }
 .totals-row strong { color: var(--choco-deep); font-weight: 600; }
-
 .totals-row.final {
     padding-top: 14px;
     margin-top: 10px;
@@ -637,9 +587,7 @@ img { max-width: 100%; display: block; }
     font-variation-settings: "SOFT" 40, "WONK" 1;
 }
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* MODAL */
 .modal {
     position: fixed;
     inset: 0;
@@ -656,7 +604,6 @@ img { max-width: 100%; display: block; }
     transition: opacity 0.32s var(--ease), visibility 0.32s;
 }
 .modal.open { opacity: 1; visibility: visible; }
-
 .modal-card {
     width: 100%;
     max-width: 520px;
@@ -694,12 +641,9 @@ img { max-width: 100%; display: block; }
     color: #fff;
     transform: rotate(90deg);
 }
-
 .modal-hero-wrap { position: relative; background: var(--cream); }
 .modal-hero { width: 100%; height: 260px; object-fit: cover; }
-
 .modal-body { padding: 32px 32px 28px; }
-
 .modal-eyebrow {
     font-size: 0.65rem;
     letter-spacing: 3.5px;
@@ -751,7 +695,6 @@ img { max-width: 100%; display: block; }
     margin-left: 4px;
 }
 
-/* Modifier */
 .modifier { padding: 24px 0 0; }
 .modifier-head { margin-bottom: 16px; }
 .modifier-title {
@@ -774,12 +717,7 @@ img { max-width: 100%; display: block; }
     color: var(--ink-muted);
     font-weight: 500;
 }
-
-.modifier-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+.modifier-options { display: flex; flex-direction: column; gap: 8px; }
 
 .m-option {
     display: flex;
@@ -794,10 +732,7 @@ img { max-width: 100%; display: block; }
     position: relative;
     -webkit-tap-highlight-color: transparent;
 }
-.m-option:hover {
-    border-color: var(--choco-soft);
-    background: var(--white-warm);
-}
+.m-option:hover { border-color: var(--choco-soft); background: var(--white-warm); }
 .m-option input { position: absolute; opacity: 0; pointer-events: none; }
 
 .m-radio {
@@ -824,13 +759,11 @@ img { max-width: 100%; display: block; }
 }
 .m-option input:checked ~ .m-radio { border-color: var(--choco-deep); }
 .m-option input:checked ~ .m-radio::after { transform: scale(1); }
-
 .m-option:has(input:checked) {
     border-color: var(--choco-deep);
     background: var(--cream);
     box-shadow: 0 2px 10px rgba(42, 22, 8, 0.06);
 }
-
 .m-text { flex: 1; min-width: 0; }
 .m-name {
     display: block;
@@ -865,7 +798,6 @@ img { max-width: 100%; display: block; }
     font-size: 0.62rem;
 }
 
-/* Quantity */
 .qty-row {
     display: flex;
     justify-content: center;
@@ -895,7 +827,6 @@ img { max-width: 100%; display: block; }
     transform: scale(1.05);
 }
 .qty-big:active { transform: scale(0.95); }
-
 .qty-display {
     min-width: 46px;
     text-align: center;
@@ -907,7 +838,6 @@ img { max-width: 100%; display: block; }
     font-variation-settings: "SOFT" 40, "WONK" 1;
     letter-spacing: -0.02em;
 }
-
 .modal-total {
     display: flex;
     align-items: center;
@@ -934,9 +864,7 @@ img { max-width: 100%; display: block; }
     font-variation-settings: "SOFT" 40, "WONK" 1;
 }
 
-/* =========================================================
-   CHECKOUT
-========================================================= */
+/* CHECKOUT */
 .checkout {
     display: none;
     max-width: 680px;
@@ -972,10 +900,7 @@ img { max-width: 100%; display: block; }
     color: var(--caramel-dark);
     font-variation-settings: "SOFT" 60, "WONK" 1;
 }
-.checkout-head p {
-    color: var(--ink-muted);
-    font-size: 0.85rem;
-}
+.checkout-head p { color: var(--ink-muted); font-size: 0.85rem; }
 
 .field { margin-bottom: 22px; }
 .field label {
@@ -1018,7 +943,6 @@ img { max-width: 100%; display: block; }
 .input::placeholder { color: var(--ink-faint); }
 textarea.input { resize: vertical; min-height: 88px; }
 
-/* Estados de validación */
 .input.is-valid {
     border-color: rgba(29, 168, 81, 0.45);
     background-image: none;
@@ -1030,13 +954,19 @@ textarea.input { resize: vertical; min-height: 88px; }
 .input.is-invalid {
     border-color: rgba(185, 59, 44, 0.55);
     background: rgba(185, 59, 44, 0.02);
+    animation: shake 0.35s var(--ease);
 }
 .input.is-invalid:focus {
     border-color: var(--danger);
     box-shadow: 0 0 0 4px rgba(185, 59, 44, 0.10);
 }
 
-/* Wrapper para input con ícono de estado */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
 .input-wrap { position: relative; }
 .input-wrap .input { padding-right: 44px; }
 .input-status {
@@ -1049,14 +979,8 @@ textarea.input { resize: vertical; min-height: 88px; }
     opacity: 0;
     transition: opacity 0.2s var(--ease);
 }
-.input.is-valid ~ .input-status {
-    opacity: 1;
-    color: var(--success);
-}
-.input.is-invalid ~ .input-status {
-    opacity: 1;
-    color: var(--danger);
-}
+.input.is-valid ~ .input-status { opacity: 1; color: var(--success); }
+.input.is-invalid ~ .input-status { opacity: 1; color: var(--danger); }
 
 .field-hint {
     display: flex;
@@ -1072,7 +996,6 @@ textarea.input { resize: vertical; min-height: 88px; }
 .field-hint.is-valid { color: var(--success-dark); }
 .field-hint.is-invalid { color: var(--danger); }
 
-/* Aviso para entrega */
 .delivery-notice {
     display: flex;
     align-items: flex-start;
@@ -1087,13 +1010,20 @@ textarea.input { resize: vertical; min-height: 88px; }
     line-height: 1.5;
     animation: riseIn 0.3s var(--ease) both;
 }
+.delivery-notice.warn {
+    background: rgba(185, 59, 44, 0.06);
+    border-color: rgba(185, 59, 44, 0.25);
+    color: var(--danger);
+}
 .delivery-notice i {
     color: var(--gold);
     font-size: 0.9rem;
     margin-top: 1px;
     flex-shrink: 0;
 }
+.delivery-notice.warn i { color: var(--danger); }
 .delivery-notice strong { color: var(--choco-deep); font-weight: 700; }
+.delivery-notice.warn strong { color: var(--danger); }
 
 /* Toggle */
 .toggle-group {
@@ -1140,10 +1070,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     gap: 10px;
     margin-top: 10px;
 }
-.btn-location:hover {
-    border-color: var(--choco-deep);
-    background: var(--cream);
-}
+.btn-location:hover { border-color: var(--choco-deep); background: var(--cream); }
 .btn-location:disabled { opacity: 0.6; cursor: wait; }
 .btn-location i { color: var(--caramel-dark); }
 
@@ -1158,10 +1085,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     border: 1.5px solid rgba(29, 168, 81, 0.22);
     animation: riseIn 0.35s var(--ease) both;
 }
-.location-preview > i:first-child {
-    color: var(--success);
-    font-size: 1.05rem;
-}
+.location-preview > i:first-child { color: var(--success); font-size: 1.05rem; }
 .location-preview-info { flex: 1; min-width: 0; }
 .location-preview-info strong {
     display: block;
@@ -1206,9 +1130,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     margin-top: 28px;
 }
 
-/* =========================================================
-   LOCATION MODAL
-========================================================= */
+/* LOCATION MODAL */
 .location-icon {
     width: 72px;
     height: 72px;
@@ -1228,20 +1150,14 @@ textarea.input { resize: vertical; min-height: 88px; }
     60% { transform: scale(1.15); }
     100% { transform: scale(1); }
 }
-.location-question {
-    text-align: center;
-    margin-bottom: 24px;
-}
+.location-question { text-align: center; margin-bottom: 24px; }
 .location-question h3 {
     font-size: 1.4rem;
     margin-bottom: 8px;
     font-weight: 500;
     letter-spacing: -0.025em;
 }
-.location-question p {
-    color: var(--ink-soft);
-    font-size: 0.88rem;
-}
+.location-question p { color: var(--ink-soft); font-size: 0.88rem; }
 .location-question .location-coords {
     display: inline-block;
     margin-top: 14px;
@@ -1255,9 +1171,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     letter-spacing: 0.5px;
 }
 
-/* =========================================================
-   SUCCESS
-========================================================= */
+/* SUCCESS */
 .success { text-align: center; padding: 48px 32px; }
 .success-icon {
     width: 88px;
@@ -1294,9 +1208,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     line-height: 1.6;
 }
 
-/* =========================================================
-   FAB
-========================================================= */
+/* FAB */
 .fab {
     display: none;
     position: fixed;
@@ -1341,9 +1253,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     100% { transform: scale(1); }
 }
 
-/* =========================================================
-   TOAST
-========================================================= */
+/* TOAST */
 .toast {
     position: fixed;
     left: 50%;
@@ -1373,9 +1283,7 @@ textarea.input { resize: vertical; min-height: 88px; }
 .toast i { color: var(--gold); }
 .toast.toast-error i { color: #F4A3A0; }
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* FOOTER */
 .site-footer {
     margin-top: 60px;
     padding: 48px 20px 56px;
@@ -1418,9 +1326,7 @@ textarea.input { resize: vertical; min-height: 88px; }
     margin-top: 12px;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE */
 @media (max-width: 950px) {
     .main-grid { grid-template-columns: 1fr; }
     .cart-panel { position: static; }
@@ -1467,9 +1373,6 @@ textarea.input { resize: vertical; min-height: 88px; }
 
 <body>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
 <header class="site-header">
     <div class="container">
         <div class="header-inner">
@@ -1477,12 +1380,7 @@ textarea.input { resize: vertical; min-height: 88px; }
                 <a href="#catalogo"><i class="fas fa-store"></i>&nbsp; Catálogo</a>
             </div>
             <a href="#" class="brand">
-                <!-- 🔁 REEMPLAZA ESTA URL CON TU LOGO REAL -->
-                <img
-                    src="https://placehold.co/120x120/3E2010/FAF4E8?text=RF&font=playfair"
-                    alt="Roles de Familia"
-                    class="brand-logo"
-                >
+                <img src="https://placehold.co/120x120/3E2010/FAF4E8?text=RF&font=playfair" alt="Roles de Familia" class="brand-logo">
                 <span class="brand-name">Roles de <em>Familia</em></span>
             </a>
             <div class="header-side right">
@@ -1494,7 +1392,6 @@ textarea.input { resize: vertical; min-height: 88px; }
 
 <main class="container">
 
-    <!-- HERO -->
     <section class="hero">
         <div class="hero-eyebrow">Panadería Artesanal</div>
         <h2>Roles de canela <em>recién horneados</em>,<br>hechos en casa cada día</h2>
@@ -1502,32 +1399,19 @@ textarea.input { resize: vertical; min-height: 88px; }
         <div class="hero-divider"></div>
     </section>
 
-    <!-- PRODUCT + CART -->
     <div class="main-grid" id="catalogo">
 
-        <!-- PRODUCTO -->
         <section>
             <article class="product" role="button" tabindex="0" data-open-modal>
                 <div class="product-media">
-                    <span class="product-tag">
-                        <i class="fas fa-fire"></i> Recién horneado
-                    </span>
-                    <!-- 🔁 REEMPLAZA CON LA FOTO REAL DE TUS ROLES -->
-                    <img
-                        src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Roles+de+Familia&font=playfair"
-                        alt="Roles de canela recién horneados"
-                    >
+                    <span class="product-tag"><i class="fas fa-fire"></i> Recién horneado</span>
+                    <img src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Roles+de+Familia&font=playfair" alt="Roles de canela">
                 </div>
 
                 <div class="product-body">
                     <div class="product-cat">Edición artesanal</div>
-
                     <h3 class="product-name">Rol de canela <em>artesanal</em></h3>
-
-                    <p class="product-text">
-                        Rol esponjoso recién horneado, elaborado con canela premium y terminado con el
-                        glaseado que tú elijas. Disponible por pieza.
-                    </p>
+                    <p class="product-text">Rol esponjoso recién horneado, elaborado con canela premium y terminado con el glaseado que tú elijas. Disponible por pieza.</p>
 
                     <div class="product-attributes">
                         <div class="attr">
@@ -1556,7 +1440,6 @@ textarea.input { resize: vertical; min-height: 88px; }
             </article>
         </section>
 
-        <!-- CARRITO -->
         <aside class="cart-panel" id="cartPanel">
             <div class="cart-head">
                 <h3 class="cart-title">Tu pedido</h3>
@@ -1589,7 +1472,6 @@ textarea.input { resize: vertical; min-height: 88px; }
 
     </div>
 
-    <!-- CHECKOUT -->
     <section class="checkout" id="checkoutSection">
         <div class="checkout-head">
             <h2>Finalizar <em>pedido</em></h2>
@@ -1643,8 +1525,11 @@ textarea.input { resize: vertical; min-height: 88px; }
 
             <div class="field">
                 <label for="deliveryAddress">
-                    <span class="label-text">Dirección de entrega <span class="req" id="addressReq" style="display:none;">*</span></span>
-                    <span class="opt" id="addressHint">opcional</span>
+                    <span class="label-text">
+                        Dirección de entrega
+                        <span class="req" id="addressReq" style="display:none;">*</span>
+                    </span>
+                    <span class="opt" id="addressHint">requerido</span>
                 </label>
                 <textarea
                     id="deliveryAddress"
@@ -1655,9 +1540,9 @@ textarea.input { resize: vertical; min-height: 88px; }
                     maxlength="300"
                 ></textarea>
 
-                <div class="delivery-notice" id="deliveryNotice" hidden>
+                <div class="delivery-notice" id="deliveryNotice">
                     <i class="fas fa-circle-info"></i>
-                    <span>Como el pedido es <strong>para alguien más</strong>, necesitamos saber a dónde llevarlo. Comparte la ubicación <strong>o</strong> escribe la dirección.</span>
+                    <span id="deliveryNoticeText">Necesitamos saber dónde entregar. Comparte tu ubicación <strong>o</strong> escribe tu dirección.</span>
                 </div>
 
                 <button type="button" class="btn-location" id="shareLocationBtn">
@@ -1699,9 +1584,6 @@ textarea.input { resize: vertical; min-height: 88px; }
 
 </main>
 
-<!-- =========================================================
-     MODAL PRODUCTO
-========================================================= -->
 <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
         <button class="modal-close" data-close-modal aria-label="Cerrar">
@@ -1709,12 +1591,7 @@ textarea.input { resize: vertical; min-height: 88px; }
         </button>
 
         <div class="modal-hero-wrap">
-            <!-- 🔁 REEMPLAZA CON LA FOTO REAL -->
-            <img
-                src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Rol+de+Canela&font=playfair"
-                alt="Rol de canela"
-                class="modal-hero"
-            >
+            <img src="https://placehold.co/1000x750/A5703F/FAF4E8?text=Rol+de+Canela&font=playfair" alt="Rol de canela" class="modal-hero">
         </div>
 
         <div class="modal-body">
@@ -1728,7 +1605,7 @@ textarea.input { resize: vertical; min-height: 88px; }
                 <small>MXN · base</small>
             </div>
 
-            <div id="modifierContainer"><!-- se renderiza dinámicamente --></div>
+            <div id="modifierContainer"></div>
 
             <div class="qty-row">
                 <button type="button" class="qty-big" id="decreaseQty" aria-label="Disminuir">
@@ -1752,9 +1629,6 @@ textarea.input { resize: vertical; min-height: 88px; }
     </div>
 </div>
 
-<!-- =========================================================
-     MODAL UBICACIÓN
-========================================================= -->
 <div class="modal" id="locationModal" role="dialog" aria-modal="true">
     <div class="modal-card" style="max-width: 440px;">
         <div class="modal-body">
@@ -1777,9 +1651,6 @@ textarea.input { resize: vertical; min-height: 88px; }
     </div>
 </div>
 
-<!-- =========================================================
-     MODAL CONFIRMACIÓN FINAL
-========================================================= -->
 <div class="modal" id="confirmationModal" role="dialog" aria-modal="true">
     <div class="modal-card">
         <div class="success">
@@ -1795,18 +1666,13 @@ textarea.input { resize: vertical; min-height: 88px; }
     </div>
 </div>
 
-<!-- FAB -->
 <button class="fab" id="fab" aria-label="Ver pedido">
     <i class="fas fa-shopping-bag"></i>
     <span class="fab-badge" id="fabBadge">0</span>
 </button>
 
-<!-- TOAST -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
 <footer class="site-footer">
     <div class="footer-mark">Roles de <em>Familia</em></div>
     <div class="footer-tagline">Panadería Artesanal · México</div>
@@ -1816,16 +1682,15 @@ textarea.input { resize: vertical; min-height: 88px; }
 
 <script>
 /* =========================================================
-   CONFIGURACIÓN · ROLES DE FAMILIA
+   CONFIGURACIÓN
 ========================================================= */
 const CONFIG = {
     brandName: "Roles de Familia",
-    whatsappNumber: "525639569884", // sin +, espacios ni guiones
+    whatsappNumber: "525639569884",
     currencySymbol: "$",
     currencyCode: "MXN",
     storageKey: "rolesDeFamiliaCart_v1",
 
-    /* Validaciones */
     phoneMinDigits: 10,
     nameMinLength: 2,
     addressMinLength: 5,
@@ -1835,7 +1700,6 @@ const CONFIG = {
         name: "Rol de canela artesanal",
         shortName: "Rol de canela",
         basePrice: 45.00,
-
         modifiers: [
             {
                 id: "glaze",
@@ -1894,7 +1758,6 @@ function escapeHtml(str) {
 }
 function setBodyLock(lock) { document.body.style.overflow = lock ? "hidden" : ""; }
 
-/* Scroll + focus al campo con error */
 function focusField(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1902,32 +1765,25 @@ function focusField(id) {
     setTimeout(() => el.focus({ preventScroll: true }), 300);
 }
 
+function markInvalid(id, invalid = true) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (invalid) el.classList.add("is-invalid");
+    else el.classList.remove("is-invalid");
+}
+
 /* =========================================================
    VALIDACIONES
 ========================================================= */
-function digitsOnly(str) {
-    return String(str).replace(/\D/g, "");
-}
+function digitsOnly(str) { return String(str).replace(/\D/g, ""); }
+function validatePhone(phone) { return digitsOnly(phone).length >= CONFIG.phoneMinDigits; }
+function validateName(name) { return name.trim().length >= CONFIG.nameMinLength; }
+function validateAddress(address) { return address.trim().length >= CONFIG.addressMinLength; }
 
-function validatePhone(phone) {
-    const digits = digitsOnly(phone);
-    return digits.length >= CONFIG.phoneMinDigits;
-}
-
-function validateName(name) {
-    return name.trim().length >= CONFIG.nameMinLength;
-}
-
-function validateAddress(address) {
-    return address.trim().length >= CONFIG.addressMinLength;
-}
-
-/* Feedback en vivo del teléfono */
 function updatePhoneFeedback(showError = false) {
     const input = $("#customerPhone");
     const hint  = $("#phoneHint");
     const status = $("#phoneStatus");
-
     const value = input.value.trim();
     const digits = digitsOnly(value);
 
@@ -1968,21 +1824,53 @@ function updatePhoneFeedback(showError = false) {
 }
 
 /* =========================================================
+   AVISO DINÁMICO DE ENTREGA
+========================================================= */
+const deliveryNotice = $("#deliveryNotice");
+const deliveryNoticeText = $("#deliveryNoticeText");
+
+function updateDeliveryNotice(showErrorState = false) {
+    const deliveryFor = document.querySelector('input[name="deliveryFor"]:checked')?.value || "self";
+    const address = $("#deliveryAddress").value.trim();
+    const hasAddress = validateAddress(address);
+    const hasLocation = !!userLocation;
+
+    /* Si ya tiene dirección O ubicación → ocultar aviso */
+    if (hasAddress || hasLocation) {
+        deliveryNotice.hidden = true;
+        deliveryNotice.classList.remove("warn");
+        return;
+    }
+
+    /* Mostrar aviso apropiado */
+    deliveryNotice.hidden = false;
+
+    if (showErrorState) {
+        deliveryNotice.classList.add("warn");
+        deliveryNoticeText.innerHTML = deliveryFor === "other"
+            ? `<strong>Falta la dirección de entrega.</strong> Como es para alguien más, comparte la ubicación o escribe la dirección.`
+            : `<strong>Falta la dirección de entrega.</strong> Comparte tu ubicación o escribe tu dirección para poder enviar el pedido.`;
+    } else {
+        deliveryNotice.classList.remove("warn");
+        deliveryNoticeText.innerHTML = deliveryFor === "other"
+            ? `Como el pedido es <strong>para alguien más</strong>, necesitamos la dirección. Comparte la ubicación <strong>o</strong> escribe la dirección.`
+            : `Necesitamos saber dónde entregar. Comparte tu ubicación <strong>o</strong> escribe tu dirección.`;
+    }
+}
+
+/* =========================================================
    RENDER MODIFICADORES
 ========================================================= */
 function renderModifiers() {
     const container = $("#modifierContainer");
 
     container.innerHTML = CONFIG.product.modifiers.map(mod => {
-        const requiredLabel = mod.required
-            ? `<span class="required">Requerido</span>`
-            : "";
+        const requiredLabel = mod.required ? `<span class="required">Requerido</span>` : "";
 
         const optionsHTML = mod.options.map((opt, i) => {
             const priceHTML = opt.price > 0
                 ? `<span class="m-price">+ ${money(opt.price)}</span>`
                 : `<span class="m-price included">Incluido</span>`;
-
             const checked = (mod.type === "radio" && mod.required && i === 0) ? "checked" : "";
 
             return `
@@ -2011,9 +1899,7 @@ function renderModifiers() {
                     <div class="modifier-title">${escapeHtml(mod.name)}${requiredLabel}</div>
                     <div class="modifier-sub">${escapeHtml(mod.subtitle)}</div>
                 </div>
-                <div class="modifier-options">
-                    ${optionsHTML}
-                </div>
+                <div class="modifier-options">${optionsHTML}</div>
             </section>
         `;
     }).join("");
@@ -2044,11 +1930,9 @@ function getSelections() {
 
     return { selections, extras };
 }
-
 function buildCartKey(selections) {
     return Object.keys(selections).sort().map(k => selections[k].id).join("|");
 }
-
 function getUnitPrice() {
     const { extras } = getSelections();
     return CONFIG.product.basePrice + extras;
@@ -2094,15 +1978,8 @@ document.querySelectorAll(".product").forEach(el => {
 ========================================================= */
 $("#increaseQty").addEventListener("click", () => { modalQty++; updateModalQty(); });
 $("#decreaseQty").addEventListener("click", () => { if (modalQty > 1) { modalQty--; updateModalQty(); } });
-
-function updateModalQty() {
-    $("#qtyDisplay").textContent = modalQty;
-    updateModalTotal();
-}
-function updateModalTotal() {
-    const unit = getUnitPrice();
-    $("#modalTotal").textContent = money(unit * modalQty);
-}
+function updateModalQty() { $("#qtyDisplay").textContent = modalQty; updateModalTotal(); }
+function updateModalTotal() { $("#modalTotal").textContent = money(getUnitPrice() * modalQty); }
 
 /* =========================================================
    AÑADIR AL CARRITO
@@ -2160,9 +2037,7 @@ function renderCart() {
     } else {
         cartList.innerHTML = cart.map((item, i) => {
             const glaze = item.selections.glaze;
-            const glazeHTML = glaze
-                ? `<div class="cart-item-glaze">${escapeHtml(glaze.name)}</div>`
-                : "";
+            const glazeHTML = glaze ? `<div class="cart-item-glaze">${escapeHtml(glaze.name)}</div>` : "";
 
             return `
                 <div class="cart-item">
@@ -2242,6 +2117,7 @@ $("#checkoutBtn").addEventListener("click", () => {
     }
     checkoutSection.classList.add("open");
     checkoutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => updateDeliveryNotice(false), 400);
 });
 
 $("#cancelCheckout").addEventListener("click", () => {
@@ -2255,40 +2131,41 @@ $("#cancelCheckout").addEventListener("click", () => {
 const deliveryRadios = $$('input[name="deliveryFor"]');
 const addressHint = $("#addressHint");
 const addressReq = $("#addressReq");
-const deliveryNotice = $("#deliveryNotice");
 
 function updateAddressHint() {
     const val = document.querySelector('input[name="deliveryFor"]:checked')?.value;
     if (val === "other") {
-        addressHint.textContent = "recomendado";
+        addressHint.textContent = "requerido";
         addressHint.style.color = "var(--caramel-dark)";
         addressReq.style.display = "inline";
-        deliveryNotice.hidden = false;
     } else {
-        addressHint.textContent = "opcional";
-        addressHint.style.color = "";
-        addressReq.style.display = "none";
-        deliveryNotice.hidden = true;
+        addressHint.textContent = "requerido";
+        addressHint.style.color = "var(--caramel-dark)";
+        addressReq.style.display = "inline";
     }
+    updateDeliveryNotice(false);
 }
 deliveryRadios.forEach(r => r.addEventListener("change", updateAddressHint));
 
 /* =========================================================
-   VALIDACIÓN EN VIVO DEL TELÉFONO
+   VALIDACIÓN EN VIVO
 ========================================================= */
 const phoneInput = $("#customerPhone");
-
 phoneInput.addEventListener("input", () => {
-    /* Solo permitir dígitos, espacios y guiones */
-    let v = phoneInput.value.replace(/[^\d\s\-()]/g, "");
-    phoneInput.value = v;
+    phoneInput.value = phoneInput.value.replace(/[^\d\s\-()]/g, "");
     updatePhoneFeedback(false);
 });
-
 phoneInput.addEventListener("blur", () => {
-    if (phoneInput.value.trim()) {
-        updatePhoneFeedback(true);
-    }
+    if (phoneInput.value.trim()) updatePhoneFeedback(true);
+});
+
+$("#customerName").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+});
+
+$("#deliveryAddress").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+    updateDeliveryNotice(false);
 });
 
 /* =========================================================
@@ -2339,6 +2216,7 @@ shareBtn.addEventListener("click", () => {
     );
 });
 
+/* "Sí, entregar aquí" → guarda la ubicación como punto de entrega */
 $("#locConfirmSelf").addEventListener("click", () => {
     document.querySelector('input[name="deliveryFor"][value="self"]').checked = true;
     updateAddressHint();
@@ -2347,13 +2225,22 @@ $("#locConfirmSelf").addEventListener("click", () => {
     toast("Ubicación de entrega guardada", "fa-check-circle");
 });
 
+/* "No, es para otra persona" → DESCARTA la ubicación y exige dirección */
 $("#locConfirmOther").addEventListener("click", () => {
+    /* Limpiamos la ubicación porque el usuario dijo que NO es aquí */
+    userLocation = null;
+    locationPreview.hidden = true;
+
     document.querySelector('input[name="deliveryFor"][value="other"]').checked = true;
     updateAddressHint();
     closeLocationModal();
-    showLocationPreview("Referencia (para otra persona)");
-    setTimeout(() => $("#deliveryAddress").focus(), 250);
-    toast("Comparte la dirección de la otra persona", "fa-info-circle");
+
+    setTimeout(() => {
+        $("#deliveryAddress").focus();
+        $("#deliveryAddress").scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 250);
+
+    toast("Escribe la dirección de la otra persona", "fa-info-circle");
 });
 
 function closeLocationModal() {
@@ -2369,16 +2256,18 @@ function showLocationPreview(label) {
     locationLabel.textContent = label;
     locationCoords.textContent = `${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)} · ±${userLocation.accuracy}m`;
     locationPreview.hidden = false;
+    updateDeliveryNotice(false);
 }
 
 $("#removeLocationBtn").addEventListener("click", () => {
     userLocation = null;
     locationPreview.hidden = true;
+    updateDeliveryNotice(false);
     toast("Ubicación eliminada", "fa-trash", "error");
 });
 
 /* =========================================================
-   VALIDACIÓN GLOBAL DEL FORMULARIO
+   VALIDACIÓN GLOBAL
 ========================================================= */
 function validateForm() {
     const name = $("#customerName").value.trim();
@@ -2409,19 +2298,19 @@ function validateForm() {
         };
     }
 
-    /* 3. Entrega: si es "para alguien más" → requiere dirección O ubicación */
-    if (deliveryFor === "other") {
-        const hasAddress = validateAddress(address);
-        const hasLocation = !!userLocation;
+    /* 3. Entrega — SIEMPRE requerimos dirección O ubicación */
+    const hasAddress = validateAddress(address);
+    const hasLocation = !!userLocation;
 
-        if (!hasAddress && !hasLocation) {
-            return {
-                ok: false,
-                field: "deliveryAddress",
-                msg: "Comparte la ubicación o escribe la dirección de entrega",
-                icon: "fa-location-dot"
-            };
-        }
+    if (!hasAddress && !hasLocation) {
+        return {
+            ok: false,
+            field: "deliveryAddress",
+            msg: deliveryFor === "other"
+                ? "Comparte la ubicación o escribe la dirección de entrega"
+                : "Comparte tu ubicación o escribe tu dirección para la entrega",
+            icon: "fa-location-dot"
+        };
     }
 
     return { ok: true, deliveryFor, name, phone, address };
@@ -2433,13 +2322,30 @@ function validateForm() {
 $("#orderForm").addEventListener("submit", e => {
     e.preventDefault();
 
-    /* Marcar el teléfono con error visual si no es válido */
-    updatePhoneFeedback(true);
+    /* Limpiar estados previos */
+    $("#customerName").classList.remove("is-invalid");
+    $("#deliveryAddress").classList.remove("is-invalid");
+    updatePhoneFeedback(false);
+
+    /* Marcar teléfono si está mal */
+    const phoneVal = $("#customerPhone").value.trim();
+    if (!validatePhone(phoneVal)) {
+        updatePhoneFeedback(true);
+    }
 
     const v = validateForm();
 
     if (!v.ok) {
+        /* Marcar el campo con error */
+        markInvalid(v.field, true);
+
         toast(v.msg, "fa-exclamation-circle", "error");
+
+        /* Si el problema es de entrega, activar el aviso rojo */
+        if (v.field === "deliveryAddress") {
+            updateDeliveryNotice(true);
+        }
+
         focusField(v.field);
         return;
     }
@@ -2459,7 +2365,6 @@ $("#orderForm").addEventListener("submit", e => {
         const mapUrl = `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`;
         msg += `*📍 Ubicación:* ${mapUrl}\n`;
     }
-    if (!address && !userLocation) msg += `*Entrega:* Por definir\n`;
 
     msg += `\n*Detalle del pedido:*\n`;
 
@@ -2480,7 +2385,7 @@ $("#orderForm").addEventListener("submit", e => {
     const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank");
 
-    /* Limpiar */
+    /* Limpiar todo */
     cart = [];
     localStorage.removeItem(CONFIG.storageKey);
     userLocation = null;
@@ -2515,8 +2420,7 @@ confirmModal.addEventListener("click", e => { if (e.target === confirmModal) clo
    FAB
 ========================================================= */
 $("#fab").addEventListener("click", () => {
-    const panel = $("#cartPanel");
-    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("#cartPanel").scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 /* =========================================================
@@ -2538,6 +2442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderModifiers();
     renderCart();
     updateAddressHint();
+    updateDeliveryNotice(false);
 });
 </script>
 
