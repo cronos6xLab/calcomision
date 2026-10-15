@@ -6,9 +6,26 @@
     <title>Roles de Familia - Menú</title>
 
     <script>
+        // ============================================================
+        // IDENTIFICADOR ÚNICO DE TIENDA
+        // ------------------------------------------------------------
+        // Todas las claves de localStorage se prefijan con este ID para
+        // aislar el almacenamiento de cada menú/tienda que viva en el
+        // mismo dominio. Cambia el sufijo si clonas este menú para otra
+        // marca, así el carrito/historial no se mezclan entre clientes.
+        // ============================================================
+        window.STORE_ID = 'rolesDeFamilia_cronos6xlab_a7f3';
+        window.STORE_KEYS = {
+            theme:    window.STORE_ID + '_theme',
+            cart:     window.STORE_ID + '_cart',
+            history:  window.STORE_ID + '_history',
+            client:   window.STORE_ID + '_client',
+            delivery: window.STORE_ID + '_delivery'
+        };
+
         (function(){
             try {
-                var t = localStorage.getItem('theme') || 'light';
+                var t = localStorage.getItem(window.STORE_KEYS.theme) || 'light';
                 if (t !== 'dark') t = 'light';
                 document.documentElement.setAttribute('data-theme', t);
             } catch(e) {
@@ -950,7 +967,7 @@
 
                 <footer>
                     <img src="https://i.ibb.co/kpK80Rs/Photoroom-20261014-124407.png" alt="Logo Footer" class="footer-logo">
-                    <p>&copy; 2026 Roles de Familia</p>
+                    <p>&copy; 2025 Roles de Familia</p>
                     <p style="margin-top: 10px;">
                         <i class="fab fa-instagram" style="color: var(--color-notion-blue);"></i> @roles_de_familia
                     </p>
@@ -1322,7 +1339,7 @@
 
                     <footer style="margin-top: 30px;">
                         <img src="https://i.ibb.co/kpK80Rs/Photoroom-20261014-124407.png" alt="Logo Footer" class="footer-logo">
-                        <p>&copy; 2026 Roles de Familia</p>
+                        <p>&copy; 2025 Roles de Familia</p>
                         <p style="margin-top: 10px;">
                             <i class="fab fa-instagram" style="color: var(--color-notion-blue);"></i> @roles_de_familia
                         </p>
@@ -1431,11 +1448,15 @@
         const MAX_SCHEDULE_DATES      = 8;
         const SCHEDULE_SCAN_DAYS      = 14;
 
-        const HISTORY_KEY = 'orderHistory';
-        const HISTORY_MAX = 40;
+        // === Claves de almacenamiento namespaced por tienda ===
+        // Ver definición de window.STORE_ID y window.STORE_KEYS en el <head>.
+        const THEME_KEY         = window.STORE_KEYS.theme;
+        const CART_KEY          = window.STORE_KEYS.cart;
+        const HISTORY_KEY       = window.STORE_KEYS.history;
+        const CLIENT_DATA_KEY   = window.STORE_KEYS.client;
+        const DELIVERY_DATA_KEY = window.STORE_KEYS.delivery;
 
-        const CLIENT_DATA_KEY = 'clientProfileData';
-        const DELIVERY_DATA_KEY = 'lastDeliveryProfile';
+        const HISTORY_MAX = 40;
 
         const shippingRates = {
             baseRate: 15.00,
@@ -1463,7 +1484,7 @@
 
         let cart = [];
         try {
-            cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
             cart = cart.map(item => {
                 if (!item.uniqueId) {
                     const selId = item.selection ? item.selection.id : 'none';
@@ -1573,7 +1594,7 @@
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme') || 'light';
             const next = current === 'dark' ? 'light' : 'dark';
-            try { localStorage.setItem('theme', next); } catch(e) {}
+            try { localStorage.setItem(THEME_KEY, next); } catch(e) {}
             applyTheme(next);
         }
 
@@ -1643,7 +1664,7 @@
         function getProductTotalQuantity(productId) {
             return cart.filter(item => item.id === productId).reduce((s, i) => s + i.quantity, 0);
         }
-        function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
+        function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
         function refreshAll() { saveCart(); updateCartDisplay(); renderProducts(); updateCartAvailabilityWarning(); }
         function roundPeso(n) { return Math.round(n); }
 
